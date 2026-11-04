@@ -38,6 +38,11 @@ return [
     'oauth' => [
         'unverified_discord_account' => 'Dein Discord Account ist nicht verifiziert.',
         'account_not_registered' => 'Du bist nicht auf dieser Seite registriert.',
+        'unverified_account' => 'Dein Anbieter-Konto hat keine bestätigte E-Mail-Adresse.',
+        'invalid_oauth_flow' => 'Deine Anmeldeanfrage ist abgelaufen. Bitte versuche es erneut.',
+        'account_requires_connection' => 'Für diese E-Mail-Adresse existiert bereits ein Konto. Melde dich mit deinem Passwort an und verbinde den Anbieter anschließend unter Sicherheit.',
+        'registration_disabled' => 'Die Registrierung neuer Konten ist derzeit deaktiviert.',
+        'complete_registration_with' => 'Vervollständige deine Registrierung mit :provider',
     ],
 
     'reset_password' => 'Passwort zurücksetzen',

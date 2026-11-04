@@ -45,6 +45,58 @@
             </form>
         </div>  
 
+        @if($socialProviders->isNotEmpty())
+        <div class="bg-background-secondary rounded-lg p-4">
+            <h5 class="text-lg font-bold pb-1">{{ __('account.connected_accounts') }}</h5>
+            <p class="text-sm text-primary-300 pb-3">{{ __('account.connected_accounts_description') }}</p>
+            <div class="flex flex-col gap-3">
+                @foreach($socialProviders as $provider => $socialProvider)
+                <div class="flex flex-row items-center justify-between gap-4 py-2 border-b border-base/50 last:border-b-0">
+                    <div>
+                        <p class="text-sm text-primary-100">{{ $socialProvider['name'] }}</p>
+                        @if($socialProvider['account'])
+                        <p class="text-sm text-primary-400">{{ __('account.connected_since', ['date' => $socialProvider['account']->linked_at->translatedFormat('d. M Y')]) }}</p>
+                        @else
+                        <p class="text-sm text-primary-400">{{ __('account.not_connected') }}</p>
+                        @endif
+                    </div>
+                    @if($socialProvider['account'])
+                    <x-button.primary wire:click="startDisconnectSocialAccount('{{ $provider }}')" class="text-sm !w-fit">
+                        {{ __('account.disconnect') }}
+                    </x-button.primary>
+                    @elseif($socialProvider['enabled'])
+                    <a href="{{ route('oauth.connect', $provider) }}" class="text-sm text-secondary-500 text-secondary hover:underline">
+                        {{ __('account.connect') }}
+                    </a>
+                    @else
+                    <span class="text-sm text-primary-400">{{ __('account.not_available') }}</span>
+                    @endif
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        @if($showDisconnectSocialAccount)
+        <x-modal :title="__('account.disconnect_account_title', ['provider' => ucfirst($disconnectingProvider)])" open="true">
+            <p class="text-primary-100">{{ __('account.disconnect_account_description') }}</p>
+            <form wire:submit.prevent="disconnectSocialAccount">
+                <x-form.input divClass="mt-4" name="disconnectPassword" type="password"
+                    :label="__('account.input.current_password')" :placeholder="__('account.input.current_password_placeholder')"
+                    wire:model="disconnectPassword" autocomplete="current-password" required />
+                <div class="flex gap-3 mt-4">
+                    <x-button.primary type="submit" class="w-full">{{ __('account.disconnect') }}</x-button.primary>
+                    <button type="button" class="w-full text-sm text-primary-100" wire:click="$set('showDisconnectSocialAccount', false)">{{ __('account.cancel') }}</button>
+                </div>
+            </form>
+            <x-slot name="closeTrigger">
+                <button wire:click="$set('showDisconnectSocialAccount', false)" class="text-primary-100">
+                    <x-ri-close-fill class="size-6" />
+                </button>
+            </x-slot>
+        </x-modal>
+        @endif
+        @endif
+
         <div class="bg-background-secondary rounded-lg p-4">
             <!-- Two factor authentication -->
             <h5 class="text-lg font-bold pb-3">{{ __('account.two_factor_authentication') }}</h5>

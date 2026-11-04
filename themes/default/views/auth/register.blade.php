@@ -4,6 +4,9 @@
     <div class="flex flex-col items-center my-14">
         <x-logo class="h-10" />
         <h1 class="text-2xl text-center mt-6">{{ __('auth.sign_up_title') }} </h1>
+        @if($socialRegistration)
+        <p class="text-sm text-primary-300 mt-2 text-center">{{ __('auth.oauth.complete_registration_with', ['provider' => ucfirst($socialProvider)]) }}</p>
+        @endif
     </div>
     <div class="flex flex-col md:grid md:grid-cols-2 gap-4">
         <x-form.input name="first_name" type="text" :label="__('general.input.first_name')"
@@ -12,7 +15,7 @@
             :placeholder="__('general.input.last_name_placeholder')" wire:model="last_name" required />
 
         <x-form.input name="email" type="email" :label="__('general.input.email')"
-            :placeholder="__('general.input.email_placeholder')" required wire:model="email" divClass="col-span-2" />
+            :placeholder="__('general.input.email_placeholder')" required wire:model="email" divClass="col-span-2" :readonly="$socialRegistration" />
 
         <x-form.input name="password" type="password" :label="__('general.input.password')" :placeholder="__('general.input.password_placeholder')"
             wire:model="password" required />

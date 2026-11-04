@@ -8,6 +8,16 @@ return [
 
     'change_password' => 'Passwort ändern',
 
+    'connected_accounts' => 'Verknüpfte Konten',
+    'connected_accounts_description' => 'Verbinde ein externes Konto für eine einfachere Anmeldung oder trenne ein nicht mehr genutztes Konto.',
+    'connected_since' => 'Verbunden seit :date',
+    'not_connected' => 'Nicht verbunden',
+    'not_available' => 'Nicht verfügbar',
+    'connect' => 'Verbinden',
+    'disconnect' => 'Trennen',
+    'disconnect_account_title' => ':provider trennen',
+    'disconnect_account_description' => 'Gib dein aktuelles Passwort ein, um dieses Konto nicht mehr für die Anmeldung zu verwenden.',
+
     'two_factor_authentication' => 'Zwei-Faktor-Authentifizierung',
     'two_factor_authentication_description' => 'Sichere dein Konto, indem du Zwei-Faktor-Authentifizierung aktivierst.',
     'two_factor_authentication_enabled' => 'Zwei-Faktor-Authentifizierung wurde deinem Account hinzugefügt.',
@@ -46,6 +56,11 @@ return [
         'two_factor_disabled' => 'Zwei-Faktor-Authentifizierung wurde deaktiviert.',
         'two_factor_code_incorrect' => 'Der Code war falsch.',
         'session_logged_out' => 'Sitzung wurde abgemeldet.',
+        'social_account_connected' => 'Konto wurde verbunden.',
+        'social_account_disconnected' => 'Konto wurde getrennt.',
+        'social_account_not_connected' => 'Dieses Konto ist nicht mehr verbunden.',
+        'social_account_in_use' => 'Dieses externe Konto ist bereits mit einem anderen Nutzer verbunden.',
+        'social_account_already_connected' => 'Für diesen Anbieter ist bereits ein Konto verbunden.',
     ],
 
     'no_credit' => 'Du hast kein Guthaben.',

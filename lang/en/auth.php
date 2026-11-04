@@ -38,6 +38,11 @@ return [
     'oauth' => [
         'unverified_discord_account' => 'Your Discord account is not verified.',
         'account_not_registered' => 'You are not registered on this site.',
+        'unverified_account' => 'Your provider account does not have a verified email address.',
+        'invalid_oauth_flow' => 'Your sign-in request has expired. Please try again.',
+        'account_requires_connection' => 'An account with this email already exists. Sign in with your password and connect this provider from Security.',
+        'registration_disabled' => 'New account registration is currently disabled.',
+        'complete_registration_with' => 'Complete your registration with :provider',
     ],
 
     'reset_password' => 'Reset password',
