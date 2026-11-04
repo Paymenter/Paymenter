@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 
@@ -206,8 +207,42 @@ class Cart
                 }
             }
 
+            // Listeners may refuse the coupon by returning the reason as a string
+            if (Event::hasListeners('coupon.validate')) {
+                foreach (Event::dispatch('coupon.validate', [$coupon, Auth::user(), self::couponContext()]) ?? [] as $reason) {
+                    if (is_string($reason) && trim($reason) !== '') {
+                        throw new DisplayException($reason);
+                    }
+                }
+            }
+
             return $coupon;
         });
+    }
+
+    /**
+     * The cart as seen by coupon.validate listeners.
+     *
+     * The amount is taken before any discount, so a percentage coupon cannot
+     * push the cart under a minimum and refuse itself. It is null for an empty
+     * cart, which may still hold a coupon for later.
+     *
+     * @return array{amount: ?float, currency: ?string}
+     */
+    private static function couponContext(): array
+    {
+        $cart = self::get();
+        $amount = 0.0;
+
+        foreach ($cart->items as $item) {
+            $price = $item->price;
+            $amount += ((float) $price->original_price + (float) $price->original_setup_fee) * $item->quantity;
+        }
+
+        return [
+            'amount' => $cart->items->isEmpty() ? null : $amount,
+            'currency' => $cart->currency_code ?? session('currency', config('settings.default_currency')),
+        ];
     }
 
     public static function applyCoupon($code)
