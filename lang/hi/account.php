@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'दो-चरणीय प्रमाणीकरण अक्षम कर दिया गया है।',
         'two_factor_code_incorrect' => 'कोड गलत है।',
         'session_logged_out' => 'सेशन को लॉग आउट कर दिया गया है।',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'आपके पास कोई क्रेडिट नहीं है।',

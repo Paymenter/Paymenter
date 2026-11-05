@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Autentikasi dua langkah telah dinonaktifkan.',
         'two_factor_code_incorrect' => 'Kode yang Anda berikan salah.',
         'session_logged_out' => 'Sesi telah dikeluarkan.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Anda tidak memiliki kredit.',

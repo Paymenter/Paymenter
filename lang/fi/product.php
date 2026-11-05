@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'Varastossa',
     'out_of_stock' => 'Tuote :product on loppunut varastosta',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'Olet saavuttanut :product tuotteen maksimirajan',
     'payment_method' => 'Maksutapa',
     'use_credits' => 'Käytä krediittejä',
