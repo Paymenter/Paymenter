@@ -29,7 +29,7 @@ use Str;
 #[ExtensionMeta(
     name: 'Stripe Gateway',
     description: 'Accept payments via Stripe.',
-    version: '1.0.1',
+    version: 'builtin',
     author: 'Paymenter',
     url: 'https://paymenter.org/docs/extensions/stripe',
     icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzUzM0FGRCIvPjxwYXRoIGQ9Ik0xMjAgMzkyTDM5MiAzMzRWMTEyTDEyMCAxNz hWMzk yWiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='
@@ -87,6 +87,7 @@ class Stripe extends Gateway
                 'label' => 'Stripe Restricted key',
                 'placeholder' => 'Enter your Stripe Restricted API key',
                 'type' => 'text',
+                'encrypted' => true,
                 'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
                 'required' => true,
             ],
@@ -109,6 +110,7 @@ class Stripe extends Gateway
                 'name' => 'stripe_webhook_secret',
                 'label' => 'Stripe webhook secret (auto generated)',
                 'type' => 'text',
+                'encrypted' => true,
                 'description' => 'Stripe webhook secret',
                 'required' => false,
             ],
@@ -129,6 +131,8 @@ class Stripe extends Gateway
         // If the extension isn't enabled, try to boot it
         if (!Route::has('extensions.gateways.stripe.webhook')) {
             require __DIR__ . '/routes.php';
+            // Routes added after boot aren't in the name index yet, which route() below relies on
+            Route::getRoutes()->refreshNameLookups();
         }
 
         // Check if webhook already exists
@@ -803,7 +807,7 @@ class Stripe extends Gateway
     {
         [$timestamp, $signature] = $this->getHeaderValues($sig_header);
 
-        if (empty($timestamp) || empty($signature)) {
+        if (empty($timestamp) || empty($signature) || empty($secret)) {
             return false;
         }
 
@@ -815,5 +819,28 @@ class Stripe extends Gateway
 
         // Compare the expected signature to the actual signature
         return hash_equals($expected_signature, $signature);
+    }
+
+    public function supportsRefunds(): bool
+    {
+        return true;
+    }
+
+    public function refund(InvoiceTransaction $transaction, $amount): bool
+    {
+        $paymentIntentId = $transaction->transaction_id;
+
+        if (!$paymentIntentId) {
+            throw new Exception('Transaction has no Stripe payment intent ID.');
+        }
+
+        $refundData = [
+            'payment_intent' => $paymentIntentId,
+            'amount' => (int) round($amount * 100),
+        ];
+
+        $this->request('post', '/refunds', $refundData);
+
+        return true;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Widgets;
 
+use App\Enums\DashboardPeriod;
 use App\Enums\InvoiceTransactionStatus;
 use App\Models\InvoiceTransaction;
 use App\Models\Order;
@@ -15,44 +16,39 @@ class Revenue extends ChartWidget
 {
     protected ?string $heading = 'Revenue';
 
-    public ?string $filter = 'week';
+    public ?string $filter = 'month';
 
     protected ?string $pollingInterval = null;
 
     protected function getFilters(): ?array
     {
-        return [
-            'today' => 'Last 24 hours',
-            'week' => 'Last 7 days',
-            'month' => 'Last 30 days',
-            'year' => 'Last 365 days',
-        ];
+        return DashboardPeriod::options();
+    }
+
+    /**
+     * Let the overview stats follow the period chosen here.
+     */
+    public function updatedFilter(): void
+    {
+        $this->dispatch('dashboard-period-updated', period: $this->filter);
     }
 
     protected function getData(): array
     {
-        $start = match ($this->filter) {
-            'today' => now()->subDay()->startOfDay(),
-            'week' => now()->subWeek()->startOfDay(),
-            'month' => now()->subMonth()->startOfDay(),
-            'year' => now()->subYear()->startOfDay(),
-        };
+        $period = DashboardPeriod::fromValue($this->filter);
+
+        $start = $period->start();
 
         $end = now();
 
-        $per = match ($this->filter) {
-            'today' => 'hour',
-            'week' => 'day',
-            'month' => 'day',
-            'year' => 'month',
-        };
+        $interval = $period->interval();
 
         $revenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
             ->between(
                 start: $start,
                 end: $end,
             )
-            ->{'per' . ucfirst($per)}()
+            ->interval($interval)
             ->sum('amount');
 
         $netRevenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
@@ -60,7 +56,7 @@ class Revenue extends ChartWidget
                 start: $start,
                 end: $end,
             )
-            ->{'per' . ucfirst($per)}()
+            ->interval($interval)
             ->sum('amount - COALESCE(fee, 0)');
 
         $newOrders = Trend::model(Order::class)
@@ -68,7 +64,7 @@ class Revenue extends ChartWidget
                 start: $start,
                 end: $end,
             )
-            ->{'per' . ucfirst($per)}()
+            ->interval($interval)
             ->count();
 
         return [
@@ -92,11 +88,7 @@ class Revenue extends ChartWidget
                     'borderColor' => '#e3342f',
                 ],
             ],
-            'labels' => $revenue->map(fn (TrendValue $value) => match ($this->filter) {
-                'today' => Carbon::parse($value->date)->format('H:i'),
-                'year' => Carbon::parse($value->date)->format('M'),
-                default => Carbon::parse($value->date)->format('M d'),
-            })->toArray(),
+            'labels' => $revenue->map(fn (TrendValue $value) => Carbon::parse($value->date)->format($period->dateFormat()))->toArray(),
         ];
     }
 

@@ -11,8 +11,6 @@ use App\Admin\Resources\TaxRateResource;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Audit;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -76,11 +74,6 @@ class AuditsTable
             ])
             ->defaultSort(function (Builder $query) {
                 return $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
-            })
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            });
     }
 }

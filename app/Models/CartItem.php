@@ -46,17 +46,24 @@ class CartItem extends Model
     {
         return Attribute::make(
             get: function () {
+                // Resolve against the cart's currency: the invoice inherits it, while the session may have expired back to the default currency.
+                $currency = $this->cart?->currency_code ?? session('currency', config('settings.default_currency'));
                 $total = 0;
                 $setup_fee = 0;
-                $total += $this->plan->price()->price;
-                $setup_fee += $this->plan->price()->setup_fee;
-                $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee) {
+                $unavailable = false;
+                $total += $this->plan->price($currency)->price;
+                $setup_fee += $this->plan->price($currency)->setup_fee;
+                $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee, &$unavailable, $currency) {
                     $selected = (object) collect($this->config_options)->firstWhere('option_id', $option->id);
 
                     // If checkbox and selected, add price of first child (only one)
                     if ($option->type === 'checkbox' && $selected?->value) {
-                        $total += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
-                        $setup_fee += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+                        $childPrice = $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit, currency: $currency);
+                        if ($childPrice) {
+                            $unavailable = $unavailable || !$childPrice->available;
+                            $total += $childPrice->price;
+                            $setup_fee += $childPrice->setup_fee;
+                        }
 
                         return;
                     }
@@ -72,13 +79,22 @@ class CartItem extends Model
                         return;
                     }
 
-                    $total += $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
-                    $setup_fee += $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+                    $childPrice = $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit, currency: $currency);
+                    if ($childPrice) {
+                        $unavailable = $unavailable || !$childPrice->available;
+                        $total += $childPrice->price;
+                        $setup_fee += $childPrice->setup_fee;
+                    }
                 });
+
+                // A paid option without a price row must make the whole item unavailable, not contribute 0.
+                if ($unavailable) {
+                    return new Price((object) ['price' => null, 'setup_fee' => null, 'currency' => null]);
+                }
 
                 $price = new Price([
                     'price' => $total,
-                    'currency' => $this->plan->price()->currency,
+                    'currency' => $this->plan->price($currency)->currency,
                     'setup_fee' => $setup_fee,
                 ], apply_exclusive_tax: true);
 

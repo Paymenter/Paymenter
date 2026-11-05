@@ -16,5 +16,6 @@ class ExtensionMeta
         public string $author,
         public string $url = '',
         public string $icon = '',
+        public string $extensionId = 'unknown',
     ) {}
 }

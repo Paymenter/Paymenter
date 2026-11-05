@@ -54,7 +54,7 @@ class UserController extends ApiController
         $user = User::create($request->validated());
 
         // Return the created user as a JSON response
-        return new UserResource($user);
+        return new UserResource($this->loadAllowedIncludes($user, self::INCLUDES));
     }
 
     /**
@@ -79,7 +79,7 @@ class UserController extends ApiController
         $user->update($request->validated());
 
         // Return the updated user as a JSON response
-        return new UserResource($user);
+        return new UserResource($this->loadAllowedIncludes($user, self::INCLUDES));
     }
 
     /**

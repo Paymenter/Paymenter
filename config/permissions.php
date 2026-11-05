@@ -16,6 +16,15 @@ return [
                 'delete' => 'Delete Users',
                 'impersonate' => 'Impersonate Users',
             ],
+            'credits' => [
+                'create' => 'Create Credits',
+                'update' => 'Update Credits',
+                'viewAny' => 'View Credits',
+                'delete' => 'Delete Credits',
+            ],
+            'billing_agreements' => [
+                'viewAny' => 'View Billing Agreements',
+            ],
             'invoices' => [
                 'create' => 'Create Invoices',
                 'update' => 'Update Invoices',
@@ -125,6 +134,13 @@ return [
                 'viewAny' => 'View Tax Rates',
                 'delete' => 'Delete Tax Rates',
                 'deleteAny' => 'Bulk Delete Tax Rates',
+            ],
+            'adjustment_notes' => [
+                'create' => 'Create Adjustment Notes',
+                'update' => 'Update Adjustment Notes',
+                'viewAny' => 'View Adjustment Notes',
+                'delete' => 'Delete Adjustment Notes',
+                'deleteAny' => 'Bulk Delete Adjustment Notes',
             ],
             'gateways' => [
                 'create' => 'Create Gateways',
@@ -251,6 +267,7 @@ return [
             ],
             'roles' => [
                 'view' => 'View Roles',
+                'update' => 'Update Roles',
             ],
         ],
     ],

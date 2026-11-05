@@ -101,7 +101,6 @@ class Price
         }
         $this->has_setup_fee = isset($this->setup_fee) ? $this->setup_fee > 0 : false;
         $this->dontShowUnavailablePrice = $dontShowUnavailablePrice;
-
         $this->formatted = (object) [
             'total' => $this->format($this->total),
             'price' => $this->format($this->price),

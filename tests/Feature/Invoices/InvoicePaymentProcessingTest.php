@@ -2,12 +2,16 @@
 
 namespace Tests\Feature\Invoices;
 
+use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
+use App\Mail\Mail as InvoiceMail;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class InvoicePaymentProcessingTest extends TestCase
@@ -17,7 +21,7 @@ class InvoicePaymentProcessingTest extends TestCase
     private function createInvoiceWithItem($total = 100.00)
     {
         $user = User::factory()->create();
-        $invoice = Invoice::factory()->create(['user_id' => $user->id]);
+        $invoice = Invoice::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
 
         $invoice->items()->create([
             'description' => 'Test Item',
@@ -28,12 +32,46 @@ class InvoicePaymentProcessingTest extends TestCase
         return $invoice->fresh();
     }
 
-    public function test_invoice_starts_with_pending_status()
+    public function test_invoice_email_is_queued_when_the_service_no_longer_exists(): void
     {
         $invoice = $this->createInvoiceWithItem();
+        $invoice->items()->first()->update(['reference_type' => Service::class, 'reference_id' => 0]);
+        config(['settings.mail_disable' => false]);
+        Mail::fake();
 
-        $this->assertEquals('pending', $invoice->status);
+        NotificationHelper::invoicePaidNotification($invoice->user, $invoice->fresh());
+
+        Mail::assertQueued(InvoiceMail::class, fn (InvoiceMail $mail) => $mail->hasTo($invoice->user->email) && $mail->data['has_subscription'] === false);
+    }
+
+    public function test_invoice_starts_with_draft_status()
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['user_id' => $user->id]);
+
+        $invoice->items()->create([
+            'description' => 'Test Item',
+            'quantity' => 1,
+            'price' => 100.00,
+        ]);
+
+        $invoice = $invoice->fresh();
+
+        $this->assertEquals('draft', $invoice->status);
         $this->assertGreaterThan(0, $invoice->total);
+    }
+
+    public function test_pending_invoice_is_snapshotted_when_created()
+    {
+        config(['settings.invoice_snapshot' => true]);
+
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create([
+            'user_id' => $user->id,
+            'status' => Invoice::STATUS_PENDING,
+        ]);
+
+        $this->assertSame($user->name, $invoice->fresh()->snapshot->name);
     }
 
     public function test_invoice_calculates_remaining_amount_correctly()
@@ -50,6 +88,44 @@ class InvoicePaymentProcessingTest extends TestCase
         ]);
 
         $this->assertEquals(70.00, $invoice->fresh()->remaining);
+    }
+
+    public function test_invoice_totals_are_calculated_without_floating_point_errors()
+    {
+        $invoice = $this->createInvoiceWithItem(0.10);
+        $invoice->items()->create([
+            'description' => 'Second Test Item',
+            'quantity' => 2,
+            'price' => 0.10,
+        ]);
+
+        $invoice->refresh();
+
+        $this->assertSame(0.30, $invoice->total);
+
+        $invoice->transactions()->create([
+            'amount' => 0.10,
+            'status' => InvoiceTransactionStatus::Succeeded,
+        ]);
+
+        $this->assertSame(0.20, $invoice->fresh()->remaining);
+    }
+
+    public function test_decimal_invoice_is_marked_paid_when_the_full_amount_is_paid()
+    {
+        $invoice = $this->createInvoiceWithItem(179.99);
+        $invoice->items()->create([
+            'description' => 'Second Test Item',
+            'quantity' => 1,
+            'price' => 69.99,
+        ]);
+
+        ExtensionHelper::addPayment($invoice->id, 'TestGateway', 249.98);
+
+        $invoice->refresh();
+
+        $this->assertSame('paid', $invoice->status);
+        $this->assertSame(0.0, $invoice->remaining);
     }
 
     public function test_successful_payment_marks_invoice_as_paid()
@@ -132,6 +208,98 @@ class InvoicePaymentProcessingTest extends TestCase
 
         $this->assertEquals('active', $service->status);
         $this->assertNotNull($service->expires_at);
+    }
+
+    public function test_refunding_a_cancelled_invoice_does_not_renew_its_service()
+    {
+        $user = User::factory()->create();
+        $product = $this->createProduct();
+        $service = Service::factory()->create([
+            'status' => Service::STATUS_ACTIVE,
+            'user_id' => $user->id,
+            'product_id' => $product->product->id,
+            'plan_id' => $product->plan->id,
+            'expires_at' => now()->addMonth(),
+        ]);
+        $invoice = Invoice::factory()->create([
+            'user_id' => $user->id,
+            'status' => Invoice::STATUS_PENDING,
+            'currency_code' => $service->currency_code,
+        ]);
+
+        $invoice->items()->create([
+            'reference_type' => Service::class,
+            'reference_id' => $service->id,
+            'price' => 100.00,
+            'quantity' => 1,
+            'description' => 'Service renewal',
+        ]);
+
+        ExtensionHelper::addPayment($invoice->id, 'Stripe', 100.00);
+        $service->refresh();
+        $expiryAfterPayment = $service->expires_at->toDateString();
+
+        $invoice->update([
+            'status' => Invoice::STATUS_CANCELLED,
+            'cancellation_reason' => 'Test cancellation',
+        ]);
+
+        ExtensionHelper::refundLocally($invoice->transactions()->firstOrFail(), 100.00);
+
+        $this->assertSame(Invoice::STATUS_CANCELLED, $invoice->fresh()->status);
+        $this->assertSame($expiryAfterPayment, $service->fresh()->expires_at->toDateString());
+    }
+
+    public function test_fully_credited_invoice_is_paid_and_renews_its_service()
+    {
+        $user = User::factory()->create();
+        $product = $this->createProduct();
+        $service = Service::factory()->create([
+            'status' => Service::STATUS_ACTIVE,
+            'user_id' => $user->id,
+            'product_id' => $product->product->id,
+            'plan_id' => $product->plan->id,
+            'expires_at' => now()->addMonth(),
+        ]);
+        $invoice = Invoice::factory()->create([
+            'user_id' => $user->id,
+            'status' => Invoice::STATUS_PENDING,
+            'currency_code' => $service->currency_code,
+        ]);
+
+        $invoice->items()->create([
+            'reference_type' => Service::class,
+            'reference_id' => $service->id,
+            'price' => 100.00,
+            'quantity' => 1,
+            'description' => 'Service renewal',
+        ]);
+        $expectedExpiry = $service->expires_at->copy()->addMonth()->toDateString();
+
+        $invoice->adjustmentNotes()->create([
+            'type' => AdjustmentNoteType::Credit->value,
+            'amount' => -100.00,
+            'description' => 'Waive renewal invoice',
+        ]);
+
+        $this->assertSame(Invoice::STATUS_PAID, $invoice->fresh()->status);
+        $this->assertSame(0.0, $invoice->fresh()->remaining);
+        $this->assertSame(0, $invoice->transactions()->count());
+        $this->assertSame($expectedExpiry, $service->fresh()->expires_at->toDateString());
+    }
+
+    public function test_partially_credited_invoice_remains_pending()
+    {
+        $invoice = $this->createInvoiceWithItem(100.00);
+
+        $invoice->adjustmentNotes()->create([
+            'type' => AdjustmentNoteType::Credit->value,
+            'amount' => -20.00,
+            'description' => 'Partial credit',
+        ]);
+
+        $this->assertSame(Invoice::STATUS_PENDING, $invoice->fresh()->status);
+        $this->assertSame(80.0, $invoice->fresh()->remaining);
     }
 
     public function test_invoice_handles_multiple_partial_payments()

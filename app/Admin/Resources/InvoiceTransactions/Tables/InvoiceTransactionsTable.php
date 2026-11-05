@@ -18,7 +18,7 @@ class InvoiceTransactionsTable
         return $table
             ->columns([
                 TextColumn::make('invoice_id')
-                    ->url(fn (InvoiceTransaction $record): string => InvoiceResource::getUrl('edit', ['record' => $record->invoice_id]))
+                    ->url(fn (InvoiceTransaction $record): string => InvoiceResource::getUrl(config('settings.immutable_invoices_enabled', false) ? 'view' : 'edit', ['record' => $record->invoice_id]))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('gateway.name')

@@ -29,7 +29,7 @@ class ProductController extends ApiController
     {
         // Fetch products with pagination
         $products = QueryBuilder::for(Product::class)
-            ->allowedFilters(['name', 'category_id', 'server_id', 'hidden', 'allow_quantity'])
+            ->allowedFilters(['name', 'slug', 'category_id', 'server_id', 'hidden', 'allow_quantity'])
             ->allowedIncludes($this->allowedIncludes(self::INCLUDES))
             ->allowedSorts(['id', 'created_at', 'updated_at', 'name', 'sort', 'stock'])
             ->simplePaginate(request('per_page', 15));

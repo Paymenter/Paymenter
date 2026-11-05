@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Others\Announcements;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Extension;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Auth\Register;
@@ -17,6 +18,12 @@ use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show;
 use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget;
 use Paymenter\Extensions\Others\Announcements\Models\Announcement;
 
+#[ExtensionMeta(
+    name: 'Announcements',
+    description: 'Announcements extension',
+    version: 'builtin',
+    author: 'Paymenter',
+)]
 class Announcements extends Extension
 {
     public function getConfig($values = [])

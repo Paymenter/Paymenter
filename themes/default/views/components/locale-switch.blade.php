@@ -2,7 +2,7 @@
     <x-slot:trigger>
         <div class="text-sm text-base font-semibold text-nowrap">
             @if(count($locales) > 1)
-            {{ config('app.available_locales')[app()->getLocale()] }}
+            {{ config('app.available_locales')[app()->getLocale()] ?? app()->getLocale() }}
             @endif
             @if(count($locales) > 1 && count($this->currencies) > 1 && Cart::items()->isEmpty())
             <span class="text-base/50 font-semibold">|</span>
@@ -18,7 +18,7 @@
             <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
             <x-select wire:model.live="currentLocale" :options="collect($locales)->map(fn($code) => [
                 'value' => $code,
-                'label' => config('app.available_locales')[$code]
+                'label' => config('app.available_locales')[$code] ?? $code
                 ])->values()->toArray()" placeholder="Select language" />
         </div>
         @endif

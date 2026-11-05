@@ -37,10 +37,12 @@ class Service extends Model implements Auditable
         'user_id',
         'currency_code',
         'billing_agreement_id',
+        'suspend_hold_until',
     ];
 
     protected $casts = [
         'expires_at' => 'date',
+        'suspend_hold_until' => 'date',
     ];
 
     /**
@@ -97,7 +99,7 @@ class Service extends Model implements Auditable
     public function baseLabel(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->product->name . ' #' . $this->id
+            get: fn () => $this->product?->name . ' #' . $this->id
         );
     }
 

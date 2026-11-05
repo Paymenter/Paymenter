@@ -10,6 +10,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\BillingAgreement;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\InvoiceTransaction;
 use App\Models\Service;
 use App\Models\User;
 use Exception;
@@ -23,7 +24,7 @@ use Illuminate\Support\HtmlString;
 #[ExtensionMeta(
     name: 'PayPal Gateway',
     description: 'Accept payments via PayPal.',
-    version: '1.0.0',
+    version: 'builtin',
     author: 'Paymenter',
     url: 'https://paymenter.org/docs/extensions/paypal',
     icon: 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjRjVGNkY4IiAvPgogICAgPHBhdGggZD0iTTMzNi4zOTcgMTgxLjQ4QzMzNi4zOTcgMjE1LjY2NyAzMDQuODQ3IDI1NiAyNTcuMTExIDI1NkgyMTEuMTI5TDIwOC44NzIgMjcwLjI0MkwxOTguMTQ1IDMzOC44SDE0MUwxNzUuMzc4IDExOEgyNjcuOTYxQzI5OS4xMzcgMTE4IDMyMy42NjQgMTM1LjM3NiAzMzIuNjk4IDE1OS41MjNDMzM1LjMwNCAxNjYuNTQzIDMzNi41NTkgMTczLjk5MyAzMzYuMzk3IDE4MS40OFoiIGZpbGw9IiMwMDI5OTEiIC8+CiAgICA8cGF0aCBkPSJNMzY5LjMzMSAyNDQuOTZDMzYzLjAzMSAyODMuMjM3IDMyOS44OTggMzExLjI5MyAyOTEuMTA2IDMxMS4ySDI1OS4xNzZMMjQ1Ljg4NSAzOTRIMTg5LjA0N0wxOTguMTQzIDMzOC44TDIwOC44NzYgMjcwLjI0MUwyMTEuMTI3IDI1NkgyNTcuMTA5QzMwNC43ODMgMjU2IDMzNi4zOTUgMjE1LjY2NyAzMzYuMzk1IDE4MS40NzlDMzU5Ljg1NSAxOTMuNTg3IDM3My41MzIgMjE4LjA1MyAzNjkuMzMxIDI0NC45NloiIGZpbGw9IiM2MENERkYiIC8+CiAgICA8cGF0aCBkPSJNMzM2LjM5NyAxODEuNDhDMzI2LjU1OSAxNzYuMzM0IDMxNC42MjkgMTczLjIgMzAxLjY0NSAxNzMuMkgyMjQuMTE5TDIxMS4xMjkgMjU2SDI1Ny4xMTFDMzA0Ljc4NSAyNTYgMzM2LjM5NyAyMTUuNjY3IDMzNi4zOTcgMTgxLjQ4WiIgZmlsbD0iIzAwOENGRiIgLz4KPC9zdmc+Cg=='
@@ -177,6 +178,7 @@ class PayPal extends Gateway
                 'name' => 'client_secret',
                 'label' => 'Client Secret',
                 'type' => 'text',
+                'encrypted' => true,
                 'description' => 'Find your API keys at https://developer.paypal.com/developer/applications',
                 'required' => true,
             ],
@@ -236,7 +238,6 @@ class PayPal extends Gateway
     public function pay($invoice, $total)
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-
         $order = $this->request('post', $url . '/v2/checkout/orders', [
             'intent' => 'CAPTURE',
             'purchase_units' => [
@@ -259,22 +260,42 @@ class PayPal extends Gateway
         return view('gateways.paypal::pay', ['invoice' => $invoice, 'total' => $total, 'order' => $order ?? null, 'clientId' => $this->config('client_id')]);
     }
 
-    public function capture(Request $request)
+    public function capture(Invoice $invoice, string $orderID)
     {
-        if (!$request->has('orderID')) {
+        // Validate the order ID format
+        if (!preg_match('/^[A-Z0-9-]+$/', $orderID)) {
             abort(400);
         }
-        $orderID = $request->input('orderID');
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+
         // First check if the order is already captured
         $order = $this->request('get', $url . '/v2/checkout/orders/' . $orderID);
+
+        // Verify if the invoice id matches the one from the order
+        if (!isset($order->purchase_units[0]->invoice_id) || $order->purchase_units[0]->invoice_id != $invoice->id) {
+            abort(400, 'PayPal order is not associated with an invoice');
+        }
+
         if ($order->status === 'COMPLETED') {
             return $order;
+        }
+
+        if ($order->status !== 'APPROVED') {
+            abort(400, 'PayPal order is not approved for capture');
+        }
+
+        // Verify currency matches the invoice
+        if ($order->purchase_units[0]->amount->currency_code !== $invoice->currency_code) {
+            abort(400, 'PayPal order currency does not match invoice currency');
         }
 
         $response = $this->request('post', $url . '/v2/checkout/orders/' . $orderID . '/capture', [
             'intent' => 'CAPTURE',
         ]);
+
+        if (($response->status ?? null) !== 'COMPLETED' || !isset($response->purchase_units[0]->payments->captures[0])) {
+            abort(400, 'Failed to capture PayPal order');
+        }
 
         ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->purchase_units[0]->payments->captures[0]->id);
 
@@ -329,8 +350,13 @@ class PayPal extends Gateway
         } elseif ($body['event_type'] === 'PAYMENT.CAPTURE.COMPLETED' && isset($body['resource']['supplementary_data']['related_ids']['order_id'])) {
             $orderID = $body['resource']['supplementary_data']['related_ids']['order_id'];
             $order = $this->request('get', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v2/checkout/orders/' . $orderID);
+
             if (isset($order->purchase_units[0]->invoice_id)) {
-                ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
+                // Verify that the currency is the same as the invoice
+                $invoice = Invoice::find($order->purchase_units[0]->invoice_id);
+                if ($invoice && $invoice->currency_code === $order->purchase_units[0]->payments->captures[0]->amount->currency_code) {
+                    ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
+                }
             }
         }
 
@@ -373,6 +399,31 @@ class PayPal extends Gateway
         ]);
 
         $service->properties()->where('key', 'has_paypal_subscription')->delete();
+
+        return true;
+    }
+
+    public function supportsRefunds(): bool
+    {
+        return true;
+    }
+
+    public function refund(InvoiceTransaction $transaction, $amount): bool
+    {
+        $captureId = $transaction->transaction_id;
+
+        if (!$captureId) {
+            throw new Exception('Transaction has no PayPal capture ID.');
+        }
+
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+
+        $this->request('post', $url . '/v2/payments/captures/' . $captureId . '/refund', [
+            'amount' => [
+                'currency_code' => $transaction->invoice->currency_code,
+                'value' => number_format($amount, 2, '.', ''),
+            ],
+        ]);
 
         return true;
     }

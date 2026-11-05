@@ -58,7 +58,7 @@ class UploadExtensionService
 
             if ($updating) {
                 // Read the extension class for current version
-                $extensionClass = 'Paymenter\\Extensions\\' . ucfirst($type['type']) . 's\\' . ucfirst($type['class']);
+                $extensionClass = 'Paymenter\\Extensions\\' . ucfirst($type['type']) . 's\\' . ucfirst($type['class']) . '\\' . ucfirst($type['class']);
                 if (class_exists($extensionClass)) {
                     $reflection = new ReflectionClass($extensionClass);
                     $attributes = $reflection->getAttributes(ExtensionMeta::class);
@@ -73,7 +73,7 @@ class UploadExtensionService
                 File::deleteDirectory($destinationPath);
             }
 
-            if (!rename($path, $destinationPath)) {
+            if (!File::copyDirectory($path, $destinationPath)) {
                 throw new \Exception('Failed to move the extension files to the destination.');
             }
         } catch (\Exception $e) {

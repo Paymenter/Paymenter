@@ -50,7 +50,7 @@ class TicketController extends ApiController
         $ticket = Ticket::create($request->validated());
 
         // Return the created ticket as a JSON response
-        return new TicketResource($ticket);
+        return new TicketResource($this->loadAllowedIncludes($ticket, self::INCLUDES));
     }
 
     /**
@@ -75,7 +75,7 @@ class TicketController extends ApiController
         $ticket->update($request->validated());
 
         // Return the updated ticket as a JSON response
-        return new TicketResource($ticket);
+        return new TicketResource($this->loadAllowedIncludes($ticket, self::INCLUDES));
     }
 
     /**

@@ -53,7 +53,7 @@ class ServiceController extends ApiController
         $service = Service::create($request->validated());
 
         // Return the created service as a JSON response
-        return new ServiceResource($service);
+        return new ServiceResource($this->loadAllowedIncludes($service, self::INCLUDES));
     }
 
     /**
@@ -78,7 +78,7 @@ class ServiceController extends ApiController
         $service->update($request->validated());
 
         // Return the updated service as a JSON response
-        return new ServiceResource($service);
+        return new ServiceResource($this->loadAllowedIncludes($service, self::INCLUDES));
     }
 
     /**

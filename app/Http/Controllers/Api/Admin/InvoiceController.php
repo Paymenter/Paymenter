@@ -49,7 +49,7 @@ class InvoiceController extends ApiController
         $invoice = Invoice::create($request->validated());
 
         // Return the created invoice as a JSON response
-        return new InvoiceResource($invoice);
+        return new InvoiceResource($this->loadAllowedIncludes($invoice, self::INCLUDES));
     }
 
     /**
@@ -74,7 +74,7 @@ class InvoiceController extends ApiController
         $invoice->update($request->validated());
 
         // Return the updated invoice as a JSON response
-        return new InvoiceResource($invoice);
+        return new InvoiceResource($this->loadAllowedIncludes($invoice, self::INCLUDES));
     }
 
     /**

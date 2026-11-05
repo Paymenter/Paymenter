@@ -108,6 +108,10 @@
                                 @else
                                 {{ $item->description }}
                                 @endif
+
+                                @if($item->reference && $item->reference->label)
+                                    <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
+                                @endif
                             </td>
                             <td class="p-4 font-normal whitespace-nowrap text-base">{{ $item->formattedPrice }}
                             </td>
@@ -136,6 +140,19 @@
                     </div>
                 </div>
                 @endif
+                @php
+                    $adjustmentsTotal = $invoice->adjustmentNotes->filter(fn ($note) => $note->status === \App\Enums\AdjustmentNoteStatus::Active)->sum('amount');
+                    $adjustmentsPrice = new App\Classes\Price(['price' => $adjustmentsTotal, 'currency' => $invoice->currency]);
+                @endphp
+                @if($adjustmentsTotal != 0)
+                <div class="flex justify-between">
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ __('invoices.ledger_adjustments') }}
+                    </div>
+                    <div class="text-base font-medium text-gray-900 dark:text-white">
+                        {{ $adjustmentsPrice->format($adjustmentsTotal) }}
+                    </div>
+                </div>
+                @endif
                 <div class="flex justify-between">
                     <div class="text-base font-semibold text-gray-900 uppercase dark:text-white">Total</div>
                     <div class="text-base font-bold text-gray-900 dark:text-white">
@@ -145,6 +162,9 @@
             </div>
 
             @if ($invoice->transactions->isNotEmpty())
+            @php
+                $hasRefunds = $invoice->transactions->contains(fn ($transaction) => $transaction->refunded_amount > 0);
+            @endphp
             <div class="mt-12">
                 <h2 class="text-2xl font-bold">{{ __('invoices.transactions') }}</h2>
                 <div class="mt-4 overflow-x-auto">
@@ -164,6 +184,11 @@
                                 <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                     {{ __('invoices.amount') }}
                                 </th>
+                                @if($hasRefunds)
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.refunded_amount') }}
+                                </th>
+                                @endif
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
                                     {{ __('invoices.status') }}
@@ -187,6 +212,15 @@
                                 </td>
                                 <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->formattedAmount }}
                                 </td>
+                                @if($hasRefunds)
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    @if($transaction->refunded_amount > 0)
+                                    {{ $transaction->formattedRefundedAmount }}
+                                    @else
+                                    -
+                                    @endif
+                                </td>
+                                @endif
                                 <td class="p-4 font-normal whitespace-nowrap">
                                     @if($transaction->status == \App\Enums\InvoiceTransactionStatus::Succeeded)
                                     <span class="text-green-600 font-semibold">{{
@@ -201,6 +235,69 @@
                                     <span class="text-red-600 font-semibold">{{ __('invoices.transaction_statuses.failed')
                                     }}</span>
                                     @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
+
+            @php
+                $clientAdjustmentNotes = $invoice->adjustmentNotes;
+            @endphp
+            @if (config('settings.notes_client_visible', false) && $clientAdjustmentNotes->isNotEmpty())
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold">{{ __('invoices.ledger_adjustments') }}</h2>
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-background border border-neutral rounded-lg">
+                            <tr>
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
+                                    {{ __('invoices.date') }}
+                                </th>
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.type') }}
+                                </th>
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.status') }}
+                                </th>
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.description') }}
+                                </th>
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
+                                    {{ __('invoices.amount') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($clientAdjustmentNotes as $note)
+                            <tr>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    {{ $note->created_at->format('d M Y H:i') }}
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    @if($note->type === \App\Enums\AdjustmentNoteType::Credit->value)
+                                    <span class="text-green-600 font-semibold">{{ __('invoices.credit_note') }}</span>
+                                    @elseif($note->type === \App\Enums\AdjustmentNoteType::Debit->value)
+                                    <span class="text-red-600 font-semibold">{{ __('invoices.debit_note') }}</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    <span class="{{ $note->status === \App\Enums\AdjustmentNoteStatus::Voided ? 'text-red-600 line-through' : 'text-green-600' }}">
+                                        {{ ucfirst($note->status instanceof \App\Enums\AdjustmentNoteStatus ? $note->status->value : $note->status) }}
+                                    </span>
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    {{ $note->description }}
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    <span class="{{ $note->type === \App\Enums\AdjustmentNoteType::Credit->value ? 'text-green-600' : 'text-red-600' }}">
+                                        {{ $note->formattedAmount }}
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach

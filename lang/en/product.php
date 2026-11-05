@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'In stock',
     'out_of_stock' => 'Product :product is out of stock',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'You have reached the limit of :product',
     'payment_method' => 'Payment method',
     'use_credits' => 'Use credits',

@@ -7,9 +7,9 @@ use App\Livewire\Component;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
-use Livewire\Attributes\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
@@ -21,15 +21,24 @@ class Show extends Component
     #[Locked]
     public Ticket $ticket;
 
-    #[Validate(['attachments.*' => 'file|max:10240'])]
+    #[Validate(['attachments' => 'array|max:10', 'attachments.*' => 'file|max:10240'])]
     public array $attachments = [];
 
-    #[Rule('required', 'string')]
+    #[Validate('required|string|max:16000')]
     public string $message;
 
     public function save()
     {
         $this->validate();
+
+        $rateLimitKey = 'ticket-message:' . $this->ticket->id . ':' . Auth::id();
+        if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
+            $this->notify('Too many message attempts. Please try again in 10 seconds.', 'error');
+
+            return;
+        }
+
+        RateLimiter::increment($rateLimitKey, 10);
 
         $message = $this->ticket->messages()->create([
             'user_id' => Auth::id(),

@@ -5,8 +5,10 @@ namespace App\Livewire\Client;
 use App\Classes\Settings;
 use App\Livewire\Component;
 use App\Models\NotificationTemplate;
+use App\Support\PushEndpoint;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
@@ -49,6 +51,16 @@ class Notifications extends Component
     public function storePushSubscription($subscription)
     {
         $subscription = json_decode($subscription, true);
+
+        if (
+            !is_array($subscription)
+            || !is_string($subscription['endpoint'] ?? null)
+            || !PushEndpoint::isAllowed($subscription['endpoint'])
+        ) {
+            throw ValidationException::withMessages([
+                'subscription' => 'The push subscription endpoint is not allowed.',
+            ]);
+        }
 
         $pushSubscription = Auth::user()->pushSubscriptions()
             ->updateOrCreate([

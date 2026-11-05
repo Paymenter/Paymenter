@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Support\PushEndpoint;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 use Minishlink\WebPush\Subscription;
 
 class NotificationSubscription extends Model
@@ -26,6 +28,10 @@ class NotificationSubscription extends Model
 
     public function subscription()
     {
+        if (!PushEndpoint::isAllowed($this->endpoint)) {
+            throw new InvalidArgumentException('Push subscription endpoint is not allowed.');
+        }
+
         return Subscription::create([
             'endpoint' => $this->endpoint,
             'publicKey' => $this->p256dh_key,

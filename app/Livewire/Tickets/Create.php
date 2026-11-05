@@ -35,9 +35,10 @@ class Create extends Component
         $this->validate([
             'department' => count((array) config('settings.ticket_departments')) > 0 ? 'required|in:' . implode(',', array_values((array) config('settings.ticket_departments'))) : '',
             'service' => 'nullable|exists:services,id,user_id,' . Auth::id(),
-            'subject' => 'required|string',
-            'message' => 'required|string',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:16000',
             'priority' => 'required|in:low,medium,high',
+            'attachments' => 'array|max:10',
             'attachments.*' => 'file|max:10240',
         ]);
 

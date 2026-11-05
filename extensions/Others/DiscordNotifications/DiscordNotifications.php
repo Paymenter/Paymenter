@@ -7,6 +7,7 @@ use App\Admin\Resources\OrderResource;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Extension;
 use App\Events\Invoice;
 use App\Events\Invoice\Paid;
@@ -22,6 +23,12 @@ use Exception;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
+#[ExtensionMeta(
+    name: 'Discord Notifications',
+    description: 'Send notifications to Discord for various events.',
+    version: 'builtin',
+    author: 'Paymenter',
+)]
 class DiscordNotifications extends Extension
 {
     private const events = [
@@ -53,6 +60,7 @@ class DiscordNotifications extends Extension
                 'type' => 'text',
                 'label' => 'Webhook URL',
                 'required' => true,
+                'encrypted' => true,
             ],
             [
                 'name' => 'ping_type',
@@ -352,7 +360,10 @@ class DiscordNotifications extends Extension
             ],
             [
                 'name' => 'User',
-                'value' => '[User ' . $invoice->user->name . '](' . UserResource::getUrl('edit', ['record' => $invoice->user_id]) . ')',
+                // Invoices are kept when their user is deleted
+                'value' => $invoice->user
+                    ? '[User ' . $invoice->user->name . '](' . UserResource::getUrl('edit', ['record' => $invoice->user_id]) . ')'
+                    : __('invoices.deleted_user'),
                 'inline' => true,
             ],
             [

@@ -8,8 +8,8 @@ use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\CronStat;
 use App\Models\DebugLog;
+use App\Models\EmailLog;
 use App\Models\Invoice;
-use App\Models\Notification;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Setting;
@@ -126,7 +126,9 @@ class CronJob extends Command
                 Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
                     $query->where('status', 'paid');
                 })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel', 7)))->get()->each(function ($service) use (&$number) {
-                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $service->invoices()->where('status', 'pending')->get()->each(function ($invoice) {
+                        $invoice->update(['status' => 'cancelled']);
+                    });
 
                     $service->update(['status' => 'cancelled']);
 
@@ -158,9 +160,10 @@ class CronJob extends Command
                         return;
                     }
 
-                    $upgrade->invoice->items()->update([
-                        'price' => $upgrade->calculatePrice()->price,
-                    ]);
+                    $price = $upgrade->calculatePrice()->price;
+                    $upgrade->invoice->items()->get()->each(function ($item) use ($price) {
+                        $item->update(['price' => $price]);
+                    });
 
                     $number++;
                 });
@@ -170,24 +173,32 @@ class CronJob extends Command
 
             $this->runCronJob('services_suspended', function ($number = 0) {
                 // Suspend orders if due date is overdue for x days
-                Service::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend', 2)))->get()->each(function ($service) use (&$number) {
-                    SuspendJob::dispatch($service);
+                Service::where('status', 'active')
+                    ->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend', 2)))
+                    ->where(function ($query) {
+                        $query->whereNull('suspend_hold_until')->orWhere('suspend_hold_until', '<', now());
+                    })
+                    ->get()->each(function ($service) use (&$number) {
+                        SuspendJob::dispatch($service);
 
-                    $service->update(['status' => 'suspended']);
-                    $number++;
-                });
+                        $service->update(['status' => 'suspended']);
+                        $number++;
+                    });
 
                 return $number;
             });
 
             $this->runCronJob('services_terminated', function ($number = 0) {
                 // Terminate orders if due date is overdue for x days
-                Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->each(function ($service) use (&$number) {
+                // eachById: each() pages by offset, and every cancelled service drops out of the next page
+                Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->eachById(function ($service) use (&$number) {
                     TerminateJob::dispatch($service);
 
                     $service->update(['status' => 'cancelled']);
                     // Cancel outstanding invoices
-                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $service->invoices()->where('status', 'pending')->get()->each(function ($invoice) {
+                        $invoice->update(['status' => 'cancelled']);
+                    });
 
                     if ($service->product->stock !== null) {
                         $service->product->increment('stock', $service->quantity);
@@ -201,7 +212,7 @@ class CronJob extends Command
 
             $this->runCronJob('tickets_closed', function ($number = 0) {
                 // Close tickets if no response for x days
-                Ticket::where('status', 'replied')->each(function ($ticket) use (&$number) {
+                Ticket::where('status', 'replied')->eachById(function ($ticket) use (&$number) {
                     $lastMessage = $ticket->messages()->latest('created_at')->first();
                     if ($lastMessage && $lastMessage->created_at < now()->subDays((int) config('settings.cronjob_close_ticket', 7))) {
                         $ticket->update(['status' => 'closed']);
@@ -213,9 +224,9 @@ class CronJob extends Command
             });
 
             $this->runCronJob('email_logs_deleted', function ($number = 0) {
-                $number = Notification::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->count();
+                $number = EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->count();
                 // Delete email logs older then x
-                Notification::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
+                EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
 
                 return $number;
             });
@@ -262,12 +273,17 @@ class CronJob extends Command
             return;
         }
         $user = $invoice->user;
-        $credits = $user->credits()->where('currency_code', $invoice->currency_code)->first();
-        if ($invoice->remaining > 0 && $credits && $credits->amount >= $invoice->remaining) {
-            $credits->amount -= $invoice->remaining;
+        $credits = $user->credits()
+            ->where('currency_code', $invoice->currency_code)
+            ->lockForUpdate()
+            ->first();
+        $remaining = $invoice->fresh()->remaining;
+
+        if ($remaining > 0 && $credits && $credits->amount >= $remaining) {
+            $credits->amount -= $remaining;
             $credits->save();
 
-            ExtensionHelper::addPayment($invoice->id, null, amount: $invoice->remaining, isCreditTransaction: true);
+            ExtensionHelper::addPayment($invoice->id, null, amount: $remaining, isCreditTransaction: true);
         }
     }
 

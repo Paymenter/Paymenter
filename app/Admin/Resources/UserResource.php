@@ -60,7 +60,13 @@ class UserResource extends Resource
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create'),
-                Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
+                Select::make('role_id')
+                    ->translateLabel()
+                    ->relationship('role', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->hidden(fn (): bool => !auth()->user()?->hasPermission('admin.roles.update') ?? false)
+                    ->disabled(fn (): bool => !auth()->user()?->hasPermission('admin.roles.update') ?? false),
                 Toggle::make('tfa_secret')
                     ->label('Two Factor Authentication')
                     ->disabled(fn ($record) => !$record?->tfa_secret)

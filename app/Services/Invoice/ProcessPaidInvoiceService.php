@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Services\Service\RenewServiceService;
 use App\Services\ServiceUpgrade\ServiceUpgradeService;
+use Illuminate\Support\Facades\DB;
 
 class ProcessPaidInvoiceService
 {
@@ -33,19 +34,19 @@ class ProcessPaidInvoiceService
                 // Handle the upgrade
                 (new ServiceUpgradeService)->handle($serviceUpgrade);
             } elseif ($item->reference_type == Credit::class) {
-                // Check if user has credits in this currency
-                $user = $invoice->user;
-                $credit = $user->credits()->where('currency_code', $invoice->currency_code)->first();
+                DB::transaction(function () use ($invoice, $item) {
+                    $user = $invoice->user()->lockForUpdate()->first();
+                    $credit = $user->credits()->where('currency_code', $invoice->currency_code)->lockForUpdate()->first();
 
-                if ($credit) {
-                    $credit->amount += $item->price;
-                    $credit->save();
-                } else {
-                    $user->credits()->create([
-                        'currency_code' => $invoice->currency_code,
-                        'amount' => $item->price,
-                    ]);
-                }
+                    if ($credit) {
+                        $credit->increment('amount', $item->price);
+                    } else {
+                        $user->credits()->create([
+                            'currency_code' => $invoice->currency_code,
+                            'amount' => $item->price,
+                        ]);
+                    }
+                });
             }
         });
     }

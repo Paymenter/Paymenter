@@ -48,7 +48,7 @@ class CreditController extends ApiController
         $credit = Credit::create($request->validated());
 
         // Return the created credit as a JSON response
-        return new CreditResource($credit);
+        return new CreditResource($this->loadAllowedIncludes($credit, self::INCLUDES));
     }
 
     /**
@@ -73,7 +73,7 @@ class CreditController extends ApiController
         $credit->update($request->validated());
 
         // Return the updated credit as a JSON response
-        return new CreditResource($credit);
+        return new CreditResource($this->loadAllowedIncludes($credit, self::INCLUDES));
     }
 
     /**

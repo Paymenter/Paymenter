@@ -35,6 +35,7 @@ class UpdateServiceRequest extends AdminApiRequest
              */
             'status' => 'sometimes|required|in:pending,active,cancelled,suspended',
             'expires_at' => 'sometimes|nullable|date|after_or_equal:today',
+            'suspend_hold_until' => 'sometimes|nullable|date|after_or_equal:today',
             /**
              * @example USD
              */

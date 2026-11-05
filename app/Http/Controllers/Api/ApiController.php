@@ -3,12 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
+use Spatie\QueryBuilder\QueryBuilder;
 
 abstract class ApiController extends Controller
 {
     const MAPPED_INCLUDES = [
+        'assigned_to' => 'users',
+        'category' => 'categories',
+        'children' => 'categories',
+        'coupon' => 'coupons',
+        'invoice' => 'invoices',
+        'items' => 'invoice_items',
         'messages' => 'ticket_messages',
+        'attachments' => 'ticket_messages',
+        'order' => 'orders',
+        'parent' => 'categories',
+        'product' => 'products',
+        'products.plans.prices' => 'products',
         'role' => 'roles',
         'user' => 'users',
         'ticket' => 'tickets',
@@ -23,18 +36,19 @@ abstract class ApiController extends Controller
         foreach ($includes as $include) {
             // Check if the include is mapped to a specific relation
             $relation = self::MAPPED_INCLUDES[$include] ?? $include;
-
-            if (
-                // If the user has specific permission to view the relation
-                in_array('admin.' . $relation . '.view', request()->attributes->get('api_key_permissions', [])) ||
-                // Or if there is no specific permission defined for the relation
-                config('permissions.api.admin.' . $relation . '.view') === null
-            ) {
+            if (in_array('admin.' . $relation . '.view', request()->attributes->get('api_key_permissions', []))) {
                 $allowedIncludes[] = $include;
             }
         }
 
         return $allowedIncludes;
+    }
+
+    protected function loadAllowedIncludes(Model $model, array $includes): Model
+    {
+        return QueryBuilder::for($model::class)
+            ->allowedIncludes($this->allowedIncludes($includes))
+            ->findOrFail($model->getKey());
     }
 
     /**

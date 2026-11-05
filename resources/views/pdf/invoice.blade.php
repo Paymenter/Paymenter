@@ -102,6 +102,12 @@
             font-weight: bold;
             color: #000;
         }
+
+        .section-title {
+            margin-top: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -136,7 +142,7 @@
             </td>
         </tr>
     </table>
-    <p>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->format('d/m/Y') }}</strong></p>
+    <p>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->translatedFormat('d M Y') }}</strong></p>
     @if($invoice->number)
     <p>{{ __('invoices.invoice_no') }}: <strong>{{ $invoice->number }}</strong></p>
     @endif
@@ -153,7 +159,13 @@
         <tbody>
             @foreach($invoice->items as $item)
             <tr>
-                <td>{{ $item->description }}</td>
+                <td>
+                    {{ $item->description }}
+                    
+                    @if($item->reference && $item->reference->label)
+                        <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
+                    @endif
+                </td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ $item->formattedPrice }}</td>
                 <td>{{ $item->formattedTotal }}</td>
@@ -176,6 +188,16 @@
                 </td>
                 <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
             </tr>
+            @php
+                $adjustmentsTotal = $invoice->adjustmentNotes->filter(fn ($note) => $note->status === \App\Enums\AdjustmentNoteStatus::Active)->sum('amount');
+                $adjustmentsPrice = new \App\Classes\Price(['price' => $adjustmentsTotal, 'currency' => $invoice->currency]);
+            @endphp
+            @if($adjustmentsTotal != 0)
+            <tr>
+                <td class="label">{{ __('invoices.ledger_adjustments') }}</td>
+                <td class="amount">{{ $adjustmentsPrice->format($adjustmentsTotal) }}</td>
+            </tr>
+            @endif
             <tr class="total-row">
                 <td class="label">{{ __('invoices.total') }}</td>
                 <td class="amount">{{ $invoice->formattedTotal }}</td>
@@ -183,6 +205,16 @@
         </table>
         @else
         <table class="totals-table">
+            @php
+                $adjustmentsTotal = $invoice->adjustmentNotes->filter(fn ($note) => $note->status === \App\Enums\AdjustmentNoteStatus::Active)->sum('amount');
+                $adjustmentsPrice = new \App\Classes\Price(['price' => $adjustmentsTotal, 'currency' => $invoice->currency]);
+            @endphp
+            @if($adjustmentsTotal != 0)
+            <tr>
+                <td class="label">{{ __('invoices.ledger_adjustments') }}</td>
+                <td class="amount">{{ $adjustmentsPrice->format($adjustmentsTotal) }}</td>
+            </tr>
+            @endif
             <tr class="total-row">
                 <td class="label">{{ __('invoices.total') }}</td>
                 <td class="amount">{{ $invoice->formattedTotal }}</td>
@@ -193,22 +225,78 @@
 
     <div style="clear: both;"></div>
 
-    @if($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->count() > 0)
-    <table style="margin-top: 80px;" class="invoice-items">
+    @php
+        $clientAdjustmentNotes = $invoice->adjustmentNotes;
+    @endphp
+    @if (config('settings.notes_client_visible', false) && $clientAdjustmentNotes->isNotEmpty())
+    <div class="section-title">{{ __('invoices.ledger_adjustments') }}</div>
+    <table style="margin-top: 10px;" class="invoice-items">
+        <thead>
+            <tr>
+                <th>{{ __('invoices.date') }}</th>
+                <th>{{ __('invoices.type') }}</th>
+                <th>{{ __('invoices.status') }}</th>
+                <th>{{ __('invoices.description') }}</th>
+                <th>{{ __('invoices.amount') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($clientAdjustmentNotes as $note)
+            <tr>
+                <td>{{ $note->created_at->format('d/m/Y') }}</td>
+                <td>
+                    @if($note->type === \App\Enums\AdjustmentNoteType::Credit->value)
+                    {{ __('invoices.credit_note') }}
+                    @elseif($note->type === \App\Enums\AdjustmentNoteType::Debit->value)
+                    {{ __('invoices.debit_note') }}
+                    @endif
+                </td>
+                <td>
+                    <span style="@if($note->status === \App\Enums\AdjustmentNoteStatus::Voided) color: red; text-decoration: line-through; @else color: green; @endif">
+                        {{ ucfirst($note->status instanceof \App\Enums\AdjustmentNoteStatus ? $note->status->value : $note->status) }}
+                    </span>
+                </td>
+                <td>{{ $note->description }}</td>
+                <td>{{ $note->formattedAmount }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @endif
+
+    @php
+        $successfulTransactions = $invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded);
+        $hasRefunds = $successfulTransactions->contains(fn ($transaction) => $transaction->refunded_amount > 0);
+    @endphp
+    @if($successfulTransactions->isNotEmpty())
+    <div class="section-title">{{ __('invoices.transactions') }}</div>
+    <table style="margin-top: 10px;" class="invoice-items">
         <thead>
             <tr>
                 <th>{{ __('invoices.transaction_id') }}</th>
                 <th>{{ __('invoices.payment_date') }}</th>
                 <th>{{ __('invoices.amount') }}</th>
+                @if($hasRefunds)
+                <th>{{ __('invoices.refunded_amount') }}</th>
+                @endif
                 <th>{{ __('invoices.payment_method') }}</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded) as $transaction)
+            @foreach($successfulTransactions as $transaction)
             <tr>
                 <td>{{ $transaction->transaction_id }}</td>
-                <td>{{ $transaction->created_at->format('d/m/Y') }}</td>
+                <td>{{ $transaction->created_at->translatedFormat('d M Y') }}</td>
                 <td>{{ $transaction->formattedAmount }}</td>
+                @if($hasRefunds)
+                <td>
+                    @if($transaction->refunded_amount > 0)
+                    {{ $transaction->formattedRefundedAmount }}
+                    @else
+                    -
+                    @endif
+                </td>
+                @endif
                 <td>{{ $transaction->gateway ? $transaction->gateway->name : '' }}</td>
             </tr>
             @endforeach

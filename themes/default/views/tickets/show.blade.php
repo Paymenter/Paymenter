@@ -130,6 +130,12 @@
                                 wire:model.live="attachments" x-ref="fileInput"
                                 @change="selectedFiles = Array.from($event.target.files)" />
                         </div>
+                        @error('message')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                        @error('attachments')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                         @error('attachments.*')
                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                         @enderror

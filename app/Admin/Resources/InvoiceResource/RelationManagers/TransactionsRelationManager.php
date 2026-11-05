@@ -2,21 +2,35 @@
 
 namespace App\Admin\Resources\InvoiceResource\RelationManagers;
 
+use App\Helpers\ExtensionHelper;
+use App\Models\Credit;
+use App\Models\Invoice;
+use App\Models\InvoiceTransaction;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'transactions';
+
+    protected function canModifyTransactions(): bool
+    {
+        return !config('settings.immutable_invoices_enabled') || $this->getOwnerRecord()?->status === Invoice::STATUS_PENDING;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -58,6 +72,7 @@ class TransactionsRelationManager extends RelationManager
                 TextColumn::make('gateway.name')->label('Gateway'),
                 TextColumn::make('transaction_id'),
                 TextColumn::make('formattedAmount')->label('Amount'),
+                TextColumn::make('formattedRefundedAmount')->label(__('invoices.refunded_amount')),
                 TextColumn::make('formattedFee')->label('Fee'),
                 TextColumn::make('created_at'),
             ])
@@ -65,15 +80,94 @@ class TransactionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->visible(fn (): bool => $this->canModifyTransactions()),
             ])
             ->recordActions([
-                DeleteAction::make(),
+                Action::make('refund')
+                    ->label(__('invoices.refund'))
+                    ->icon('heroicon-o-backward')
+                    ->color('warning')
+                    ->modalHeading(fn (InvoiceTransaction $record): string => __('invoices.refund_transaction', ['id' => $record->transaction_id ?? $record->id]))
+                    ->modalDescription(fn (InvoiceTransaction $record): string => __('invoices.refundable_amount', ['amount' => $record->formattedRefundableAmount]))
+                    ->form([
+                        TextInput::make('amount')
+                            ->label(__('invoices.amount'))
+                            ->numeric()
+                            ->prefix(fn (InvoiceTransaction $record): ?string => $record->invoice?->currency->prefix)
+                            ->suffix(fn (InvoiceTransaction $record): ?string => $record->invoice?->currency->suffix)
+                            ->mask(RawJs::make(
+                                <<<'JS'
+                                    $money($input, '.', '', 2)
+                                JS
+                            ))
+                            ->required()
+                            ->rules([
+                                fn (InvoiceTransaction $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($record) {
+                                    if ((float) $value <= 0) {
+                                        $fail(__('invoices.refund_amount_positive'));
+                                    }
+                                    if ((float) $value > $record->refundable_amount) {
+                                        $fail(__('invoices.refund_amount_exceeds_refundable', ['max' => $record->formattedRefundableAmount]));
+                                    }
+                                },
+                            ]),
+                        TextEntry::make('credit_refund_warning')
+                            ->label(__('invoices.credit_refund_warning_title'))
+                            ->state(__('invoices.credit_refund_warning'))
+                            ->visible(fn (InvoiceTransaction $record): bool => $record->invoice?->items()
+                                ->where('reference_type', Credit::class)
+                                ->exists() ?? false),
+                        Toggle::make('refund_via_gateway')
+                            ->label(__('invoices.refund_via_gateway'))
+                            ->default(false)
+                            ->visible(fn (InvoiceTransaction $record): bool => $record->gateway && $record->gateway->extension && ExtensionHelper::hasFunction($record->gateway, 'supportsRefunds') && ExtensionHelper::hasFunction($record->gateway, 'refund')),
+                    ])
+                    ->action(function (InvoiceTransaction $record, array $data, Action $action): void {
+                        try {
+                            if (!empty($data['refund_via_gateway']) && $record->gateway) {
+                                ExtensionHelper::refund($record, (float) $data['amount']);
+                            } else {
+                                ExtensionHelper::refundLocally($record, (float) $data['amount']);
+                            }
+
+                            $this->notifyRefundResult(true);
+
+                            $action->success();
+                        } catch (\Exception $e) {
+                            $this->notifyRefundResult(false, $e->getMessage());
+
+                            $action->halt();
+                        }
+                    })
+                    ->visible(
+                        fn (InvoiceTransaction $record): bool => !empty($record->transaction_id) &&
+                            $record->refundable_amount > 0 &&
+                            Auth::user()->can('update', $record)
+                    )
+                    ->modalSubmitAction(fn (Action $action) => $action->label(__('invoices.refund'))),
+                DeleteAction::make()
+                    ->visible(fn (): bool => $this->canModifyTransactions()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn (): bool => $this->canModifyTransactions()),
                 ]),
             ]);
+    }
+
+    private function notifyRefundResult(bool $success, ?string $errorMessage = null): void
+    {
+        Notification::make()
+            ->title(__($success ? 'invoices.refund_success' : 'invoices.refund_failed'))
+            ->when(!$success, fn (Notification $notification) => $notification->body($errorMessage))
+            ->{$success ? 'success' : 'danger'}()
+            ->send();
+    }
+
+    public function isReadOnly(): bool
+    {
+        return false;
     }
 }

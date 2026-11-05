@@ -15,7 +15,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 class CategoryController extends ApiController
 {
     protected const INCLUDES = [
-        'products',
+        'products.plans.prices',
         'parent',
         'children',
     ];
@@ -29,7 +29,7 @@ class CategoryController extends ApiController
     {
         // Fetch categories with pagination
         $categories = QueryBuilder::for(Category::class)
-            ->allowedFilters(['name', 'parent_id'])
+            ->allowedFilters(['name', 'parent_id', 'slug'])
             ->allowedIncludes($this->allowedIncludes(self::INCLUDES))
             ->allowedSorts(['id', 'created_at', 'updated_at', 'name'])
             ->simplePaginate(request('per_page', 15));

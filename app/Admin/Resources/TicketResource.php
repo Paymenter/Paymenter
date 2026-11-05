@@ -112,7 +112,7 @@ class TicketResource extends Resource
                     ->relationship('service', 'id', function (Builder $query, Get $get) {
                         $query->where('user_id', $get('user_id'));
                     })
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product?->name} #{$record->id} - " . ucfirst($record->status) . ($record->label == $record->baseLabel ? '' : " ({$record->label})"))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })

@@ -69,9 +69,7 @@ class Credits extends Component
             if ($credits->isNotEmpty()) {
                 // Check if the current credits + the new credits exceed the maximum credits allowed
                 if ($credits->sum('amount') + $this->amount > config('settings.credits_maximum_credit')) {
-                    $this->notify('You cannot exceed the maximum credits allowed.', 'error');
-
-                    return;
+                    throw new DisplayException('You cannot exceed the maximum credits allowed.');
                 }
             }
 
@@ -88,6 +86,7 @@ class Credits extends Component
                 'user_id' => Auth::id(),
                 'currency_code' => $this->currency,
                 'due_at' => now(),
+                'status' => Invoice::STATUS_PENDING,
             ]);
 
             $invoice->items()->create([
