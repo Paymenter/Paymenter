@@ -25,13 +25,13 @@ class AffiliatesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('order.id'),
                 TextColumn::make('earnings')->formatStateUsing(function (AffiliateOrder $affiliateOrder) {
-                    if (count($affiliateOrder->affiliate->earnings) <= 0) {
+                    if (count($affiliateOrder->earnings) <= 0) {
                         return null;
                     }
 
                     return implode(', ', array_map(function ($key, $value) {
                         return "$key: $value";
-                    }, array_keys($affiliateOrder->affiliate->earnings), $affiliateOrder->affiliate->earnings));
+                    }, array_keys($affiliateOrder->earnings), $affiliateOrder->earnings));
                 })->label('Earning'),
                 TextColumn::make('order.created_at')
                     ->label('Created At')
