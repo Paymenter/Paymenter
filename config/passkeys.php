@@ -7,7 +7,7 @@ return [
     'timeout' => 60000,
     'guard' => 'web',
     'middleware' => ['web'],
-    'management_middleware' => ['password.confirm'],
+    'management_middleware' => [],
     'throttle' => 'throttle:6,1',
     'redirect' => '/dashboard',
 ];

@@ -106,6 +106,16 @@ Alpine.data('passkeyLogin', () => ({
     error: '',
     init () {
         this.supported = Passkeys.isSupported()
+        if (this.supported) this.autofill()
+    },
+    async autofill () {
+        try {
+            const remember = document.querySelector('#login [name="remember"]')?.checked ?? false
+            const response = await Passkeys.autofill({ remember })
+            if (response?.redirect) window.location.assign(response.redirect)
+        } catch (error) {
+            console.error('Passkey autofill failed:', error)
+        }
     },
     async signIn () {
         if (this.loading) return
@@ -126,50 +136,39 @@ Alpine.data('passkeyLogin', () => ({
 
 Alpine.data('passkeyManager', () => ({
     supported: false,
-    name: '',
     loading: false,
     error: '',
+    removing: null,
     init () {
         this.supported = Passkeys.isSupported()
+        this.$watch('removing', () => {
+            this.$wire.passkey_password = ''
+        })
     },
-    async register () {
-        const name = this.name.trim()
-        if (!name || this.loading) return
+    async submitRemove () {
+        if (this.loading || !this.removing) return
 
         this.loading = true
-        this.error = ''
-
         try {
-            await Passkeys.register({ name })
-            this.name = ''
-            await this.$wire.refreshPasskeys()
-        } catch (error) {
-            this.error = error.message || 'Passkey registration failed.'
+            if (await this.$wire.removePasskey(this.removing.id)) this.removing = null
         } finally {
             this.loading = false
         }
     },
-    async remove (id) {
+    async register () {
         if (this.loading) return
 
         this.loading = true
         this.error = ''
 
         try {
-            const csrf = document.querySelector('meta[name="csrf-token"]')?.content
-            const response = await fetch(`/user/passkeys/${encodeURIComponent(id)}`, {
-                method: 'DELETE',
-                headers: { Accept: 'application/json', 'X-CSRF-TOKEN': csrf },
-                credentials: 'same-origin'
+            await Passkeys.register({
+                name: `${navigator.userAgentData?.platform || navigator.platform || 'Passkey'} (${new Date().toLocaleDateString()})`,
             })
-            if (!response.ok) {
-                const body = await response.json().catch(() => ({}))
-                throw new Error(body.message || 'Could not remove passkey.')
-            }
-
-            await this.$wire.refreshPasskeys()
+            await this.$wire.$refresh()
         } catch (error) {
-            this.error = error.message || 'Could not remove passkey.'
+            console.error('Passkey registration failed:', error)
+            this.error = error.message || 'Passkey registration failed.'
         } finally {
             this.loading = false
         }

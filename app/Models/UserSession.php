@@ -77,7 +77,7 @@ class UserSession extends Model
 
     public function getIsCurrentDeviceAttribute()
     {
-        return $this->id === request()->attributes->get('user_session')->id;
+        return $this->id === request()->attributes->get('user_session')?->id;
     }
 
     public function getFormattedLastActiveAttribute()

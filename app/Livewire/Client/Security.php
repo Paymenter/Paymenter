@@ -121,9 +121,24 @@ class Security extends Component
         $this->notify(__('account.notifications.session_logged_out'));
     }
 
-    public function refreshPasskeys(): void
+    public string $passkey_password = '';
+
+    public function removePasskey(int|string $id): bool
     {
-        // Re-render the current user's passkeys after a browser-side update.
+        $this->validate(['passkey_password' => 'required|string']);
+
+        if (!Hash::check($this->passkey_password, Auth::user()->password)) {
+            $this->addError('passkey_password', __('account.notifications.password_incorrect'));
+
+            return false;
+        }
+
+        Auth::user()->passkeys()->whereKey($id)->delete();
+
+        $this->reset('passkey_password');
+        $this->notify(__('account.notifications.passkey_removed'));
+
+        return true;
     }
 
     public function render()

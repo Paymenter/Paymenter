@@ -7,20 +7,12 @@
             <h5 class="text-lg font-bold pb-2">{{ __('account.passkeys') }}</h5>
             <p class="text-sm text-primary-300 mb-3">{{ __('account.passkeys_description') }}</p>
 
-            <div x-show="supported" class="flex flex-col sm:flex-row gap-3">
-                <x-form.input name="passkey_name" type="text" :label="__('account.passkey_name')"
-                    :placeholder="__('account.passkey_name_placeholder')" x-model="name" maxlength="255" />
-                <x-button.primary type="button" class="sm:mt-6" x-on:click="register"
-                    x-bind:disabled="loading || !name.trim()">
-                    {{ __('account.add_passkey') }}
-                </x-button.primary>
-            </div>
             <p x-cloak x-show="!supported" class="text-sm text-primary-400">
                 {{ __('account.passkeys_unsupported') }}
             </p>
 
             <p x-show="error" x-text="error" role="alert" class="mt-2 text-sm text-red-400"></p>
-            <div class="mt-4">
+            <div>
                 @forelse ($passkeys as $passkey)
                 <div class="flex flex-row items-center justify-between gap-3 py-3 border-b border-base/50">
                     <div>
@@ -32,13 +24,8 @@
                             @endif
                         </p>
                     </div>
-                    <x-button.primary type="button" class="text-sm !w-fit" x-on:click="$store.confirmation.confirm({
-                        title: @js(__('account.remove_passkey')),
-                        message: @js(__('account.remove_passkey_confirm', ['name' => $passkey->name])),
-                        confirmText: @js(__('account.confirm')),
-                        cancelText: @js(__('account.cancel')),
-                        callback: () => remove(@js($passkey->id))
-                    })" x-bind:disabled="loading">
+                    <x-button.primary type="button" class="text-sm !w-fit"
+                    x-on:click="removing = { id: '{{ $passkey->id }}', name: {{ \Illuminate\Support\Js::from($passkey->name) }} }">
                         {{ __('account.remove_passkey') }}
                     </x-button.primary>
                 </div>
@@ -46,6 +33,37 @@
                 <p class="text-sm text-primary-400 py-2">{{ __('account.no_passkeys') }}</p>
                 @endforelse
             </div>
+            
+            <div x-show="supported" class="flex flex-col sm:flex-row gap-3 mt-4">
+                <x-button.primary type="button" x-on:click="register"
+                    x-bind:disabled="loading">
+                    {{ __('account.add_passkey') }}
+                </x-button.primary>
+            </div>
+
+            <template x-teleport="body">
+                <div class="fixed inset-0 z-30 flex items-center justify-center bg-black/50" x-cloak x-show="removing"
+                    x-on:keydown.escape.window="removing = null">
+                    <form class="px-6 py-4 w-full mx-2 max-w-lg bg-background-secondary rounded shadow-lg"
+                    x-on:submit.prevent="submitRemove">
+                    <h2 class="text-2xl font-semibold text-primary-100">{{ __('account.remove_passkey') }}</h2>
+                    <p class="mt-4 text-sm"
+                            x-text="@js(__('account.remove_passkey_password')).replace(':name', removing?.name ?? '')">
+                        </p>
+                        <x-form.input name="passkey_password" type="password" :label="__('general.input.password')"
+                            :placeholder="__('general.input.password_placeholder')" wire:model="passkey_password"
+                            hideRequiredIndicator required autocomplete="current-password" x-ref="removePassword" />
+                        <div class="mt-4 flex flex-col sm:flex-row-reverse gap-2">
+                            <x-button.primary type="submit" x-bind:disabled="loading">
+                                {{ __('account.confirm') }}
+                            </x-button.primary>
+                            <x-button.danger type="button" x-on:click="removing = null">
+                                {{ __('account.cancel') }}
+                            </x-button.danger>
+                        </div>
+                    </form>
+                </div>
+            </template>
         </div>
 
         <!-- Sessions -->
@@ -76,13 +94,15 @@
                 <div class="grid grid-cols-2 gap-4">
                     <x-form.input divClass="col-span-2" name="current_password" type="password"
                         :label="__('account.input.current_password')"
+                        autocomplete="current-password"
                         :placeholder="__('account.input.current_password_placeholder')" wire:model="current_password"
                         required />
                     <x-form.input name="password" type="password" :label="__('account.input.new_password')"
-                        :placeholder="__('account.input.new_password_placeholder')" wire:model="password" required />
+                        :placeholder="__('account.input.new_password_placeholder')" wire:model="password" required
+                        autocomplete="new-password" />
                     <x-form.input name="password_confirmation" type="password" :label="__('account.input.confirm_password')"
                         :placeholder="__('account.input.confirm_password_placeholder')" wire:model="password_confirmation"
-                        required />
+                        required autocomplete="new-password" />
                 </div>
 
                 <x-button.primary type="submit" class="w-full mt-4">

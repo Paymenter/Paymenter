@@ -19,6 +19,7 @@ return [
     'passkey_last_used' => 'Last used :date',
     'remove_passkey' => 'Remove',
     'remove_passkey_confirm' => 'Remove the passkey “:name” from your account?',
+    'remove_passkey_password' => 'Enter your password to remove the passkey “:name”.',
     'passkey_confirmation_required' => 'You may need to confirm your password before adding or removing passkeys.',
     'confirm_password' => 'Confirm password',
 
@@ -60,6 +61,7 @@ return [
         'two_factor_disabled' => 'Two-factor authentication has been disabled.',
         'two_factor_code_incorrect' => 'The code is incorrect.',
         'session_logged_out' => 'Session has been logged out.',
+        'passkey_removed' => 'Passkey has been removed.',
     ],
 
     'no_credit' => 'You have no credits.',

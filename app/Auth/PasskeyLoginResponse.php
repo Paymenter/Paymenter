@@ -4,9 +4,8 @@ namespace App\Auth;
 
 use App\Actions\Auth\Login;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
-use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class PasskeyLoginResponse implements PasskeyLoginResponseContract
@@ -17,7 +16,7 @@ class PasskeyLoginResponse implements PasskeyLoginResponseContract
     {
         $user = Auth::user();
         $remember = $request->boolean('remember');
-        
+
         $this->loginAction->execute($user, $remember);
         $redirect = session()->pull('url.intended', route('dashboard'));
 

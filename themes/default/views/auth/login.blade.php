@@ -21,18 +21,10 @@
 
     <x-button.primary class="w-full" type="submit">{{ __('auth.sign_in') }}</x-button.primary>
 
-    <div x-data="passkeyLogin" x-cloak x-show="supported" class="mt-3">
-        <x-button.primary class="w-full" type="button" x-on:click="signIn" x-bind:disabled="loading">
-            <span x-show="!loading">{{ __('auth.sign_in_with_passkey') }}</span>
-            <span x-show="loading">{{ __('auth.passkey_signing_in') }}</span>
-        </x-button.primary>
-        <p x-show="error" x-text="error" role="alert" class="mt-2 text-sm text-red-400"></p>
-    </div>
-
     {!! hook('auth.login') !!}
 
-    @if (config('settings.oauth_github') || config('settings.oauth_google') || config('settings.oauth_discord'))
-    <div class="flex flex-col items-center mt-4">
+    @php $hasOauth = config('settings.oauth_github') || config('settings.oauth_google') || config('settings.oauth_discord'); @endphp
+    <div x-data="passkeyLogin" x-cloak @if (!$hasOauth) x-show="supported" @endif class="flex flex-col items-center mt-4">
         <div class="my-5 flex items-center w-full">
             <span aria-hidden="true" class="h-0.5 grow rounded bg-primary-700"></span>
             <span class="rounded-full px-3 py-1 text-xs font-medium bg-primary-700 text-gray-200">
@@ -41,6 +33,12 @@
             <span aria-hidden="true" class="h-0.5 grow rounded bg-primary-700"></span>
         </div>
         <div class="flex flex-row flex-wrap justify-center mt-2 gap-4">
+            <button type="button" x-show="supported" x-on:click="signIn" x-bind:disabled="loading"
+                class="flex items-center justify-center px-4 h-10 border border-neutral rounded-md text-primary-100 disabled:opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 mr-2" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.8-9.8"/><path d="m18 5 3 3"/><path d="m15 8 2 2"/></svg>
+                <span x-show="!loading">{{ __('auth.sign_in_with_passkey') }}</span>
+                <span x-show="loading">{{ __('auth.passkey_signing_in') }}</span>
+            </button>
             @foreach (['github', 'google', 'discord'] as $provider)
             @if (config('settings.oauth_' . $provider))
             <a href="{{ route('oauth.redirect', $provider) }}"
@@ -52,8 +50,8 @@
             @endif
             @endforeach
         </div>
+        <p x-show="error" x-text="error" role="alert" class="mt-2 text-sm text-red-400"></p>
     </div>
-    @endif
     @if(!config('settings.registration_disabled', false))
     <div class="text-base text-center rounded-md py-2 mt-6 text-sm">
         {{ __('auth.dont_have_account') }}
