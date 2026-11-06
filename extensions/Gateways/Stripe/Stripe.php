@@ -39,7 +39,8 @@ class Stripe extends Gateway
     private const API_VERSION = '2025-07-30.basil';
 
     // Stripe takes these currencies in whole units: https://docs.stripe.com/currencies#zero-decimal
-    private const ZERO_DECIMAL_CURRENCIES = ['BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA', 'PYG', 'RWF', 'UGX', 'VND', 'VUV', 'XAF', 'XOF', 'XPF'];
+    // UGX is left out: Stripe still takes it with two decimals.
+    private const ZERO_DECIMAL_CURRENCIES = ['BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA', 'PYG', 'RWF', 'VND', 'VUV', 'XAF', 'XOF', 'XPF'];
 
     public function boot()
     {

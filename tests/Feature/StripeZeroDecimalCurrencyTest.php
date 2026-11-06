@@ -57,6 +57,10 @@ class StripeZeroDecimalCurrencyTest extends TestCase
         Http::fake(['*' => Http::response(['id' => 'x', 'data' => []])]);
         (new Stripe(['stripe_secret_key' => 'sk']))->pay($this->invoice('USD'), 19.99);
         $this->assertSame(1999, $this->sentAmount('/payment_intents'));
+
+        Http::fake(['*' => Http::response(['id' => 'x', 'data' => []])]);
+        (new Stripe(['stripe_secret_key' => 'sk']))->pay($this->invoice('UGX'), 80);
+        $this->assertSame(8000, $this->sentAmount('/payment_intents'));
     }
 
     public function test_refund_sends_the_amount_in_the_unit_stripe_expects()
