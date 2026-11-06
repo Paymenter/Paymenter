@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'La autenticación de dos factores ha sido deshabilitada.',
         'two_factor_code_incorrect' => 'El código es incorrecto.',
         'session_logged_out' => 'La sesión ha sido cerrada.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'No tienes créditos.',

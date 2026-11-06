@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Peruuta tilaus laskutusjakson päättyessä',
     'cancel_immediate_warning' => 'Kun painat alla olevaa painiketta, palvelu perutaan välittömästi, etkä voi enää käyttää sitä.',
     'cancellation_requested' => 'Peruutusta pyydetty',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Tämänhetkinen tilaus',
     'new_plan' => 'Uusi tilaus',

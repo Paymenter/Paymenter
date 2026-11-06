@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'אימות דו שלבי בוטל.',
         'two_factor_code_incorrect' => 'הקוד אינו נכון.',
         'session_logged_out' => 'החיבור נותק.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'נגמרו לך הנקודות.',

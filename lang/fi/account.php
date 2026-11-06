@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Kaksivaiheinen tunnistautuminen on poistettu käytöstä.',
         'two_factor_code_incorrect' => 'Koodi on virheellinen.',
         'session_logged_out' => 'Istunto on kirjauduttu ulos.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Sinulla ei ole yhtään krediittejä.',

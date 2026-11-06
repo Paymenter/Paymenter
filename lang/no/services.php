@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Avbryt ved slutten av betalings perioden',
     'cancel_immediate_warning' => 'Når du trykker på knappen nedenfor, vil tjenesten kanselleres umiddelbart, og du vil ikke kunne bruke den lenger.',
     'cancellation_requested' => 'Avbestilling forespurt',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Gjeldende abonnement',
     'new_plan' => 'Nytt abonnement',
