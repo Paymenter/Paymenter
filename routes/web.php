@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UpdateController;
 use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\TicketAttachmentController;
 use App\Http\Middleware\MustVerfiyEmail;
@@ -60,6 +61,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 
         return redirect()->route('dashboard');
     })->middleware(['signed'])->name('verification.verify');
+    Route::post('/admin/updates/run', UpdateController::class)->name('admin.updates.run');
     Route::get('/tickets/attachments/{attachment:uuid}', [TicketAttachmentController::class, 'download'])->name('tickets.attachments.show')->middleware('can:view,attachment');
 });
 

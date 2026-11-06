@@ -38,6 +38,10 @@ class InvoiceResource extends Resource
 
     protected static ?string $cluster = InvoiceCluster::class;
 
+    // Matches the {record:id} routes below. Without it, Filament re-resolves the record on Livewire requests
+    // by getRouteKey(), which Invoice overrides to return the invoice number.
+    protected static ?string $recordRouteKeyName = 'id';
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-receipt-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-receipt-fill';

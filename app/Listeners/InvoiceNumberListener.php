@@ -18,10 +18,11 @@ class InvoiceNumberListener
     public function handle(Creating|Updating|AdjustmentNoteCreating $event): void
     {
         if ($event instanceof Updating) {
-            $isChangingToPendingOrPaid = $event->invoice->isDirty('status') &&
-                in_array($event->invoice->status, [Invoice::STATUS_PENDING, Invoice::STATUS_PAID]);
+            $isChangingToNumberableStatus = $event->invoice->isDirty('status') &&
+                ($event->invoice->status === Invoice::STATUS_PAID ||
+                    ($event->invoice->status === Invoice::STATUS_PENDING && !config('settings.invoice_proforma', false)));
 
-            if ($isChangingToPendingOrPaid && !$event->invoice->number) {
+            if ($isChangingToNumberableStatus && !$event->invoice->number) {
                 $this->setNumber($event->invoice, 'invoice');
             }
         } elseif ($event instanceof Creating && !config('settings.invoice_proforma', false)) {

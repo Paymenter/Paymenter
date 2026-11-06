@@ -13,10 +13,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.4.0
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@2.40.0
         with:
           php-version: '8.3'
           extensions: bcmath, curl, gd, mbstring, mysql, openssl, pdo, tokenizer, xml, zip
@@ -24,7 +24,7 @@ jobs:
           coverage: none
 
       - name: Cache Composer Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v3.5.0
         with:
           path: ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -37,7 +37,7 @@ jobs:
         run: vendor/bin/pint
 
       - name: Commit Pint Fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v5.2.0
         with:
           commit_message: "style: linted files with pint"
           branch: master

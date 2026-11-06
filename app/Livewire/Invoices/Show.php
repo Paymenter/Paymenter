@@ -55,7 +55,7 @@ class Show extends Component
     #[Computed]
     public function gateways()
     {
-        return ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
+        return ExtensionHelper::getCheckoutGateways($this->invoice->remaining, $this->invoice->currency_code, 'invoice', $this->invoice->items);
     }
 
     #[Computed]

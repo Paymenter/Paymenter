@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'متوفر',
     'out_of_stock' => 'المنتج :product غير متوفر',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'لقد وصلت إلى الحد الأقصى من :product',
     'payment_method' => 'طريقة الدفع',
     'use_credits' => 'إستخدم الرصيد',

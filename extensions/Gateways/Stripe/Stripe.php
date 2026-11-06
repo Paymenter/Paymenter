@@ -131,6 +131,8 @@ class Stripe extends Gateway
         // If the extension isn't enabled, try to boot it
         if (!Route::has('extensions.gateways.stripe.webhook')) {
             require __DIR__ . '/routes.php';
+            // Routes added after boot aren't in the name index yet, which route() below relies on
+            Route::getRoutes()->refreshNameLookups();
         }
 
         // Check if webhook already exists

@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Двофакторна автентифікація вимкнена.',
         'two_factor_code_incorrect' => 'Код невірний.',
         'session_logged_out' => 'Сесію завершено.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'У вас немає кредитів.',

@@ -58,6 +58,7 @@ class Plesk extends Server
                 'label' => 'Password',
                 'type' => 'password',
                 'required' => true,
+                'encrypted' => true,
                 'description' => 'The password of the Plesk server',
             ],
         ];

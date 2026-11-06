@@ -3,6 +3,7 @@
 namespace App\Admin\Resources\InvoiceResource\RelationManagers;
 
 use App\Helpers\ExtensionHelper;
+use App\Models\Credit;
 use App\Models\Invoice;
 use App\Models\InvoiceTransaction;
 use Filament\Actions\Action;
@@ -13,6 +14,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -110,6 +112,12 @@ class TransactionsRelationManager extends RelationManager
                                     }
                                 },
                             ]),
+                        TextEntry::make('credit_refund_warning')
+                            ->label(__('invoices.credit_refund_warning_title'))
+                            ->state(__('invoices.credit_refund_warning'))
+                            ->visible(fn (InvoiceTransaction $record): bool => $record->invoice?->items()
+                                ->where('reference_type', Credit::class)
+                                ->exists() ?? false),
                         Toggle::make('refund_via_gateway')
                             ->label(__('invoices.refund_via_gateway'))
                             ->default(false)

@@ -62,6 +62,7 @@ return [
         'two_factor_code_incorrect' => 'The code is incorrect.',
         'session_logged_out' => 'Session has been logged out.',
         'passkey_removed' => 'Passkey has been removed.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'You have no credits.',

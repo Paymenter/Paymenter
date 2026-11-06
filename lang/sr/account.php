@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Dvofaktorska autentifikacija je onemogućena.',
         'two_factor_code_incorrect' => 'Kod je netačan.',
         'session_logged_out' => 'Sesija je izlogovana.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Nemate kredita.',

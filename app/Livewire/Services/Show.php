@@ -40,6 +40,10 @@ class Show extends Component
 
     public function mount()
     {
+        if ($this->showCancel && !$this->service->cancellable) {
+            $this->showCancel = false;
+        }
+
         // Only fetch the actions if the service is active
         if ($this->service->status == Service::STATUS_ACTIVE) {
             $actions = [];
@@ -70,6 +74,11 @@ class Show extends Component
     public function updateBillingAgreement()
     {
         $agreement = Auth::user()->billingAgreements()->where('ulid', $this->selectedMethod)->first();
+        if (!$agreement) {
+            $this->notify(__('account.notifications.unauthorized'), 'error');
+
+            return;
+        }
         $this->service->billing_agreement_id = $agreement->id;
         $this->service->save();
 
@@ -110,7 +119,7 @@ class Show extends Component
     public function updatedShowCancel($value)
     {
         if (!$this->service->cancellable) {
-            $this->notify('This service cannot be cancelled', 'error');
+            $this->notify(__('services.not_cancellable'), 'error');
             $this->showCancel = false;
 
             return;
@@ -119,9 +128,9 @@ class Show extends Component
 
     public function goto($function)
     {
-        // Check if function is allowed
-        if (!in_array($function, array_column($this->buttons, 'function'))) {
-            $this->notify('This action is not allowed', 'error');
+        // The buttons were loaded when the page was opened, the service may no longer be active
+        if ($this->service->status !== Service::STATUS_ACTIVE || !in_array($function, array_column($this->buttons, 'function'))) {
+            $this->notify(__('account.notifications.unauthorized'), 'error');
 
             return;
         }
@@ -138,7 +147,7 @@ class Show extends Component
         $view = null;
         $previousView = $this->currentView;
 
-        if ($this->currentView) {
+        if ($this->currentView && $this->service->status === Service::STATUS_ACTIVE) {
             try {
                 // Search array for the current view
                 $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;

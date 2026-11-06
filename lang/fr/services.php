@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'À l\'échéance du service',
     'cancel_immediate_warning' => 'Si vous choisissez de continuer, le service sera résilié immédiatement sans remboursement et vous ne pourrez plus l\'utiliser.',
     'cancellation_requested' => 'Résiliation demandée',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Offre actuelle',
     'new_plan' => 'Nouvelle offre',

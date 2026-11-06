@@ -85,15 +85,19 @@ class Pterodactyl extends Server
         foreach ($location['data'] as $location) {
             $locationList[$location['attributes']['id']] = $location['attributes']['short'];
         }
-
-        $nests = $this->request('/api/application/nests');
         $nestList = [];
-        foreach ($nests['data'] as $nest) {
-            $nestList[$nest['attributes']['id']] = $nest['attributes']['name'];
+        try {
+            $nests = $this->request('/api/application/nests');
+            foreach ($nests['data'] as $nest) {
+                $nestList[$nest['attributes']['id']] = $nest['attributes']['name'];
+            }
+        } catch (Exception $e) {
+            $nestList = [];
         }
 
         $eggList = [];
-        if (isset($values['nest_id']) && $values['nest_id'] !== '') {
+        if (count($nestList) > 0 && isset($values['nest_id']) && $values['nest_id'] !== '') {
+            // Pterodactyl V1
             try {
                 $eggs = $this->request('/api/application/nests/' . $values['nest_id'] . '/eggs');
                 foreach ($eggs['data'] as $egg) {
@@ -101,11 +105,17 @@ class Pterodactyl extends Server
                 }
             } catch (Exception $e) {
             }
+        } else {
+            // Pterodactyl V2
+            $eggs = $this->request('/api/application/eggs');
+            foreach ($eggs['data'] as $egg) {
+                $eggList[$egg['attributes']['id']] = $egg['attributes']['name'];
+            }
         }
 
         $using_port_array = isset($values['port_array']) && $values['port_array'] !== '';
 
-        return [
+        return array_filter([
             [
                 'name' => 'location_ids',
                 'label' => 'Location(s)',
@@ -123,7 +133,7 @@ class Pterodactyl extends Server
                 'description' => 'Fill in to install the server on a specific node',
                 'options' => $nodeList,
             ],
-            [
+            $nestList ? [
                 'name' => 'nest_id',
                 'label' => 'Nest ID',
                 'type' => 'select',
@@ -132,7 +142,7 @@ class Pterodactyl extends Server
                 'required' => true,
                 // Lets fetch the eggs every time the nest id changes
                 'live' => true,
-            ],
+            ] : null,
             [
                 'name' => 'egg_id',
                 'label' => 'Egg ID',
@@ -259,7 +269,27 @@ class Pterodactyl extends Server
                 'description' => 'Terminates the server if it breaches the memory limits. Enabling OOM killer may cause server processes to exit unexpectedly.',
                 'type' => 'checkbox',
             ],
-        ];
+        ]);
+    }
+
+    private function getEggData($settings)
+    {
+        if (!empty($settings['nest_id'])) {
+            try {
+                $eggData = $this->request('/api/application/nests/' . $settings['nest_id'] . '/eggs/' . $settings['egg_id'], data: ['include' => 'variables']);
+                if (isset($eggData['attributes'])) {
+                    return $eggData;
+                }
+            } catch (Exception $e) {
+                // Ignore and try fetching without nest
+            }
+        }
+        $eggData = $this->request('/api/application/eggs/' . $settings['egg_id'], data: ['include' => 'variables']);
+        if (!isset($eggData['attributes'])) {
+            throw new Exception('Could not fetch egg data');
+        }
+
+        return $eggData;
     }
 
     public function createServer(Service $service, $settings, $properties)
@@ -270,10 +300,7 @@ class Pterodactyl extends Server
         // Smash the properties into the settings
         $settings = array_merge($settings, $properties);
 
-        $eggData = $this->request('/api/application/nests/' . $settings['nest_id'] . '/eggs/' . $settings['egg_id'], data: ['include' => 'variables']);
-        if (!isset($eggData['attributes'])) {
-            throw new Exception('Could not fetch egg data');
-        }
+        $eggData = $this->getEggData($settings);
         $environment = [];
         foreach ($eggData['attributes']['relationships']['variables']['data'] as $variable) {
             $environment[$variable['attributes']['env_variable']] = $settings[$variable['attributes']['env_variable']] ?? $variable['attributes']['default_value'];
@@ -618,11 +645,7 @@ class Pterodactyl extends Server
 
         $this->request('/api/application/servers/' . $server['attributes']['id'] . '/build', 'patch', $updateServerData);
 
-        $eggData = $this->request('/api/application/nests/' . $settings['nest_id'] . '/eggs/' . $settings['egg_id'], data: ['include' => 'variables']);
-
-        if (!isset($eggData['attributes'])) {
-            throw new Exception('Could not fetch egg data');
-        }
+        $eggData = $this->getEggData($settings);
 
         $environment = [];
 

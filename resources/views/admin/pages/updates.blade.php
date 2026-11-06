@@ -28,7 +28,7 @@
                     target="_blank">update documentation</a> before continuing.</p>
 
                 <p class="mt-2">Alternatively, use the web updater. This beta feature is provided at your own risk.</p>
-                <div class="mt-2">
+                <div class="mt-2" x-data="{ running: false }" x-show="!running" x-on:start-update.window="running = true" x-on:update-failed.window="running = false">
                     {{ $this->update }}
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     target="_blank">update documentation</a> before continuing.</p>
 
                 <p class="mt-2">Alternatively, use the web updater. Use at your own risk.</p>
-                <div class="mt-2">
+                <div class="mt-2" x-data="{ running: false }" x-show="!running" x-on:start-update.window="running = true" x-on:update-failed.window="running = false">
                     {{ $this->update }}
                 </div>
             </div>
@@ -61,7 +61,39 @@
             @endif
 
             <code>
-                <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output" x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);"></pre>
+                <pre id="update-result" class="mt-2" x-data="{
+                    output: '',
+                    async run() {
+                        this.output = '';
+                        let raw = '';
+                        const ansi = new AnsiUp();
+                        try {
+                            const response = await fetch('{{ route('admin.updates.run') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.content ?? '{{ csrf_token() }}',
+                                    'Accept': 'text/plain',
+                                },
+                                credentials: 'same-origin',
+                            });
+                            if (!response.ok || !response.body) {
+                                this.output = 'Update request failed (HTTP ' + response.status + ').';
+                                window.dispatchEvent(new CustomEvent('update-failed'));
+                                return;
+                            }
+                            const reader = response.body.getReader();
+                            const decoder = new TextDecoder();
+                            while (true) {
+                                const { done, value } = await reader.read();
+                                if (done) break;
+                                raw += decoder.decode(value, { stream: true });
+                                this.output = ansi.ansi_to_html(raw);
+                            }
+                        } catch (e) {
+                            this.output = ansi.ansi_to_html(raw) + '\nConnection lost: ' + e.message;
+                        }
+                    }
+                }" x-html="output" x-on:start-update.window="run()"></pre>
             </code>
         </x-filament::section>
 

@@ -54,6 +54,7 @@ class InvoiceNumberTest extends TestCase
     public function test_invoice_number_generation_proforma(): void
     {
         $user = User::factory()->create();
+        config(['settings.invoice_proforma' => true]);
         // Generate first invoice
         Setting::updateOrCreate(['key' => 'invoice_number'], ['value' => 2000]);
         Setting::updateOrCreate(['key' => 'invoice_number_format'], ['value' => '{number}']);
@@ -74,21 +75,26 @@ class InvoiceNumberTest extends TestCase
         // Number should not be set
         $this->assertNull($invoice->number);
 
-        // Config should still be 2000
-        $this->assertEquals(2000, config('settings.invoice_number'));
+        $invoice->update(['status' => Invoice::STATUS_PENDING]);
 
-        // Add paid transaction
+        // Publishing a proforma invoice should not consume an official number.
+        $this->assertNull($invoice->fresh()->number);
+
+        $this->assertDatabaseHas('settings', [
+            'key' => 'invoice_number',
+            'value' => 2000,
+        ]);
+
         $invoice->transactions()->create([
             'amount' => 10,
         ]);
 
-        // Refresh invoice
-        $invoice->refresh();
+        $this->assertEquals(Invoice::STATUS_PAID, $invoice->fresh()->status);
+        $this->assertEquals(2001, $invoice->fresh()->number);
 
-        // Number should now be set to 2001
-        $this->assertEquals(2001, $invoice->number);
-
-        // Config should be set to 2001
-        $this->assertEquals(2001, config('settings.invoice_number'));
+        $this->assertDatabaseHas('settings', [
+            'key' => 'invoice_number',
+            'value' => 2001,
+        ]);
     }
 }

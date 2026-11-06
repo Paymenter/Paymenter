@@ -58,12 +58,14 @@ class Virtualizor extends Server
                 'type' => 'text',
                 'label' => 'API Key',
                 'required' => true,
+                'encrypted' => true,
             ],
             [
                 'name' => 'password',
                 'type' => 'text',
                 'label' => 'API Password',
                 'required' => true,
+                'encrypted' => true,
             ],
             [
                 'name' => 'ip',

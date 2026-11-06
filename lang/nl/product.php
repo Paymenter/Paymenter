@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'Op voorraad',
     'out_of_stock' => 'Product :product is niet op voorraad',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'U heeft het limiet van :product bereikt',
     'payment_method' => 'Betaalmethode',
     'use_credits' => 'Krediet gebruiken',

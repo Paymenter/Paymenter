@@ -180,7 +180,7 @@ class Cart
                 throw new DisplayException('Coupon code not found');
             }
 
-            if ($coupon->expires_at && $coupon->expires_at->isPast()) {
+            if ($coupon->expires_at && $coupon->expires_at->copy()->endOfDay()->isPast()) {
                 throw new DisplayException('Coupon code has expired');
             }
             if ($coupon->starts_at && $coupon->starts_at->isFuture()) {

@@ -126,7 +126,9 @@ class CronJob extends Command
                 Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
                     $query->where('status', 'paid');
                 })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel', 7)))->get()->each(function ($service) use (&$number) {
-                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $service->invoices()->where('status', 'pending')->get()->each(function ($invoice) {
+                        $invoice->update(['status' => 'cancelled']);
+                    });
 
                     $service->update(['status' => 'cancelled']);
 
@@ -158,9 +160,10 @@ class CronJob extends Command
                         return;
                     }
 
-                    $upgrade->invoice->items()->update([
-                        'price' => $upgrade->calculatePrice()->price,
-                    ]);
+                    $price = $upgrade->calculatePrice()->price;
+                    $upgrade->invoice->items()->get()->each(function ($item) use ($price) {
+                        $item->update(['price' => $price]);
+                    });
 
                     $number++;
                 });
@@ -187,12 +190,15 @@ class CronJob extends Command
 
             $this->runCronJob('services_terminated', function ($number = 0) {
                 // Terminate orders if due date is overdue for x days
-                Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->each(function ($service) use (&$number) {
+                // eachById: each() pages by offset, and every cancelled service drops out of the next page
+                Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->eachById(function ($service) use (&$number) {
                     TerminateJob::dispatch($service);
 
                     $service->update(['status' => 'cancelled']);
                     // Cancel outstanding invoices
-                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $service->invoices()->where('status', 'pending')->get()->each(function ($invoice) {
+                        $invoice->update(['status' => 'cancelled']);
+                    });
 
                     if ($service->product->stock !== null) {
                         $service->product->increment('stock', $service->quantity);
@@ -206,7 +212,7 @@ class CronJob extends Command
 
             $this->runCronJob('tickets_closed', function ($number = 0) {
                 // Close tickets if no response for x days
-                Ticket::where('status', 'replied')->each(function ($ticket) use (&$number) {
+                Ticket::where('status', 'replied')->eachById(function ($ticket) use (&$number) {
                     $lastMessage = $ticket->messages()->latest('created_at')->first();
                     if ($lastMessage && $lastMessage->created_at < now()->subDays((int) config('settings.cronjob_close_ticket', 7))) {
                         $ticket->update(['status' => 'closed']);

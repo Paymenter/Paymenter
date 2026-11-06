@@ -57,6 +57,7 @@ class Convoy extends Server
                 'type' => 'text',
                 'label' => 'API Key',
                 'required' => true,
+                'encrypted' => true,
             ],
         ];
     }

@@ -8,6 +8,7 @@ use App\Admin\Resources\AdjustmentNoteResource\Pages\EditAdjustmentNote;
 use App\Admin\Resources\AdjustmentNoteResource\Pages\ListAdjustmentNotes;
 use App\Enums\AdjustmentNoteStatus;
 use App\Models\AdjustmentNote;
+use App\Models\Invoice;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,6 +23,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 class AdjustmentNoteResource extends Resource
 {
@@ -43,8 +45,17 @@ class AdjustmentNoteResource extends Resource
             ->components([
                 Select::make('invoice_id')
                     ->label('Invoice')
-                    ->relationship('invoice', modifyQueryUsing: fn (Builder $query) => $query->with('user')->orderByDesc('id'))
+                    ->relationship('invoice', modifyQueryUsing: fn (Builder $query) => $query
+                        ->when(
+                            config('settings.immutable_invoices_enabled', false),
+                            fn (Builder $query) => $query->where('status', Invoice::STATUS_PENDING)
+                        )
+                        ->with('user')
+                        ->orderByDesc('id'))
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => ($record->number ? "#$record->number" : $record->id) . ' (' . ($record->user?->email ?? __('invoices.deleted_user')) . ')')
+                    ->rules(fn () => config('settings.immutable_invoices_enabled', false)
+                        ? [Rule::exists('invoices', 'id')->where('status', Invoice::STATUS_PENDING)]
+                        : [])
                     ->required()
                     ->searchable()
                     ->preload()

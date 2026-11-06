@@ -53,6 +53,8 @@ class AnnouncementResource extends Resource
                     ->label('Slug')
                     ->required()
                     ->maxLength(255)
+                    ->alphaDash()
+                    ->unique(ignoreRecord: true)
                     ->placeholder('Enter the slug of the announcement'),
                 TextInput::make('description')
                     ->label('Description')

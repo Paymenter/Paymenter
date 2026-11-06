@@ -67,6 +67,8 @@ return [
     'refund_transaction' => 'Refund Transaction #:id',
     'refund_amount_positive' => 'The refund amount must be greater than 0.',
     'refund_amount_exceeds_refundable' => 'The refund amount cannot exceed the refundable amount of :max.',
+    'credit_refund_warning_title' => 'Credit deposit refund',
+    'credit_refund_warning' => "Refunding this payment will not deduct the customer's account credits. Deduct any remaining credits manually.",
     'refund_success' => 'Refund processed successfully.',
     'refund_failed' => 'Refund failed.',
     'refund_via_gateway' => 'Refund via Payment Gateway',

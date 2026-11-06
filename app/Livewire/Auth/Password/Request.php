@@ -26,12 +26,23 @@ class Request extends Component
         $rateLimitKey = 'password-reset:' . request()->ip();
 
         if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
-            $this->addError('email', 'Too many password reset attempts. Please try again later.');
+            $this->addError('email', __('passwords.throttled'));
+
+            return;
+        }
+
+        // Password::createToken() skips the broker's own per-user throttle, so apply
+        // it per address here, whether or not the address has an account.
+        $emailKey = 'password-reset-email:' . sha1(strtolower($this->email));
+
+        if (RateLimiter::tooManyAttempts($emailKey, 1)) {
+            $this->addError('email', __('passwords.throttled'));
 
             return;
         }
 
         RateLimiter::hit($rateLimitKey, 60);
+        RateLimiter::hit($emailKey, config('auth.passwords.users.throttle', 60));
 
         // Find the user
         $user = User::where('email', $this->email)->first();
@@ -43,7 +54,7 @@ class Request extends Component
             ], false))]);
         }
 
-        $this->notify('If the email address is associated with an account, you will receive an email with instructions on how to reset your password.', 'success');
+        $this->notify(__('passwords.sent_if_exists'), 'success');
     }
 
     public function render()
