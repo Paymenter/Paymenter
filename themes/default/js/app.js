@@ -1,5 +1,6 @@
 import { Livewire, Alpine } from '../../../vendor/livewire/livewire/dist/livewire.esm';
 import anchor from '@alpinejs/anchor'
+import { Passkeys } from '@laravel/passkeys'
 
 document.addEventListener('livewire:init', () => {
     Livewire.hook('request', ({ fail }) => {
@@ -98,6 +99,81 @@ Alpine.store('confirmation', {
 })
 
 Alpine.plugin(anchor)
+
+Alpine.data('passkeyLogin', () => ({
+    supported: false,
+    loading: false,
+    error: '',
+    init () {
+        this.supported = Passkeys.isSupported()
+        if (this.supported) this.autofill()
+    },
+    async autofill () {
+        try {
+            const remember = document.querySelector('#login [name="remember"]')?.checked ?? false
+            const response = await Passkeys.autofill({ remember })
+            if (response?.redirect) window.location.assign(response.redirect)
+        } catch (error) {
+            console.error('Passkey autofill failed:', error)
+        }
+    },
+    async signIn () {
+        if (this.loading) return
+
+        this.loading = true
+        this.error = ''
+
+        try {
+            const remember = document.querySelector('#login [name="remember"]')?.checked ?? false
+            const response = await Passkeys.verify({ remember })
+            if (response?.redirect) window.location.assign(response.redirect)
+        } catch (error) {
+            this.error = error.message || 'Passkey sign-in failed.'
+            this.loading = false
+        }
+    }
+}))
+
+Alpine.data('passkeyManager', () => ({
+    supported: false,
+    loading: false,
+    error: '',
+    removing: null,
+    init () {
+        this.supported = Passkeys.isSupported()
+        this.$watch('removing', () => {
+            this.$wire.passkey_password = ''
+        })
+    },
+    async submitRemove () {
+        if (this.loading || !this.removing) return
+
+        this.loading = true
+        try {
+            if (await this.$wire.removePasskey(this.removing.id)) this.removing = null
+        } finally {
+            this.loading = false
+        }
+    },
+    async register () {
+        if (this.loading) return
+
+        this.loading = true
+        this.error = ''
+
+        try {
+            await Passkeys.register({
+                name: `${navigator.userAgentData?.platform || navigator.platform || 'Passkey'} (${new Date().toLocaleDateString()})`,
+            })
+            await this.$wire.$refresh()
+        } catch (error) {
+            console.error('Passkey registration failed:', error)
+            this.error = error.message || 'Passkey registration failed.'
+        } finally {
+            this.loading = false
+        }
+    }
+}))
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker

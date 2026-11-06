@@ -17,6 +17,7 @@
         "vite": "^8.3"
     },
     "dependencies": {
-        "@alpinejs/anchor": "^3.15.3"
+        "@alpinejs/anchor": "^3.15.3",
+        "@laravel/passkeys": "^0.4.0"
     }
 }

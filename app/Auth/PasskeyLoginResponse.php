@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Auth;
+
+use App\Actions\Auth\Login;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
+use Symfony\Component\HttpFoundation\Response;
+
+class PasskeyLoginResponse implements PasskeyLoginResponseContract
+{
+    public function __construct(private Login $loginAction) {}
+
+    public function toResponse($request): Response
+    {
+        $user = Auth::user();
+        $remember = $request->boolean('remember');
+
+        $this->loginAction->execute($user, $remember);
+        $redirect = session()->pull('url.intended', route('dashboard'));
+
+        if ($request->wantsJson()) {
+            return new JsonResponse(['redirect' => $redirect]);
+        }
+
+        return redirect()->to($redirect);
+    }
+}
