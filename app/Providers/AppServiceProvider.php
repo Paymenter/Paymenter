@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Auth\PasskeyLoginResponse;
+use App\Auth\RegistrationOptions;
 use App\Classes\Synths\PriceSynth;
 use App\Exceptions\ErrorHandler;
 use App\Helpers\ExtensionHelper;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Passkeys\Actions\GenerateRegistrationOptions;
 use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
 use Laravel\Passport\Passport;
 use League\CommonMark\Extension\Table\TableExtension;
@@ -46,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         // Service provider for settings
         $this->app->register(SettingsProvider::class);
         $this->app->singleton(PasskeyLoginResponseContract::class, PasskeyLoginResponse::class);
+        $this->app->bind(GenerateRegistrationOptions::class, RegistrationOptions::class);
 
         UrlGenerator::macro('alternateHasCorrectSignature', function (Request $request, $absolute = true, Closure|array $ignoreQuery = []) {
             // ensure the base path is applied to absolute url
