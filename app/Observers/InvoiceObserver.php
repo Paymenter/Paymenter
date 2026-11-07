@@ -55,6 +55,10 @@ class InvoiceObserver
     {
         if ($invoice->status === Invoice::STATUS_CANCELLED && $invoice->getOriginal('status') !== Invoice::STATUS_CANCELLED) {
             $invoice->createCancellationCreditNote($invoice->cancellation_reason);
+
+            if ($invoice->getOriginal('status') === Invoice::STATUS_PENDING) {
+                $invoice->returnAppliedCredits();
+            }
         }
 
         if ($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status === Invoice::STATUS_PENDING) {
