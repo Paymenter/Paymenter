@@ -123,12 +123,12 @@
                 </table>
             </div>
             <div class="space-y-3 sm:text-right sm:ml-auto sm:w-72 mt-10">
-                @if ($invoice->formattedTotal->tax > 0)
+                @if ($invoice->formattedItemsTotal->tax > 0)
                 <div class="flex justify-between">
                     <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ __('invoices.subtotal') }}
                     </div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
-                        {{ $invoice->formattedTotal->format($invoice->formattedTotal->subtotal) }}
+                        {{ $invoice->formattedItemsTotal->format($invoice->formattedItemsTotal->subtotal) }}
                     </div>
                 </div>
                 <div class="flex justify-between">
@@ -136,7 +136,7 @@
                         {{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)
                     </div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
-                        {{ $invoice->formattedTotal->formatted->tax }}
+                        {{ $invoice->formattedItemsTotal->formatted->tax }}
                     </div>
                 </div>
                 @endif
