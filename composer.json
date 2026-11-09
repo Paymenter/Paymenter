@@ -45,6 +45,7 @@
         "willdurand/email-reply-parser": "^2.10"
     },
     "require-dev": {
+        "baer-software/larabeacon": "^3.3",
         "barryvdh/laravel-debugbar": "^4.4",
         "dedoc/scramble": "^0.13.0",
         "fakerphp/faker": "^1.23",
