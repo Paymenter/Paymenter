@@ -69,7 +69,7 @@ class SettingsProvider extends ServiceProvider
             if (Str::startsWith(config('app.url') ?? '', 'https://')) {
                 URL::forceScheme('https');
             }
-            URL::forceRootUrl(config('app.url'));
+            URL::useOrigin(config('app.url'));
 
             Config::set('filesystems.disks.public.url', config('app.url') . '/storage');
             Config::set('passkeys.allowed_origins', [config('app.url')]);
