@@ -44,7 +44,7 @@ class Create extends Command implements PromptsForMissingInput
 
     protected function promptForMissingArgumentsUsing(): array
     {
-        $roleOptions = Role::all()->pluck('name', 'id')->toArray();
+        $roleOptions = Role::pluck('name', 'id')->toArray();
         $roleOptions[0] = 'None';
 
         return [

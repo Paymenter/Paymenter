@@ -219,7 +219,7 @@ class ExtensionHelper
         $extensions = self::getExtensions('other');
 
         // Filter out already installed extensions
-        $installedExtensions = Extension::all()->pluck('extension')->toArray();
+        $installedExtensions = Extension::pluck('extension')->toArray();
 
         return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
     }
