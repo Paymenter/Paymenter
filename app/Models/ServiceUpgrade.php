@@ -7,6 +7,7 @@ use App\Observers\ServiceUpgradeObserver;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([ServiceUpgradeObserver::class])]
@@ -17,6 +18,8 @@ class ServiceUpgrade extends Model implements Auditable
     public const STATUS_PENDING = 'pending';
 
     public const STATUS_COMPLETED = 'completed';
+
+    public const STATUS_CANCELLED = 'cancelled';
 
     public $guarded = [];
 
@@ -43,6 +46,32 @@ class ServiceUpgrade extends Model implements Auditable
     public function configs()
     {
         return $this->morphMany(ServiceConfig::class, 'configurable');
+    }
+
+    /**
+     * Cancel the upgrade and its unpaid invoice. Returns false if it is no longer pending.
+     */
+    public function cancel(): bool
+    {
+        return DB::transaction(function () {
+            // The customer, the cron job and a payment can all reach this upgrade at the same time
+            $upgrade = static::whereKey($this->getKey())->lockForUpdate()->first();
+            $invoice = $upgrade?->invoice()->lockForUpdate()->first();
+
+            if (!$upgrade || $upgrade->status !== self::STATUS_PENDING || $invoice?->status === Invoice::STATUS_PAID) {
+                return false;
+            }
+
+            $upgrade->update(['status' => self::STATUS_CANCELLED]);
+
+            if ($invoice?->status === Invoice::STATUS_PENDING) {
+                $invoice->update(['status' => Invoice::STATUS_CANCELLED]);
+            }
+
+            $this->setRawAttributes($upgrade->getAttributes(), true);
+
+            return true;
+        });
     }
 
     public function calculateProratedAmount($oldItem, $newItem): Price

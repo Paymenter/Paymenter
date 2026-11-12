@@ -126,6 +126,20 @@ class Show extends Component
         }
     }
 
+    public function cancelUpgrade()
+    {
+        $upgrade = $this->service->pendingUpgrade();
+
+        if (!$upgrade || !$upgrade->cancel()) {
+            $this->notify(__('services.upgrade_cancel_failed'), 'error');
+
+            return;
+        }
+
+        $this->service->refresh();
+        $this->notify(__('services.upgrade_cancelled'), 'success');
+    }
+
     public function goto($function)
     {
         // The buttons were loaded when the page was opened, the service may no longer be active
