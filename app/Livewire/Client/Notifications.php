@@ -58,7 +58,7 @@ class Notifications extends Component
             || !PushEndpoint::isAllowed($subscription['endpoint'])
         ) {
             throw ValidationException::withMessages([
-                'subscription' => 'The push subscription endpoint is not allowed.',
+                'subscription' => __('The push subscription endpoint is not allowed.'),
             ]);
         }
 
@@ -77,7 +77,7 @@ class Notifications extends Component
             $this->notify('Test push notification sent successfully. Please check your device.', 'success');
         } catch (\Exception $e) {
             // Failed to send notification
-            $this->notify('Failed to send test push notification: ' . $e->getMessage(), 'error');
+            $this->notify(__('Failed to send test push notification: :error', ['error' => $e->getMessage()]), 'error');
         }
     }
 

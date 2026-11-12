@@ -14,7 +14,7 @@
 
         <div class="container mt-4 flex flex-col gap-5">
 
-            <h2 class="text-xl font-semibold">Services</h2>
+            <h2 class="text-xl font-semibold">{{ __('Services') }}</h2>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-4">
                 @foreach ($categories as $category)
