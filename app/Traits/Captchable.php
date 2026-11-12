@@ -33,7 +33,30 @@ trait Captchable
             $this->hcaptcha($this->captcha);
         } elseif (config('settings.captcha') == 'recaptcha-v2' || config('settings.captcha') == 'recaptcha-v3') {
             $this->recaptcha($this->captcha);
+        } elseif (config('settings.captcha') == 'cap') {
+            $this->cap($this->captcha);
         }
+    }
+
+    // Cap (self-hosted)
+    private function cap($value)
+    {
+        $url = rtrim((string) config('settings.captcha_url'), '/') . '/' . config('settings.captcha_site_key') . '/siteverify';
+
+        try {
+            $response = Http::acceptJson()->asJson()->post($url, [
+                'secret' => config('settings.captcha_secret'),
+                'response' => $value,
+            ]);
+        } catch (\Throwable $e) {
+            throw ValidationException::withMessages(['captcha' => 'The CAPTCHA could not be verified.']);
+        }
+
+        if ($response->json('success')) {
+            return $this->is_valid = true;
+        }
+
+        throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
     }
 
     // Turnstile
