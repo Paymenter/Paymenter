@@ -9,6 +9,8 @@
                 <x-captcha.turnstile :$form />
             @elseif(config('settings.captcha') == 'hcaptcha')
                 <x-captcha.hcaptcha :$form />
+            @elseif(config('settings.captcha') == 'cap')
+                <x-captcha.cap :$form />
             @endif
         </div>
         @error('captcha')
