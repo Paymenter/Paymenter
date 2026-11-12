@@ -22,4 +22,12 @@ class BillingAgreementPolicy
     {
         return $user->hasPermission('admin.billing_agreements.viewAny');
     }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, BillingAgreement $billingAgreement): bool
+    {
+        return $user->hasPermission('admin.billing_agreements.delete');
+    }
 }
