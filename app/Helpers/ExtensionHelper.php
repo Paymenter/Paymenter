@@ -391,6 +391,19 @@ class ExtensionHelper
             }
         }
 
+        // Listeners may return an array of gateway ids to leave out of this checkout
+        $excluded = [];
+
+        foreach (Event::dispatch('checkout.gateways', [$gateways, $total, $currency, $type, $items]) ?? [] as $response) {
+            if (is_array($response)) {
+                $excluded = array_merge($excluded, $response);
+            }
+        }
+
+        if (!empty($excluded)) {
+            $gateways = array_values(array_filter($gateways, fn ($gateway) => !in_array($gateway->id, $excluded, true)));
+        }
+
         return $gateways;
     }
 
