@@ -108,6 +108,7 @@ class FilamentInput
 
             case 'text':
                 return TextInput::make($setting->name)
+                    ->hidden($setting->hidden ?? false)
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? null)
                     ->placeholder($setting->placeholder ?? $setting->default ?? '')
