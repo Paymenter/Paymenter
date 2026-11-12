@@ -4,7 +4,7 @@ URL='https://github.com/paymenter/paymenter/releases/latest/download/paymenter.t
 
 echo "Starting upgrade process..."
 
-# Read config/app.php to check if someone is trying to ugprade to a major version.
+# Read config/app.php to check if someone is trying to upgrade to a major version.
 if [ -f "config/app.php" ]; then
     if grep -q "marketplace" "config/app.php"; then
         echo -e "\x1b[31;1mCannot execute self-upgrade process. Please follow the upgrade instructions at https://paymenter.org/docs/guides/v0-migration to migrate your V0 to V1\x1b[0m"
@@ -12,37 +12,13 @@ if [ -f "config/app.php" ]; then
     fi
 fi
 
-if [ "$(php -r 'echo version_compare(PHP_VERSION, "8.2.0");')" -lt 0 ]; then
-    echo -e "\x1b[31;1mCannot execute self-upgrade process. The minimum required PHP version required is 8.2, you have [$(php -r 'echo PHP_VERSION;')].\x1b[0m"
+if [ "$(php -r 'echo version_compare(PHP_VERSION, "8.3.0");')" -lt 0 ]; then
+    echo -e "\x1b[31;1mCannot execute self-upgrade process. The minimum required PHP version required is 8.3, you have [$(php -r 'echo PHP_VERSION;')].\x1b[0m"
     exit 1
 fi
 
 # Exit if release URL is empty or underfined
 if [[ $URL == "" ]]; then echo -e "\x1b[31;1mRelease URL not defined.\x1b[0m"; exit 1; fi
-
-
-# Check if the previous version is 1.2.11 or lower, if so, check if extensions directory contains filament resources (except announcements/affiliates)
-
-if [[ -f "config/app.php" ]]; then
-  # Read version from config/app.php
-  PREV_VER="$(grep 'version' config/app.php | head -1 | sed -E "s/.*'version'\s*=>\s*'([^']+)'.*/\1/")"
-
-  # Only run checks if version < 1.2.12
-  if [[ "$PREV_VER" != *beta* ]] && [[ -n "${PREV_VER:-}" ]] && php -r "exit(version_compare('$PREV_VER','1.2.12','<')?0:1);"; then
-    # Check extensions for admin folder
-    if [[ -d extensions ]]; then
-      found_admin=$(find extensions -type d -name Admin \
-        ! -path "*/Announcements/*" \
-        ! -path "*/Affiliates/*")
-      if [[ -n "$found_admin" ]]; then
-        echo -e "\x1b[31;1mExtensions that need to be removed (temporary):\x1b[0m"
-        echo "$found_admin"
-        echo -e "\x1b[31;1mCannot execute self-upgrade process. Please remove the given extensions, then re-run the upgrade process and add the (updated) extensions again after the upgrade is complete.\x1b[0m"
-        exit 1
-      fi
-    fi
-  fi
-fi
 
 for i in "$@"
 do
