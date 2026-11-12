@@ -232,11 +232,13 @@ class Service extends Model implements Auditable
             }
         });
 
-        // Add coupon discount if applicable
-        if ($this->coupon) {
+        // Add coupon discount if applicable (a coupon limited to other products never discounts this one)
+        if ($this->coupon && ($this->coupon->products->isEmpty() || $this->coupon->products->contains($this->product_id))) {
             $invoices = $this->invoices()->where('status', 'paid')->count() + 1;
+            // An empty recurring means the first billing cycle only, 0 means every cycle
+            $cycles = (int) ($this->coupon->recurring ?? 1);
             // If it already used for the recurring period, do not apply the discount
-            if ($this->coupon->recurring == 0 || $invoices <= $this->coupon->recurring) {
+            if ($cycles === 0 || $invoices <= $cycles) {
                 $discount = $this->coupon->calculateDiscount($price);
                 $price -= $discount;
             }
