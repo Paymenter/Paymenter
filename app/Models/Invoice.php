@@ -86,6 +86,21 @@ class Invoice extends Model implements Auditable
     }
 
     /**
+     * Total of the invoice items, without adjustment notes.
+     * Used for the subtotal and tax breakdown, as adjustment notes are listed separately.
+     */
+    public function formattedItemsTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => new Price([
+                'price' => $this->items->sum(fn ($item) => $this->moneyToCents($item->price) * $item->quantity) / 100.0,
+                'currency' => $this->currency,
+                'tax' => $this->tax,
+            ])
+        );
+    }
+
+    /**
      * Current balance of the invoice, accounting for total + debit notes - credit notes - succeeded transactions (net of refunds).
      */
     public function currentBalance(): Attribute
