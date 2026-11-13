@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Classes\Price;
+use App\Classes\Settings;
 use App\Observers\ServiceUpgradeObserver;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -82,6 +83,11 @@ class ServiceUpgrade extends Model implements Auditable
                 $total += $this->calculateProratedAmount($oldPrice?->configValue, $configValue)->price;
             }
         }
+
+        $total = (float) (new Price([
+            'price' => $total,
+            'currency' => $this->service->currency,
+        ], apply_exclusive_tax: true, tax: Settings::tax($this->service->user)))->price;
 
         // Cap refunds to what was actually paid when coupon exists
         if ($total < 0 && $this->service->coupon_id) {
