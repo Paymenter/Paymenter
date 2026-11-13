@@ -14,13 +14,15 @@ class EditInvoice extends EditRecord
 {
     protected static string $resource = InvoiceResource::class;
 
-    public function mount(int|string $record): void
+    protected function authorizeAccess(): void
     {
-        parent::mount($record);
+        if (config('settings.immutable_invoices_enabled', false) && $this->getRecord()->status !== Invoice::STATUS_DRAFT) {
+            $this->redirect(InvoiceResource::getUrl('view', ['record' => $this->getRecord()->getKey()]));
 
-        if (config('settings.immutable_invoices_enabled', false) && $this->record->status !== Invoice::STATUS_DRAFT) {
-            redirect(InvoiceResource::getUrl('view', ['record' => $record]));
+            return;
         }
+
+        parent::authorizeAccess();
     }
 
     protected function getHeaderActions(): array

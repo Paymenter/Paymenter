@@ -27,7 +27,7 @@ class ViewInvoice extends ViewRecord
         parent::mount($record);
 
         if (!config('settings.immutable_invoices_enabled', false)) {
-            redirect(InvoiceResource::getUrl('edit', ['record' => $record]));
+            $this->redirect(InvoiceResource::getUrl('edit', ['record' => $record]));
         }
     }
 

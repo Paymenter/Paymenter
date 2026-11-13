@@ -38,7 +38,7 @@ class Create extends Command implements PromptsForMissingInput
             'last_name' => $this->argument('last_name'),
             'email' => $this->argument('email'),
             'password' => $this->argument('password'),
-            'role_id' => $this->argument('role') ?? null,
+            'role_id' => $this->argument('role') ?: null,
         ]);
     }
 
