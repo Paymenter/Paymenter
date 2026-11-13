@@ -21,7 +21,7 @@ class Upgrade extends Component
 {
     public Service $service;
 
-    public $upgrade;
+    public int $upgrade;
 
     public Product $upgradeProduct;
 
@@ -78,7 +78,7 @@ class Upgrade extends Component
     }
 
     // When upgrade changes, update the upgradeProduct
-    public function updatedUpgrade($upgrade)
+    public function updatedUpgrade(int $upgrade)
     {
         // Check if the upgrade is valid
         if (!$this->service->productUpgrades()->contains($upgrade) && $upgrade != $this->service->product_id) {

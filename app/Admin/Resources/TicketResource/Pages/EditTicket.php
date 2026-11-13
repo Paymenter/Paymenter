@@ -50,6 +50,7 @@ class EditTicket extends EditRecord
                     ->visibility('private')
                     ->directory('tickets/uploads')
                     ->multiple()
+                    ->preventFilePathTampering()
                     ->storeFileNamesIn('attachment_names')
                     ->reorderable(),
             ]);
