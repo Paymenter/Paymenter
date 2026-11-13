@@ -53,6 +53,12 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
         'tfa_secret',
     ];
 
+    protected $auditExclude = [
+        'password',
+        'remember_token',
+        'tfa_secret',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
