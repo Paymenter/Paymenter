@@ -129,37 +129,122 @@ class Enhance extends Server
         }
     }
 
+    // Reuses an existing Enhance login instead of failing with 409 "Login already exists
+    // in this realm", repairs an org that has no owner (left behind by such a failure),
+    // and creates a new org when the stored one was deleted.
     private function fetchUserOrg(User $user)
     {
-        if ($user->properties()->where('key', 'enhance_orgId')->exists()) {
-            return $user->properties()->where('key', 'enhance_orgId')->first()->value;
+        $prop = $user->properties()->where('key', 'enhance_orgId')->first();
+        if ($prop) {
+            $org = $this->orgInfo($prop->value);
+            if ($org !== null && ($org['status'] ?? 'active') !== 'deleted') {
+                if (empty($org['ownerLoginId'])) {
+                    $this->addOwner($prop->value, $this->loginFor($user, $prop->value));
+                }
+
+                return $prop->value;
+            }
+            // the stored org was terminated (status "deleted") or is gone: start a new one
         }
+
         $response = $this->request('/orgs/' . $this->config('orgId') . '/customers', 'post', [
             'name' => $user->name,
         ])->json();
 
-        if (isset($response['id'])) {
-            $user->properties()->create([
-                'key' => 'enhance_orgId',
-                'value' => $response['id'],
-                'name' => 'Enhance Org ID',
-            ]);
+        if (!isset($response['id'])) {
+            throw new Exception('Enhance did not return an id for the new customer organisation');
+        }
+        // saved before the owner is added, so a retry repairs this org instead of making another one
+        $user->properties()->updateOrCreate(['key' => 'enhance_orgId'], [
+            'value' => $response['id'],
+            'name' => 'Enhance Org ID',
+        ]);
+
+        $this->addOwner($response['id'], $this->loginFor($user, $response['id']));
+
+        return $response['id'];
+    }
+
+    // GET /orgs/{id}; null when the org does not exist (any longer)
+    private function orgInfo(string $orgId): ?array
+    {
+        $req_url = rtrim($this->config('host'), '/') . '/api/orgs/' . $orgId;
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->config('apikey'),
+            'Accept' => 'application/json',
+        ])->get($req_url);
+        if ($response->status() === 404) {
+            return null;
+        }
+        if (!$response->successful()) {
+            throw new Exception('An error occurred, got status code ' . $response->status() . ' on /orgs/' . $orgId .
+                ($response->body() ? ' | Response: ' . $response->body() : ''));
         }
 
-        // Create Login
-        $loginResponse = $this->request('/logins?orgId=' . $response['id'], 'post', [
+        return $response->json();
+    }
+
+    // The customer's Enhance login id: a new login, or the existing one with the same e-mail
+    private function loginFor(User $user, string $orgId): string
+    {
+        $req_url = rtrim($this->config('host'), '/') . '/api/logins?orgId=' . $orgId;
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->config('apikey'),
+            'Accept' => 'application/json',
+        ])->post($req_url, [
             'email' => $user->email,
             'name' => $user->name,
             'password' => Str::password(),
-        ])->json();
+        ]);
+        if ($response->successful() && isset($response['id'])) {
+            return $response['id'];
+        }
+        if ($response->status() === 409) {
+            $id = $this->findLoginId($user->email);
+            if ($id !== null) {
+                return $id;
+            }
+        }
+        throw new Exception('An error occurred, got status code ' . $response->status() . ' on /logins' .
+            ($response->body() ? ' | Response: ' . $response->body() : ''));
+    }
 
-        // Create Org member
-        $this->request('/orgs/' . $response['id'] . '/members', 'post', [
-            'loginId' => $loginResponse['id'],
+    // Look the e-mail up in our realm (GET /logins?realmId=, paged); null when not found
+    private function findLoginId(string $email): ?string
+    {
+        $email = mb_strtolower(trim($email));
+        $offset = 0;
+        $limit = 100;
+        do {
+            // as query data: Laravel's get() replaces a query string written into the URL
+            $page = $this->request('/logins', 'get', [
+                'realmId' => $this->config('orgId'), 'offset' => $offset, 'limit' => $limit,
+            ])->json();
+            $items = $page['items'] ?? [];
+            foreach ($items as $login) {
+                if (mb_strtolower(trim($login['email'] ?? '')) === $email) {
+                    return $login['id'];
+                }
+            }
+            $offset += $limit;
+        } while (count($items) > 0 && $offset < (int) ($page['total'] ?? 0));
+
+        return null;
+    }
+
+    // Make the login the org's Owner, unless it is a member already
+    private function addOwner(string $orgId, string $loginId): void
+    {
+        $members = $this->request('/orgs/' . $orgId . '/members')->json();
+        foreach ($members['items'] ?? [] as $member) {
+            if (($member['loginId'] ?? null) === $loginId) {
+                return;
+            }
+        }
+        $this->request('/orgs/' . $orgId . '/members', 'post', [
+            'loginId' => $loginId,
             'roles' => ['Owner'],
         ]);
-
-        return $response['id'];
     }
 
     /**
