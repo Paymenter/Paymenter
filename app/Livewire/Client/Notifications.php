@@ -45,7 +45,7 @@ class Notifications extends Component
             );
         }
 
-        $this->notify('Notification preferences updated successfully.', 'success');
+        $this->notify(__('account.notifications.preferences_updated'), 'success');
     }
 
     public function storePushSubscription($subscription)
@@ -58,7 +58,7 @@ class Notifications extends Component
             || !PushEndpoint::isAllowed($subscription['endpoint'])
         ) {
             throw ValidationException::withMessages([
-                'subscription' => 'The push subscription endpoint is not allowed.',
+                'subscription' => __('account.notifications.push_endpoint_not_allowed'),
             ]);
         }
 
@@ -70,14 +70,14 @@ class Notifications extends Component
                 'auth_key' => $subscription['keys']['auth'],
             ]);
 
-        $this->notify('Push subscription saved successfully.', 'success');
+        $this->notify(__('account.notifications.push_saved'), 'success');
 
         try {
             $this->sendTestNotification($pushSubscription);
-            $this->notify('Test push notification sent successfully. Please check your device.', 'success');
+            $this->notify(__('account.notifications.push_test_sent'), 'success');
         } catch (\Exception $e) {
             // Failed to send notification
-            $this->notify('Failed to send test push notification: ' . $e->getMessage(), 'error');
+            $this->notify(__('account.notifications.push_test_failed', ['error' => $e->getMessage()]), 'error');
         }
     }
 
