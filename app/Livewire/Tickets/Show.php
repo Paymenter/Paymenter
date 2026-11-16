@@ -33,7 +33,7 @@ class Show extends Component
 
         $rateLimitKey = 'ticket-message:' . $this->ticket->id . ':' . Auth::id();
         if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
-            $this->notify('Too many message attempts. Please try again in 10 seconds.', 'error');
+            $this->notify(__('ticket.rate_limit_message', ['seconds' => 10]), 'error');
 
             return;
         }
@@ -58,7 +58,7 @@ class Show extends Component
             ]);
         }
 
-        $this->notify('Message sent successfully');
+        $this->notify(__('ticket.message_sent'));
 
         $this->message = '';
         $this->attachments = [];
@@ -69,7 +69,7 @@ class Show extends Component
     {
         $this->authorize('update', $this->ticket);
         if (config('settings.ticket_client_closing_disabled', false)) {
-            abort(403, 'Closing tickets is disabled.');
+            abort(403, __('ticket.closing_disabled'));
         }
 
         $this->ticket->update(['status' => 'closed']);
