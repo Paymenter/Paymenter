@@ -13,6 +13,7 @@ use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([InvoiceObserver::class])]
@@ -43,6 +44,52 @@ class Invoice extends Model implements Auditable
             'amount' => -1 * abs($this->total),
             'description' => $description ?? 'Automatic credit note generated after overdue invoice cancellation.',
         ]);
+    }
+
+    /**
+     * Put the credits applied to this invoice back on the user's credit balance.
+     */
+    public function returnAppliedCredits(): void
+    {
+        if (!$this->user) {
+            return;
+        }
+
+        DB::transaction(function () {
+            // Same lock order as paying with credit: the balance first, then the invoice
+            $credit = $this->user->credits()->where('currency_code', $this->currency_code)->lockForUpdate()->first();
+            self::whereKey($this->id)->lockForUpdate()->first();
+
+            $transactions = $this->transactions()
+                ->where('is_credit_transaction', true)
+                ->where('status', InvoiceTransactionStatus::Succeeded)
+                ->lockForUpdate()
+                ->get();
+
+            $total = 0;
+            foreach ($transactions as $transaction) {
+                $cents = $this->moneyToCents($transaction->amount) - $this->moneyToCents($transaction->refunded_amount);
+                if ($cents <= 0) {
+                    continue;
+                }
+
+                $transaction->increment('refunded_amount', $cents / 100);
+                $total += $cents;
+            }
+
+            if ($total <= 0) {
+                return;
+            }
+
+            if ($credit) {
+                $credit->increment('amount', $total / 100);
+            } else {
+                $this->user->credits()->create([
+                    'currency_code' => $this->currency_code,
+                    'amount' => $total / 100,
+                ]);
+            }
+        });
     }
 
     /**
