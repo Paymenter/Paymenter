@@ -46,17 +46,12 @@ class Account extends ComponentWithProperties
 
         /** @var User $user */
         $user = Auth::user();
-        $user->fill($validatedData);
-        $emailChanged = $user->isDirty('email');
+        $user->update($validatedData);
 
         // If email was changed, we should mark it as unverified and send a new verification email
-        if ($emailChanged) {
+        if ($user->wasChanged('email')) {
             $user->email_verified_at = null;
-        }
-
-        $user->save();
-
-        if ($emailChanged) {
+            $user->save();
             NotificationHelper::emailVerificationNotification($user);
         }
 
@@ -64,7 +59,7 @@ class Account extends ComponentWithProperties
             $this->updateProperties($user, $validatedData['properties']);
         }
 
-        $this->notify(__('Account updated successfully.'));
+        $this->notify(__('account.notifications.account_updated'));
     }
 
     public function render()
