@@ -110,8 +110,9 @@ Alpine.data('passkeyLogin', () => ({
     },
     async autofill () {
         try {
-            const remember = document.querySelector('#login [name="remember"]')?.checked ?? false
-            const response = await Passkeys.autofill({ remember })
+            const response = await Passkeys.autofill({
+                remember: () => document.querySelector('#login [name="remember"]')?.checked ?? false
+            })
             if (response?.redirect) window.location.assign(response.redirect)
         } catch (error) {
             console.error('Passkey autofill failed:', error)
@@ -124,8 +125,9 @@ Alpine.data('passkeyLogin', () => ({
         this.error = ''
 
         try {
-            const remember = document.querySelector('#login [name="remember"]')?.checked ?? false
-            const response = await Passkeys.verify({ remember })
+            const response = await Passkeys.verify({
+                remember: () => document.querySelector('#login [name="remember"]')?.checked ?? false
+            })
             if (response?.redirect) window.location.assign(response.redirect)
         } catch (error) {
             this.error = error.message || 'Passkey sign-in failed.'
