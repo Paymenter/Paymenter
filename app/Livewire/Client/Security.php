@@ -111,7 +111,7 @@ class Security extends Component
     public function logoutSession(UserSession $session)
     {
         if ($session->user_id !== Auth::id()) {
-            $this->notify(__('Unauthorized'), 'error');
+            $this->notify(__('account.notifications.unauthorized'), 'error');
 
             return;
         }
