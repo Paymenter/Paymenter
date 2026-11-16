@@ -17,7 +17,7 @@
             <div class="w-full max-h-96 overflow-y-auto">
                 @if ($this->notifications->isEmpty())
                 <div class="p-4 text-center text-sm text-base/80">
-                    {{ __('No new notifications') }}
+                    {{ __('account.notifications.no_new_notifications') }}
                 </div>
                 @else
                 @foreach ($this->notifications as $notification)
@@ -36,7 +36,7 @@
 
                                 <button wire:click.stop="markAsRead({{ $notification->id }})" class="cursor-pointer"
                                     type="button">
-                                    {{ __('Mark as read') }}
+                                    {{ __('account.notifications.mark_as_read') }}
                                 </button>
                             </div>
                         </div>
