@@ -149,13 +149,13 @@ class NotificationHelper
             mkdir(storage_path('app/invoices'), 0755, true);
         }
         // Save the PDF to a temporary location
-        $pdfPath = storage_path('app/invoices/' . ($invoice->number ?? $invoice->id) . '.pdf');
+        $pdfPath = storage_path('app/invoices/' . $invoice->fileName() . '.pdf');
         $pdf->save($pdfPath);
 
         // Attach the PDF to the email
         $attachments = [
             [
-                'path' => 'invoices/' . ($invoice->number ?? $invoice->id) . '.pdf',
+                'path' => 'invoices/' . $invoice->fileName() . '.pdf',
                 'name' => 'invoice.pdf',
             ],
         ];

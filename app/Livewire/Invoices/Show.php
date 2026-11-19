@@ -247,6 +247,6 @@ class Show extends Component
     {
         return response()->streamDownload(function () {
             echo PDF::generateInvoice($this->invoice)->stream();
-        }, 'invoice-' . ($this->invoice->number ?? $this->invoice->id) . '.pdf');
+        }, 'invoice-' . $this->invoice->fileName() . '.pdf');
     }
 }

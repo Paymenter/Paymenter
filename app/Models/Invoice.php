@@ -239,6 +239,14 @@ class Invoice extends Model implements Auditable
         );
     }
 
+    /**
+     * Invoice number safe to use in file names, e.g. INV-2026/2 becomes INV-2026-2.
+     */
+    public function fileName(): string
+    {
+        return str_replace(['/', '\\'], '-', (string) ($this->number ?? $this->id));
+    }
+
     public function getRouteKey()
     {
         // Prefer using number if it’s set, otherwise fallback to id
