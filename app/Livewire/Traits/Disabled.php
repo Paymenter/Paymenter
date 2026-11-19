@@ -24,7 +24,7 @@ trait Disabled
             // If the condition is met, abort with a 404 error
             if ($condition) {
                 // If the condition is met, abort with a 404 error
-                abort(404, 'This feature is currently disabled.');
+                abort(404, __('common.feature_disabled'));
             }
         }
     }

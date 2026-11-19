@@ -3,7 +3,7 @@
     @if (isset($type) && $type === 'submit')
         <div role="status" wire:loading>
             <x-ri-loader-5-fill aria-hidden="true" class="size-6 me-2 fill-background animate-spin" />
-            <span class="sr-only">Loading...</span>
+            <span class="sr-only">{{ __('common.loading') }}</span>
         </div>
         <div wire:loading.remove>
             {{ $slot }}
