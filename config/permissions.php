@@ -77,6 +77,22 @@ return [
                 'delete' => 'Delete Services',
                 'deleteAny' => 'Bulk Delete Services',
             ],
+            'domains' => [
+                'create' => 'Create Domains',
+                'update' => 'Update Domains',
+                'viewAny' => 'View Domains',
+                'view' => 'View Domain',
+                'delete' => 'Delete Domains',
+                'deleteAny' => 'Bulk Delete Domains',
+            ],
+            'tlds' => [
+                'create' => 'Create TLDs',
+                'update' => 'Update TLDs',
+                'viewAny' => 'View TLDs',
+                'view' => 'View TLD',
+                'delete' => 'Delete TLDs',
+                'deleteAny' => 'Bulk Delete TLDs',
+            ],
             'service_cancellations' => [
                 'create' => 'Create Service Cancellations',
                 'update' => 'Update Service Cancellations',

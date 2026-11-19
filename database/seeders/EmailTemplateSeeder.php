@@ -289,6 +289,62 @@ class EmailTemplateSeeder extends Seeder
             'edit_preference_message' => 'Notify me about service cancellations',
             'in_app_url' => '{{ route("services.show", $service) }}',
         ],
+        'domain_renewal_upcoming' => [
+            'subject' => 'Domain renewal upcoming',
+            'body' => <<<'HTML'
+                # Domain renewal upcoming
+
+                Your domain **{{ $domain->name }}** expires in **{{ $days }} days**.
+
+                Please pay the renewal invoice before the expiry date.
+                HTML,
+            'in_app_title' => 'Domain renewal upcoming',
+            'in_app_body' => 'Your domain {{ $domain->name }} expires in {{ $days }} days.',
+            'mail_enabled' => 'choice_on',
+            'in_app_enabled' => 'choice_on',
+            'edit_preference_message' => 'Notify me before domains expire',
+        ],
+        'domain_expired' => [
+            'subject' => 'Domain expired',
+            'body' => <<<'HTML'
+                # Domain expired
+
+                Your domain **{{ $domain->name }}** has expired.
+                HTML,
+            'in_app_title' => 'Domain expired',
+            'in_app_body' => 'Your domain {{ $domain->name }} has expired.',
+            'mail_enabled' => 'choice_on',
+            'in_app_enabled' => 'choice_on',
+            'edit_preference_message' => 'Notify me when domains expire',
+        ],
+        'domain_grace_warning' => [
+            'subject' => 'Domain grace period',
+            'body' => <<<'HTML'
+                # Domain in grace period
+
+                Your domain **{{ $domain->name }}** is in its grace period.
+                Renew it before it enters redemption.
+                HTML,
+            'in_app_title' => 'Domain grace period',
+            'in_app_body' => 'Your domain {{ $domain->name }} is in its grace period.',
+            'mail_enabled' => 'choice_on',
+            'in_app_enabled' => 'choice_on',
+            'edit_preference_message' => 'Notify me about domain grace periods',
+        ],
+        'domain_redemption_warning' => [
+            'subject' => 'Domain redemption period',
+            'body' => <<<'HTML'
+                # Domain in redemption
+
+                Your domain **{{ $domain->name }}** is in redemption.
+                A restore fee may apply.
+                HTML,
+            'in_app_title' => 'Domain redemption period',
+            'in_app_body' => 'Your domain {{ $domain->name }} is in redemption.',
+            'mail_enabled' => 'choice_on',
+            'in_app_enabled' => 'choice_on',
+            'edit_preference_message' => 'Notify me about domain redemption',
+        ],
     ];
 
     /**

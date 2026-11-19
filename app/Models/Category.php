@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
+/**
+ * @property string $slug
+ */
 #[ObservedBy(CategoryObserver::class)]
 class Category extends Model implements Auditable
 {

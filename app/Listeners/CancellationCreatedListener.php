@@ -14,6 +14,12 @@ class CancellationCreatedListener implements ShouldQueue
      */
     public function handle(Created $event): void
     {
+        if ($event->cancellation->service->domain) {
+            $event->cancellation->service->domain->update(['auto_renew' => false]);
+
+            return;
+        }
+
         if ($event->cancellation->type == 'immediate') {
             if (in_array($event->cancellation->service->status, [Service::STATUS_ACTIVE, Service::STATUS_SUSPENDED])) {
                 TerminateJob::dispatch($event->cancellation->service);

@@ -25,6 +25,11 @@ class Navigation
                     'icon' => 'ri-home-2',
                 ],
                 [
+                    'name' => __('navigation.domain_search'),
+                    'url' => route('domains.search'),
+                    'icon' => 'ri-global',
+                ],
+                [
                     'name' => __('navigation.shop'),
                     'children' => $categories->map(function ($category) {
                         return [
@@ -103,6 +108,13 @@ class Navigation
                     'icon' => 'ri-archive-stack',
                     'condition' => Auth::check(),
                     'priority' => 20,
+                ],
+                [
+                    'name' => __('navigation.domains'),
+                    'url' => route('domains'),
+                    'icon' => 'ri-global',
+                    'condition' => Auth::check(),
+                    'priority' => 25,
                 ],
                 [
                     'name' => __('navigation.invoices'),

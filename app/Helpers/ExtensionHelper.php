@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Attributes\ExtensionMeta;
+use App\Classes\Extension\Registrar;
 use App\Classes\FilamentInput;
 use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
@@ -683,6 +684,47 @@ class ExtensionHelper
         self::recordAudit($service, 'extension_action', [], ['action' => 'create_server']);
 
         return self::getExtension('server', $server->extension, $server->settings)->createServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
+    }
+
+    /**
+     * Get a server extension instance when it is a domain registrar.
+     */
+    public static function getRegistrar($server): ?Registrar
+    {
+        if (!self::isRegistrar($server)) {
+            return null;
+        }
+
+        try {
+            $extension = self::getExtension('server', $server->extension, $server->settings);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        return $extension instanceof Registrar ? $extension : null;
+    }
+
+    public static function isRegistrar($server): bool
+    {
+        if (!$server) {
+            return false;
+        }
+
+        $class = $server->namespace . '\\' . $server->extension;
+
+        return class_exists($class) && is_subclass_of($class, Registrar::class);
+    }
+
+    /**
+     * Renew a service on the provider side.
+     */
+    public static function renewServer(Service $service)
+    {
+        $server = self::checkServer($service, 'renewServer');
+
+        self::recordAudit($service, 'extension_action', [], ['action' => 'renew_server']);
+
+        return self::getExtension('server', $server->extension, $server->settings)->renewServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
     /**

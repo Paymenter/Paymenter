@@ -8,6 +8,9 @@ use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Category;
 use App\Models\Plan;
+use App\Models\Product;
+use App\Services\Domain\DomainCheckoutService;
+use App\Services\Domain\DomainPricing;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
@@ -27,6 +30,8 @@ class Checkout extends Component
     // Don't allow the user to change the total via hacks
     #[Locked]
     public $total;
+
+    public ?array $domainCheck = null;
 
     public $setup_fee;
 
@@ -99,33 +104,48 @@ class Checkout extends Component
 
     public function updatePricing()
     {
-        $total = $this->plan->price()->price;
-        $setup_fee = $this->plan->price()->setup_fee;
+        $domainPrice = DomainPricing::forProduct($this->product, (array) $this->checkoutConfig);
 
-        $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee) {
-            // Check if checkbox is set, if so, add price if checked
-            if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
-                $total += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
-                $setup_fee += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+        if ($domainPrice !== null && !$domainPrice->available) {
+            $this->total = $domainPrice;
 
-                return;
-            }
-            // Skip text, number and checkbox types as they have no price
-            if (in_array($option->type, ['text', 'number', 'checkbox'])) {
-                $total += 0;
-                $setup_fee += 0;
+            return;
+        }
 
-                return;
-            }
+        if ($domainPrice !== null) {
+            $total = $domainPrice->price ?? 0;
+            $setup_fee = 0;
+        } else {
+            $total = $this->plan->price()->price;
+            $setup_fee = $this->plan->price()->setup_fee;
+        }
 
-            // Add price of selected option
-            $total += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
-            $setup_fee += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
-        });
+        if ($domainPrice === null) {
+            $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee) {
+                // Check if checkbox is set, if so, add price if checked
+                if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
+                    $total += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
+                    $setup_fee += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+
+                    return;
+                }
+                // Skip text, number and checkbox types as they have no price
+                if (in_array($option->type, ['text', 'number', 'checkbox'])) {
+                    $total += 0;
+                    $setup_fee += 0;
+
+                    return;
+                }
+
+                // Add price of selected option
+                $total += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
+                $setup_fee += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+            });
+        }
 
         $this->total = new Price([
             'price' => $total,
-            'currency' => $this->plan->price()->currency,
+            'currency' => $domainPrice?->currency ?? $this->plan->price()->currency,
             'setup_fee' => $setup_fee,
         ], apply_exclusive_tax: true);
     }
@@ -145,7 +165,21 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig));
+        return once(function () {
+            $config = ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig);
+
+            if (ExtensionHelper::isRegistrar($this->product->server)) {
+                $config = array_merge(DomainCheckoutService::fields($this->product), $config);
+            } elseif ($this->product->domain_mode === 'required') {
+                $domainProducts = $this->domainProducts();
+
+                if ($domainProducts) {
+                    $config = array_merge(DomainCheckoutService::fieldsForProducts($domainProducts), $config);
+                }
+            }
+
+            return $config;
+        });
     }
 
     public function rules()
@@ -279,11 +313,105 @@ class Checkout extends Component
             $checkoutConfig[$config['name']] = $this->checkoutConfig[$config['name']] ?? null;
         }
 
-        Cart::add($this->product, $this->plan, $configOptions, $checkoutConfig, key: $this->cartProductKey);
+        if ($this->isDomainProduct()) {
+            $result = DomainCheckoutService::check($this->product, $checkoutConfig, true);
+
+            if (!($result['available'] ?? false)) {
+                $this->notify($result['error'] ?? 'The domain is not available.', 'error');
+
+                return;
+            }
+
+            $checkoutConfig['domain'] = $result['name'];
+            $checkoutConfig['years'] = $result['years'];
+        }
+
+        if ($this->product->domain_mode === 'required' && empty($this->domainProducts())) {
+            $this->notify('This product requires a domain, but no domain product is configured.', 'error');
+
+            return;
+        }
+
+        if ($this->product->domain_mode === 'required') {
+            $result = DomainCheckoutService::checkForProducts($this->domainProducts(), $checkoutConfig, true);
+
+            if (!($result['available'] ?? false)) {
+                $this->notify($result['error'] ?? 'The domain is not available.', 'error');
+
+                return;
+            }
+
+            $domainProduct = Product::findOrFail((int) $result['domain_product_id']);
+            $domainPlan = $domainProduct->plans()->first();
+            if (!$domainPlan) {
+                $this->notify('The selected domain product has no plan.', 'error');
+
+                return;
+            }
+
+            $checkoutConfig['domain'] = $result['name'];
+            $checkoutConfig['years'] = $result['years'];
+            $domainConfig = [
+                'sld' => $this->checkoutConfig['sld'],
+                'tld' => $this->checkoutConfig['tld'],
+                'years' => $result['years'],
+                'domain' => $result['name'],
+            ];
+        }
+
+        $hostingItemId = Cart::add($this->product, $this->plan, $configOptions, $checkoutConfig, key: $this->cartProductKey);
+
+        if (isset($domainProduct, $domainPlan, $domainConfig)) {
+            $existingDomainItem = Cart::get()->items->firstWhere('parent_id', $hostingItemId);
+
+            if (!$existingDomainItem && $this->cartProductKey) {
+                $existingDomainItem = Cart::get()->items->firstWhere('product_id', $domainProduct->id);
+            }
+
+            Cart::add($domainProduct, $domainPlan, [], $domainConfig, key: $existingDomainItem?->id, parentId: $hostingItemId);
+        }
 
         $this->dispatch('cartUpdated');
 
         return $this->redirect(route('cart'), true);
+    }
+
+    public function isDomainProduct(): bool
+    {
+        return (bool) ($this->product->server && ExtensionHelper::isRegistrar($this->product->server));
+    }
+
+    public function domainProducts(): array
+    {
+        if ($this->isDomainProduct()) {
+            return [$this->product];
+        }
+
+        $ids = $this->product->domain_products ?: [];
+
+        return Product::whereIn('id', $ids)->get()->all();
+    }
+
+    public function requiresDomainField(): bool
+    {
+        return !empty($this->domainProducts());
+    }
+
+    public function checkDomainAvailability(): void
+    {
+        $this->validate(attributes: $this->attributes());
+
+        $domainProducts = $this->domainProducts();
+        if (!$domainProducts) {
+            return;
+        }
+
+        $this->domainCheck = DomainCheckoutService::checkForProducts($domainProducts, (array) $this->checkoutConfig, true);
+    }
+
+    public function updatedCheckoutConfig(): void
+    {
+        $this->domainCheck = null;
     }
 
     public function render()

@@ -8,6 +8,7 @@ use App\Livewire\Auth;
 use App\Livewire\Cart;
 use App\Livewire\Client;
 use App\Livewire\Dashboard;
+use App\Livewire\Domains;
 use App\Livewire\Home;
 use App\Livewire\Invoices;
 use App\Livewire\Products;
@@ -17,6 +18,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
+Route::get('/domains/search', Domains\Search::class)->name('domains.search');
 
 // Destroy the session and log out the user.
 // auth()->logout();
@@ -44,6 +46,8 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
     Route::get('/tickets/{ticket}', Tickets\Show::class)->name('tickets.show')->middleware('can:view,ticket');
 
     Route::get('/services', Services\Index::class)->name('services');
+    Route::get('/domains', Domains\Index::class)->name('domains');
+    Route::get('/domains/{domain}', Domains\Show::class)->name('domains.show')->middleware('can:view,domain');
     Route::get('/services/{service}', Services\Show::class)->name('services.show')->middleware('can:view,service');
     Route::get('/services/{service}/upgrade', Services\Upgrade::class)->name('services.upgrade')->middleware('can:view,service');
 });

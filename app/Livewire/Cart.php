@@ -12,6 +12,8 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
+use App\Services\Domain\DomainAvailability;
+use App\Services\Domain\DomainService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +86,10 @@ class Cart extends Component
 
     public function removeProduct($index)
     {
-        ClassesCart::remove($index);
+        if (!ClassesCart::remove($index)) {
+            return $this->notify('This domain is required by the hosting product. Remove the hosting item instead.', 'error');
+        }
+
         $this->updateTotal();
     }
 
@@ -108,6 +113,24 @@ class Cart extends Component
         }
         if (config('settings.tos') && !$this->tos) {
             return $this->notify('You must accept the terms of service', 'error');
+        }
+
+        $cart = ClassesCart::get();
+
+        foreach ($cart->items as $item) {
+            if ($item->product->domain_mode === 'required') {
+                $child = $item->children()->first();
+
+                if (!$child || ($child->checkout_config['domain'] ?? null) !== ($item->checkout_config['domain'] ?? null)) {
+                    return $this->notify('A required domain is missing from the cart. Remove and re-add the hosting product.', 'error');
+                }
+            }
+
+            $result = DomainAvailability::validateCheckout($item->product, (array) $item->checkout_config);
+
+            if ($result && !($result['available'] ?? false)) {
+                return $this->notify($result['error'] ?? 'The domain is not available.', 'error');
+            }
         }
 
         // Start database transaction
@@ -223,6 +246,8 @@ class Cart extends Component
                     ]);
                 }
 
+                DomainService::ensureForService($service);
+
                 // Create the invoice items
                 if ($item->price->total > 0) {
                     $invoice->items()->create([
@@ -237,9 +262,14 @@ class Cart extends Component
                     if ($service->product->server) {
                         CreateJob::dispatch($service);
                     }
-                    $service->status = Service::STATUS_ACTIVE;
-                    $service->expires_at = $service->calculateNextDueDate();
-                    $service->save();
+
+                    $service->refresh();
+
+                    if (!$service->domain) {
+                        $service->status = Service::STATUS_ACTIVE;
+                        $service->expires_at = $service->calculateNextDueDate();
+                        $service->save();
+                    }
                 }
             }
 
