@@ -176,17 +176,17 @@
 
     <!-- Totals Section -->
     <div class="totals-section">
-        @if ($invoice->formattedTotal->tax > 0)
+        @if ($invoice->formattedItemsTotal->tax > 0)
         <table class="totals-table">
             <tr>
                 <td class="label">{{ __('invoices.subtotal') }}</td>
-                <td class="amount">{{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}</td>
+                <td class="amount">{{ $invoice->formattedItemsTotal->format($invoice->formattedItemsTotal->price - $invoice->formattedItemsTotal->tax) }}</td>
             </tr>
             <tr>
                 <td class="label">
                     {{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)
                 </td>
-                <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
+                <td class="amount">{{ $invoice->formattedItemsTotal->formatted->tax }}</td>
             </tr>
             @php
                 $adjustmentsTotal = $invoice->adjustmentNotes->filter(fn ($note) => $note->status === \App\Enums\AdjustmentNoteStatus::Active)->sum('amount');
