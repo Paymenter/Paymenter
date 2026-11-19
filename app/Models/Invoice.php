@@ -242,7 +242,8 @@ class Invoice extends Model implements Auditable
 
     public function pdfDownloadFilename(): string
     {
-        $name = Str::slug((string) ($this->number ?: $this->id));
+        $number = str_replace(['/', '\\'], ' ', (string) ($this->number ?: $this->id));
+        $name = Str::slug($number);
 
         return 'invoice-' . ($name !== '' ? $name : $this->id) . '.pdf';
     }
