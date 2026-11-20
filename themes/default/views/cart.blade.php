@@ -6,57 +6,155 @@
                 {{ __('product.empty_cart') }}
             </h1>
             @endif
-            @foreach (Cart::items() as $item)
-            <div class="flex flex-row justify-between w-full bg-background-secondary p-3 rounded-md border border-neutral">
-                <div class="flex flex-col gap-1">
-                    <h2 class="text-2xl font-semibold">
-                        {{ $item->product->name }}
-                    </h2>
-                    <p class="text-sm">
-                        @foreach ($item->config_options as $option)
-                        {{ $option['option_name'] }}: {{ $option['value_name'] }}<br>
-                        @endforeach
-                    </p>
+            @foreach (Cart::groupedItems() as $group)
+            @php
+                $parent = $group['parent'];
+                $groupTotal = $group['items']->sum(fn ($item) => (float) $item->price->total * $item->quantity);
+                $groupPrice = new \App\Classes\Price(['price' => $groupTotal, 'currency' => Cart::get()->currency]);
+            @endphp
+            @if ($group['items']->count() > 1)
+            <div class="flex flex-col w-full bg-background-secondary border border-neutral rounded-lg p-4 sm:p-6" data-cart-group>
+                <div class="flex flex-col">
+                    @foreach ($group['items'] as $item)
+                    @php
+                        $itemPrice = $item->price;
+                        $summary = $item->domainSummary();
+                    @endphp
+                    <div class="flex flex-row justify-between gap-4 py-4 {{ $loop->first ? 'pt-0' : 'border-t border-neutral' }}">
+                        <div class="flex flex-col gap-1">
+                            <h2 class="{{ $loop->first ? 'text-2xl' : 'text-lg' }} font-semibold">
+                                {{ $item->product->name }}
+                            </h2>
+                            @if ($summary)
+                            <p class="text-sm text-primary-500">
+                                {{ $item->isDomainProduct() ? 'Domain' : 'Included domain' }}: {{ $summary['domain'] }}
+                                · {{ $summary['years'] }} {{ $summary['years'] === 1 ? 'year' : 'years' }}
+                            </p>
+                            @endif
+                            @if (!$item->isDomainProduct() && $item->termLabel())
+                            <p class="text-sm text-base/70">
+                                {{ __('services.billing_cycle') }}: {{ $item->termLabel() }}
+                            </p>
+                            @endif
+                            @if (!empty($item->config_options))
+                            <p class="text-sm">
+                                @foreach ($item->config_options as $option)
+                                {{ $option['option_name'] }}: {{ $option['value_name'] }}<br>
+                                @endforeach
+                            </p>
+                            @endif
+                        </div>
+                        <div class="flex flex-col items-end gap-1 shrink-0">
+                            <h3 class="text-xl font-semibold">
+                                {{ $itemPrice->format($itemPrice->total * $item->quantity) }}
+                            </h3>
+                            @if ($item->quantity > 1)
+                            <p class="text-sm text-base/70">
+                                {{ $itemPrice->format($itemPrice->total) }} each
+                            </p>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
-                <div class="flex flex-col justify-between items-end gap-4">
-                    <h3 class="text-xl font-semibold p-1">
-                        {{ $item->price->format($item->price->total * $item->quantity) }} @if ($item->quantity > 1)
-                        ({{ $item->price }} each)
-                        @endif
-                    </h3>
-                    <div class="flex flex-row gap-2">
-                        @if ($item->product->allow_quantity == 'combined')
-                        <div class="flex flex-row gap-1 items-center mr-4">
+                <div class="flex flex-row flex-wrap justify-between items-center gap-4 border-t border-neutral pt-4 mt-2">
+                    <div class="text-xl font-semibold flex items-baseline gap-2">
+                        <span class="text-sm font-normal text-base/70">{{ __('invoices.total') }}</span>
+                        {{ $groupPrice->format($groupTotal) }}
+                    </div>
+                    <div class="flex flex-row gap-2 items-center ml-auto">
+                        @if ($parent->product->allow_quantity == 'combined')
+                        <div class="flex flex-row gap-1 items-center mr-2">
                             <x-button.secondary
-                                wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"
-                                class="h-full !w-fit">
+                                wire:click="updateQuantity({{ $parent->id }}, {{ $parent->quantity - 1 }})"
+                                class="!h-8 !w-8 !p-0">
                                 -
                             </x-button.secondary>
-                            <x-form.input class="h-10 text-center" disabled divClass="!mt-0 !w-14" value="{{ $item->quantity }}" name="quantity" />
+                            <x-form.input class="!h-8 !w-12 text-center" disabled divClass="!mt-0 !w-12" value="{{ $parent->quantity }}" name="quantity" />
                             <x-button.secondary
-                                wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }});"
-                                class="h-full !w-fit">
+                                wire:click="updateQuantity({{ $parent->id }}, {{ $parent->quantity + 1 }});"
+                                class="!h-8 !w-8 !p-0">
                                 +
                             </x-button.secondary>
                         </div>
                         @endif
-                        @if ($item->product->plans->count() > 1 || $item->product->configOptions->isNotEmpty() || !empty($item->checkout_config))
-                        <a href="{{ route('products.checkout', [$item->product->category, $item->product, 'edit' => $item->id]) }}"
+                        @if ($parent->product->plans->count() > 1 || $parent->product->configOptions->isNotEmpty() || !empty($parent->checkout_config))
+                        <a href="{{ route('products.checkout', [$parent->product->category, $parent->product, 'edit' => $parent->id]) }}"
                             wire:navigate>
-                            <x-button.primary class="h-fit w-fit">
+                            <x-button.primary class="!w-fit !px-3 !py-1.5 !text-xs">
                                 {{ __('product.edit') }}
                             </x-button.primary>
                         </a>
                         @endif
-                        <x-button.danger wire:click="removeProduct({{ $item->id }})" class="h-fit !w-fit">
-                            <x-loading target="removeProduct({{ $item->id }})" />
-                            <div wire:loading.remove wire:target="removeProduct({{ $item->id }})">
+                        <x-button.danger wire:click="removeProduct({{ $parent->id }})" class="!w-fit !px-3 !py-1.5 !text-xs">
+                            <x-loading target="removeProduct({{ $parent->id }})" />
+                            <div wire:loading.remove wire:target="removeProduct({{ $parent->id }})">
                                 {{ __('product.remove') }}
                             </div>
                         </x-button.danger>
                     </div>
                 </div>
             </div>
+            @else
+            <div class="flex flex-row justify-between w-full bg-background-secondary p-3 rounded-md border border-neutral">
+                <div class="flex flex-col gap-1">
+                    <h2 class="text-2xl font-semibold">
+                        {{ $parent->product->name }}
+                    </h2>
+                    @if ($summary = $parent->domainSummary())
+                        <p class="text-sm text-primary-500">
+                            {{ $parent->product->domain_mode === 'required' ? 'Included domain' : 'Domain' }}: {{ $summary['domain'] }}
+                            · {{ $summary['years'] }} {{ $summary['years'] === 1 ? 'year' : 'years' }}
+                        </p>
+                    @endif
+                    <p class="text-sm">
+                        @foreach ($parent->config_options as $option)
+                        {{ $option['option_name'] }}: {{ $option['value_name'] }}<br>
+                        @endforeach
+                    </p>
+                </div>
+                <div class="flex flex-col justify-between items-end gap-4">
+                    <h3 class="text-xl font-semibold p-1">
+                        {{ $parent->price->format($parent->price->total * $parent->quantity) }} @if ($parent->quantity > 1)
+                        ({{ $parent->price }} each)
+                        @endif
+                    </h3>
+                    <div class="flex flex-row gap-2">
+                        @if ($parent->product->allow_quantity == 'combined')
+                        <div class="flex flex-row gap-1 items-center mr-4">
+                            <x-button.secondary
+                                wire:click="updateQuantity({{ $parent->id }}, {{ $parent->quantity - 1 }})"
+                                class="h-full !w-fit">
+                                -
+                            </x-button.secondary>
+                            <x-form.input class="h-10 text-center" disabled divClass="!mt-0 !w-14" value="{{ $parent->quantity }}" name="quantity" />
+                            <x-button.secondary
+                                wire:click="updateQuantity({{ $parent->id }}, {{ $parent->quantity + 1 }});"
+                                class="h-full !w-fit">
+                                +
+                            </x-button.secondary>
+                        </div>
+                        @endif
+                        @if (!$parent->parent_id)
+                            @if ($parent->product->plans->count() > 1 || $parent->product->configOptions->isNotEmpty() || !empty($parent->checkout_config))
+                            <a href="{{ route('products.checkout', [$parent->product->category, $parent->product, 'edit' => $parent->id]) }}"
+                                wire:navigate>
+                                <x-button.primary class="h-fit w-fit">
+                                    {{ __('product.edit') }}
+                                </x-button.primary>
+                            </a>
+                            @endif
+                            <x-button.danger wire:click="removeProduct({{ $parent->id }})" class="h-fit !w-fit">
+                                <x-loading target="removeProduct({{ $parent->id }})" />
+                                <div wire:loading.remove wire:target="removeProduct({{ $parent->id }})">
+                                    {{ __('product.remove') }}
+                                </div>
+                            </x-button.danger>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @endif
             @endforeach
         </div>
         <div class="flex flex-col gap-4">

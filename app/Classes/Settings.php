@@ -449,6 +449,13 @@ class Settings
                     'required' => true,
                 ],
                 [
+                    'name' => 'cronjob_domain_invoice',
+                    'label' => 'Send domain renewal invoice if due date is x days away',
+                    'type' => 'number',
+                    'default' => 30,
+                    'required' => true,
+                ],
+                [
                     'name' => 'cronjob_invoice_reminder',
                     'label' => 'Send invoice reminder if due date is x days away',
                     'type' => 'number',
@@ -492,6 +499,16 @@ class Settings
                     'required' => true,
                 ],
             ],
+            'domains' => [
+                [
+                    'name' => 'domain_notice_days',
+                    'label' => 'Domain expiry notice days',
+                    'type' => 'text',
+                    'default' => '30,14,3',
+                    'required' => true,
+                ],
+            ],
+
             'credits' => [
                 [
                     'name' => 'credits_enabled',

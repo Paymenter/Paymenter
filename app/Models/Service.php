@@ -8,9 +8,19 @@ use App\Models\Traits\HasProperties;
 use App\Observers\ServiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use OwenIt\Auditing\Contracts\Auditable;
 
+/**
+ * @property-read Product|null $product
+ * @property-read Domain|null $domain
+ * @property-read Collection<int, Property> $properties
+ * @property-read string $description
+ * @property-read User|null $user
+ */
 #[ObservedBy([ServiceObserver::class])]
 class Service extends Model implements Auditable
 {
@@ -142,7 +152,7 @@ class Service extends Model implements Auditable
     /**
      * Get the product corresponding to the service.
      */
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
@@ -258,5 +268,10 @@ class Service extends Model implements Auditable
     public function billingAgreement()
     {
         return $this->belongsTo(BillingAgreement::class, 'billing_agreement_id');
+    }
+
+    public function domain(): HasOne
+    {
+        return $this->hasOne(Domain::class);
     }
 }

@@ -3,11 +3,19 @@
 namespace App\Models;
 
 use App\Classes\Price;
+use App\Helpers\ExtensionHelper;
 use App\Observers\CartItemObserver;
+use App\Services\Domain\DomainCheckoutService;
+use App\Services\Domain\DomainPricing;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read Cart|null $cart
+ * @property-read Plan|null $plan
+ * @property-read Product|null $product
+ */
 #[ObservedBy(CartItemObserver::class)]
 class CartItem extends Model
 {
@@ -18,6 +26,7 @@ class CartItem extends Model
         'config_options',
         'checkout_config',
         'quantity',
+        'parent_id',
     ];
 
     protected $casts = [
@@ -32,6 +41,16 @@ class CartItem extends Model
         return $this->belongsTo(Cart::class);
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
     public function plan()
     {
         return $this->belongsTo(Plan::class);
@@ -40,6 +59,31 @@ class CartItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function domainSummary(): ?array
+    {
+        return DomainCheckoutService::summary((array) $this->checkout_config);
+    }
+
+    public function isDomainProduct(): bool
+    {
+        return (bool) ($this->product?->server && ExtensionHelper::isRegistrar($this->product->server));
+    }
+
+    public function termLabel(): ?string
+    {
+        if ($this->isDomainProduct()) {
+            $years = max(1, (int) ($this->checkout_config['years'] ?? 1));
+
+            return $years . ' ' . trans_choice(__('services.billing_cycles.year'), $years);
+        }
+
+        if (!$this->plan || in_array($this->plan->type, ['free', 'one-time'], true)) {
+            return null;
+        }
+
+        return $this->plan->billing_period . ' ' . trans_choice(__('services.billing_cycles.' . $this->plan->billing_unit), $this->plan->billing_period);
     }
 
     public function price(): Attribute
@@ -51,8 +95,15 @@ class CartItem extends Model
                 $total = 0;
                 $setup_fee = 0;
                 $unavailable = false;
-                $total += $this->plan->price($currency)->price;
-                $setup_fee += $this->plan->price($currency)->setup_fee;
+                $domainPrice = DomainPricing::forProduct($this->product, (array) $this->checkout_config, $currency);
+
+                if ($domainPrice !== null) {
+                    $unavailable = !$domainPrice->available;
+                    $total += $domainPrice->price ?? 0;
+                } else {
+                    $total += $this->plan->price($currency)->price;
+                    $setup_fee += $this->plan->price($currency)->setup_fee;
+                }
                 $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee, &$unavailable, $currency) {
                     $selected = (object) collect($this->config_options)->firstWhere('option_id', $option->id);
 
@@ -94,7 +145,7 @@ class CartItem extends Model
 
                 $price = new Price([
                     'price' => $total,
-                    'currency' => $this->plan->price($currency)->currency,
+                    'currency' => $domainPrice?->currency ?? $this->plan->price($currency)->currency,
                     'setup_fee' => $setup_fee,
                 ], apply_exclusive_tax: true);
 

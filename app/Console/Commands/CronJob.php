@@ -14,6 +14,7 @@ use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Setting;
 use App\Models\Ticket;
+use App\Services\Domain\DomainPricing;
 use App\Services\Service\RenewServiceService;
 use Exception;
 use Illuminate\Console\Command;
@@ -50,9 +51,28 @@ class CronJob extends Command
         try {
             // Send invoices if due date is x days away
             $this->runCronJob('invoices_created', function ($number = 0) {
-                Service::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice', 7)))->get()->each(function ($service) use (&$number) {
+                $invoiceLead = max(
+                    (int) config('settings.cronjob_invoice', 7),
+                    (int) config('settings.cronjob_domain_invoice', 30)
+                );
+
+                Service::where('status', 'active')->where('expires_at', '<', now()->addDays($invoiceLead))->get()->each(function ($service) use (&$number) {
                     // Does the service have already a pending invoice?
                     if ($service->invoices()->where('status', 'pending')->exists() || $service->cancellation()->exists()) {
+                        return;
+                    }
+
+                    $domain = $service->domain;
+
+                    $lead = $domain
+                        ? (int) config('settings.cronjob_domain_invoice', 30)
+                        : (int) config('settings.cronjob_invoice', 7);
+
+                    if ($service->expires_at->gt(now()->addDays($lead))) {
+                        return;
+                    }
+
+                    if ($domain && !$domain->auto_renew) {
                         return;
                     }
 
@@ -66,6 +86,18 @@ class CronJob extends Command
                             $service->save();
                         }
                     }
+
+                    if ($domain) {
+                        $renewal = DomainPricing::forRenewal($domain);
+                        if (!$renewal->available) {
+                            return;
+                        }
+
+                        $service->price = $renewal->price;
+                        $service->save();
+                    }
+
+                    $quantity = $domain ? 1 : $service->quantity;
 
                     // If service price is 0, immediately activate next period
                     if ($service->price <= 0) {
@@ -89,7 +121,7 @@ class CronJob extends Command
                         'reference_id' => $service->id,
                         'reference_type' => Service::class,
                         'price' => $service->price,
-                        'quantity' => $service->quantity,
+                        'quantity' => $quantity,
                         'description' => $service->description,
                     ]);
 
@@ -174,6 +206,7 @@ class CronJob extends Command
             $this->runCronJob('services_suspended', function ($number = 0) {
                 // Suspend orders if due date is overdue for x days
                 Service::where('status', 'active')
+                    ->whereDoesntHave('domain')
                     ->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend', 2)))
                     ->where(function ($query) {
                         $query->whereNull('suspend_hold_until')->orWhere('suspend_hold_until', '<', now());
@@ -191,7 +224,7 @@ class CronJob extends Command
             $this->runCronJob('services_terminated', function ($number = 0) {
                 // Terminate orders if due date is overdue for x days
                 // eachById: each() pages by offset, and every cancelled service drops out of the next page
-                Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->eachById(function ($service) use (&$number) {
+                Service::where('status', 'suspended')->whereDoesntHave('domain')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->eachById(function ($service) use (&$number) {
                     TerminateJob::dispatch($service);
 
                     $service->update(['status' => 'cancelled']);
