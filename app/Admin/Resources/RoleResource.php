@@ -64,7 +64,7 @@ class RoleResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->hidden(fn (Role $record) => $record->id === 1),
             ]);
     }
 
