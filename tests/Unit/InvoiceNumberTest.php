@@ -51,6 +51,13 @@ class InvoiceNumberTest extends TestCase
         ]);
     }
 
+    public function test_invoice_pdf_download_filename_does_not_contain_path_separators(): void
+    {
+        $invoice = new Invoice(['number' => 'INV/2025/001']);
+
+        $this->assertSame('invoice-inv-2025-001.pdf', $invoice->pdfDownloadFilename());
+    }
+
     public function test_invoice_number_generation_proforma(): void
     {
         $user = User::factory()->create();

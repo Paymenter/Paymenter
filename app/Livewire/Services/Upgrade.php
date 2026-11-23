@@ -62,6 +62,9 @@ class Upgrade extends Component
         // Add config options to the temporary upgrade (without saving)
         foreach ($this->configOptions as $optionId => $value) {
             $option = $this->upgradeProduct->upgradableConfigOptions->where('id', $optionId)->first();
+            if ($option?->type === 'checkbox') {
+                $value = $value ? $option->children->first()?->id : null;
+            }
             if (!$option || !$option->children->contains('id', $value)) {
                 continue;
             }
@@ -93,6 +96,12 @@ class Upgrade extends Component
     {
         $currentConfigOptions = $this->service->configs->pluck('config_value_id', 'config_option_id')->toArray();
         $this->configOptions = $this->upgradeProduct->upgradableConfigOptions->mapWithKeys(function ($option) use ($currentConfigOptions) {
+            if ($option->type === 'checkbox') {
+                return [
+                    $option->id => $option->children->contains('id', $currentConfigOptions[$option->id] ?? null),
+                ];
+            }
+
             return [
                 $option->id => $currentConfigOptions[$option->id]
                     ?? $this->configOptions[$option->id]
@@ -124,6 +133,7 @@ class Upgrade extends Component
             if (in_array($option->type, ['text', 'number'])) {
                 $rules["configOptions.{$option->id}"] = ['required'];
             } elseif ($option->type === 'checkbox') {
+                $rules["configOptions.{$option->id}"] = ['required', 'boolean'];
             } else {
                 $rules["configOptions.{$option->id}"] = [
                     'required',
@@ -167,9 +177,19 @@ class Upgrade extends Component
             $configOptions = collect($serviceConfigOptions)->filter(function ($value, $key) use ($serviceConfigOptions) {
                 return isset($serviceConfigOptions[$key]) && $this->upgradeProduct->upgradableConfigOptions->contains('id', $key);
             })->toArray();
+            $upgradeConfigOptions = [];
+            foreach ($this->upgradeProduct->upgradableConfigOptions as $option) {
+                $value = $this->configOptions[$option->id] ?? null;
+                if ($option->type === 'checkbox') {
+                    $value = $value ? $option->children->first()?->id : null;
+                }
+                if ($value !== null) {
+                    $upgradeConfigOptions[$option->id] = $value;
+                }
+            }
 
             // If the product did not change and the config options are the same, present the user with a message
-            if ($this->upgradeProduct->id === $service->product_id && $this->configOptions == $configOptions) {
+            if ($this->upgradeProduct->id === $service->product_id && $upgradeConfigOptions == $configOptions) {
                 // No changes made, clean rollback and exit safely
                 DB::rollBack();
                 $this->notify('You have not changed anything. Please select a different product or change the configuration options.', 'error');
@@ -184,16 +204,11 @@ class Upgrade extends Component
             ]);
             $upgrade->save();
 
-            if ($this->configOptions) {
-                foreach ($this->upgradeProduct->upgradableConfigOptions as $option) {
-                    if (!isset($this->configOptions[$option->id])) {
-                        continue;
-                    }
-                    $upgrade->configs()->create([
-                        'config_option_id' => $option->id,
-                        'config_value_id' => $this->configOptions[$option->id],
-                    ]);
-                }
+            foreach ($upgradeConfigOptions as $optionId => $value) {
+                $upgrade->configs()->create([
+                    'config_option_id' => $optionId,
+                    'config_value_id' => $value,
+                ]);
             }
             $price = $upgrade->calculatePrice();
 
