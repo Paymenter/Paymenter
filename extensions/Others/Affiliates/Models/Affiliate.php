@@ -32,25 +32,25 @@ class Affiliate extends Model
 
     /**
      * Get the earnings made by this affiliate
-     *
-     * @return string
      */
     public function earnings(): Attribute
     {
         return Attribute::make(
             get: function (): array {
+                $this->orders->each->setRelation('affiliate', $this);
+
                 $earnings = [];
-                $this->orders->each(function ($order) use (&$earnings) {
-                    foreach ($order->earnings as $currency => $total) {
+                foreach (AffiliateOrder::earningsFor($this->orders) as $orderEarnings) {
+                    foreach ($orderEarnings as $currency => $total) {
                         if (!isset($earnings[$currency])) {
                             $earnings[$currency] = 0;
                         }
                         $earnings[$currency] += $total;
                     }
-                });
+                }
 
                 return $earnings;
             },
-        );
+        )->shouldCache();
     }
 }
