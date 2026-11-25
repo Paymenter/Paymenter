@@ -67,9 +67,13 @@ class PayPal extends Gateway
     public function cancelBillingAgreement(BillingAgreement $billingAgreement): bool
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-        $this->request('delete', $url . '/v3/vault/payment-tokens/' . $billingAgreement->external_reference);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->generateAccessToken(),
+            'PayPal-Request-Id' => uniqid(),
+        ])->delete($url . '/v3/vault/payment-tokens/' . $billingAgreement->external_reference);
 
-        return true;
+        // A 404 means the token is already gone, which is what we wanted
+        return $response->successful() || $response->notFound();
     }
 
     public function setupAgreement(Request $request)
