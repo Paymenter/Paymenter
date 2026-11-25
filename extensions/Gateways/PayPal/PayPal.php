@@ -304,6 +304,19 @@ class PayPal extends Gateway
 
     public function webhook(Request $request)
     {
+        // Verifying costs two PayPal API calls, so refuse anything that cannot be a PayPal delivery first
+        foreach (['PAYPAL-AUTH-ALGO', 'PAYPAL-TRANSMISSION-ID', 'PAYPAL-TRANSMISSION-SIG', 'PAYPAL-TRANSMISSION-TIME'] as $header) {
+            if ((string) $request->header($header) === '') {
+                return response()->json(['status' => 'error'], 400);
+            }
+        }
+
+        $certUrl = parse_url((string) $request->header('PAYPAL-CERT-URL'));
+
+        if (($certUrl['scheme'] ?? null) !== 'https' || !preg_match('/(^|\.)paypal\.com$/i', $certUrl['host'] ?? '')) {
+            return response()->json(['status' => 'error'], 400);
+        }
+
         $body = $request->getContent();
         $verification = $this->request('post', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v1/notifications/verify-webhook-signature', [
             'auth_algo' => $request->header('PAYPAL-AUTH-ALGO'),

@@ -87,7 +87,14 @@ class Mollie extends Gateway
 
     public function webhook(Request $request)
     {
-        $payment = $this->request('/v2/payments/' . $request->input('id'));
+        // Mollie only posts a payment id, which ends up in an authenticated API path
+        $id = $request->input('id');
+
+        if (!is_string($id) || !preg_match('/^tr_[A-Za-z0-9]{1,64}$/', $id)) {
+            return response()->noContent(400);
+        }
+
+        $payment = $this->request('/v2/payments/' . $id);
 
         if ($payment['status'] == 'paid') {
             ExtensionHelper::addPayment($payment['metadata']['invoice_id'], 'Mollie', $payment['amount']['value'], transactionId: $payment['id']);
