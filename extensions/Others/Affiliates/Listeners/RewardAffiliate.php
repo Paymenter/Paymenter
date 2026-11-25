@@ -59,10 +59,8 @@ class RewardAffiliate
         })->first();
 
         if ($affiliate_credits) {
-            // Add reward to credits
-            $affiliate->user->credits()->where('currency_code', $invoice->currency_code)->update([
-                'amount' => $affiliate_credits->amount + $reward_amount,
-            ]);
+            // Atomic, so a concurrent balance change is not overwritten, and through the model so its events fire
+            $affiliate_credits->increment('amount', $reward_amount);
         } else {
             // Create new credits with the invoice's currency code
             $affiliate->user->credits()->create([
