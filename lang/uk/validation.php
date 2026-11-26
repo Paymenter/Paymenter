@@ -158,6 +158,9 @@ return [
     'url' => 'Формат поля :attribute є недійсним.',
     'ulid' => 'Поле :attribute має бути коректним ULID.',
     'uuid' => 'Поле :attribute повинно бути дійсним UUID.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
