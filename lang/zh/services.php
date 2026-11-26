@@ -36,6 +36,12 @@ return [
     'next_step' => '下一步',
 
     'upgrade_pending' => '如果已經有升級/降級的帳單則無法執行',
+    'not_upgradable' => 'This service is not upgradable.',
+    'invalid_upgrade' => 'Invalid upgrade.',
+    'upgrade_no_changes' => 'You have not changed anything. Please select a different product or change the configuration options.',
+    'upgrade_completed' => 'The upgrade has been completed.',
+    'upgrade_completed_credited' => 'The upgrade has been completed. We\'ve added the remaining amount to your account balance.',
+    'upgrade_added_to_cart' => 'The upgrade has been added to your cart. Please complete the payment to proceed.',
 
     'outstanding_invoice' => '您有一項未支付得款項。',
     'view_and_pay' => '點擊查看及支付',
@@ -73,5 +79,8 @@ return [
     'label_placeholder' => '請輸入此服務的自訂標籤',
     'label_modal_title' => '編輯服務標籤',
     'update_label' => '更新標籤',
+    'label_updated' => 'Service label updated successfully',
+    'view_not_found' => 'View not found',
+    'view_load_error' => 'Got an error while trying to load the view',
 
 ];
