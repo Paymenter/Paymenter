@@ -55,21 +55,54 @@ class PasswordResetTest extends TestCase
 
     public function test_cant_request_password_reset_link_too_many_requests()
     {
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-        ]);
         for ($i = 0; $i < 3; $i++) {
+            User::factory()->create([
+                'email' => "test{$i}@example.com",
+            ]);
+
             Livewire::test(Request::class)
-                ->set('email', 'test@example.com')
+                ->set('email', "test{$i}@example.com")
                 ->call('submit')
                 ->assertHasNoErrors()
                 ->assertDispatched('notify');
         }
         Livewire::test(Request::class)
-            ->set('email', 'test@example.com')
+            ->set('email', 'test3@example.com')
             ->call('submit')
             ->assertHasErrors('email')
             ->assertSee(__('passwords.throttled'));
+    }
+
+    public function test_cant_request_password_reset_link_twice_for_same_email()
+    {
+        User::factory()->create([
+            'email' => 'test@example.com',
+        ]);
+
+        Livewire::test(Request::class)
+            ->set('email', 'test@example.com')
+            ->call('submit')
+            ->assertHasNoErrors();
+
+        // Well under the per-IP limit, but the same address (in any case) is throttled
+        Livewire::test(Request::class)
+            ->set('email', 'TEST@example.com')
+            ->call('submit')
+            ->assertHasErrors('email')
+            ->assertSee(__('passwords.throttled'));
+
+        $this->assertDatabaseCount('password_reset_tokens', 1);
+
+        // Unknown addresses get the same answer, so the limit doesn't reveal which ones exist
+        Livewire::test(Request::class)
+            ->set('email', 'nonexistent@example.com')
+            ->call('submit')
+            ->assertHasNoErrors();
+
+        Livewire::test(Request::class)
+            ->set('email', 'nonexistent@example.com')
+            ->call('submit')
+            ->assertHasErrors('email');
     }
 
     public function test_can_request_password_reset_link_with_non_existing_email()

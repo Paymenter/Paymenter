@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Lemondás a számlázási időszak végén',
     'cancel_immediate_warning' => 'Amikor megnyomod az alábbi gombot, a szolgáltatás azonnal lemondásra kerül, és többé nem fogod tudni használni.',
     'cancellation_requested' => 'Lemondás kérelmezve',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Jelenlegi csomag',
     'new_plan' => 'Új díjcsomag',

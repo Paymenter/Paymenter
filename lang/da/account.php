@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Totrinsgodkendelse er blevet deaktiveret.',
         'two_factor_code_incorrect' => 'Totrins koden er forkert.',
         'session_logged_out' => 'Sessionen er blevet logget ud.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Du har ingen kreditter på din konto.',

@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Anuluj pod koniec okresu rozliczeniowego',
     'cancel_immediate_warning' => 'Gdy naciśniesz poniższy przycisk, usługa zostanie natychmiast anulowana i nie będziesz już mógł jej używać.',
     'cancellation_requested' => 'Prośba o anulowanie',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Obecny plan',
     'new_plan' => 'Nowy Plan',

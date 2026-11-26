@@ -59,6 +59,7 @@ class CPanel extends Server
                 'placeholder' => '1234567890abcdef',
                 'label' => 'API key',
                 'required' => true,
+                'encrypted' => true,
             ],
         ];
     }

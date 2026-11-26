@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 #[DisabledIf('tickets_disabled')]
@@ -32,18 +33,20 @@ class Create extends Component
     public function create()
     {
         // Add rules for the department
+        $departments = array_values((array) config('settings.ticket_departments'));
         $this->validate([
-            'department' => count((array) config('settings.ticket_departments')) > 0 ? 'required|in:' . implode(',', array_values((array) config('settings.ticket_departments'))) : '',
+            'department' => count($departments) > 0 ? ['required', Rule::in($departments)] : '',
             'service' => 'nullable|exists:services,id,user_id,' . Auth::id(),
-            'subject' => 'required|string',
-            'message' => 'required|string',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:16000',
             'priority' => 'required|in:low,medium,high',
+            'attachments' => 'array|max:10',
             'attachments.*' => 'file|max:10240',
         ]);
 
         $rateLimitKey = 'create-ticket:' . Auth::id();
         if (RateLimiter::tooManyAttempts($rateLimitKey, 1)) {
-            $this->notify('Too many ticket creation attempts. Please try again in 30 seconds.', 'error');
+            $this->notify(__('ticket.rate_limit_create', ['seconds' => 30]), 'error');
 
             return;
         }
@@ -76,7 +79,7 @@ class Create extends Component
             ]);
         }
 
-        $this->notify('Message sent successfully', redirect: true);
+        $this->notify(__('ticket.message_sent'), redirect: true);
 
         $this->reset(['attachments', 'message', 'subject', 'department', 'service', 'priority']);
         $this->dispatch('saved');

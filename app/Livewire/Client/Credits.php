@@ -69,9 +69,7 @@ class Credits extends Component
             if ($credits->isNotEmpty()) {
                 // Check if the current credits + the new credits exceed the maximum credits allowed
                 if ($credits->sum('amount') + $this->amount > config('settings.credits_maximum_credit')) {
-                    $this->notify('You cannot exceed the maximum credits allowed.', 'error');
-
-                    return;
+                    throw new DisplayException(__('account.max_credits_exceeded'));
                 }
             }
 
@@ -81,7 +79,7 @@ class Credits extends Component
             })->exists();
 
             if ($unpaidInvoiceItems) {
-                throw new DisplayException('You have an unpaid invoice for credits. Please pay the invoice before adding more credits.');
+                throw new DisplayException(__('account.unpaid_credit_invoice'));
             }
 
             $invoice = Invoice::create([

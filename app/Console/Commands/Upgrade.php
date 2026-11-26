@@ -35,7 +35,7 @@ class Upgrade extends Command
     {
         $this->info('Starting upgrade process...');
 
-        if (version_compare(PHP_VERSION, '8.2.0') < 0) {
+        if (version_compare(PHP_VERSION, '8.3.0') < 0) {
             $this->error('Cannot execute self-upgrade process. The minimum required PHP version required is 8.1, you have [' . PHP_VERSION . '].');
         }
 
@@ -82,8 +82,8 @@ class Upgrade extends Command
         }
         ini_set('output_buffering', '0');
         // Call update.sh <url>
-        $this->line('$upgrader> curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
-        $process = Process::fromShellCommandline('curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl(), null, null, null, 1200);
+        $this->line('$upgrader> curl -sSL "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
+        $process = Process::fromShellCommandline('curl -sSL "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl(), null, null, null, 1200);
         $process->run(function ($type, $buffer) {
             $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
         });

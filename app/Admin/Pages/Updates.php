@@ -3,7 +3,6 @@
 namespace App\Admin\Pages;
 
 use App\Console\Commands\CheckForUpdates;
-use App\Console\Commands\Upgrade;
 use App\Helpers\ExtensionHelper;
 use App\Models\Extension;
 use Filament\Actions\Action;
@@ -22,7 +21,6 @@ use Filament\Tables\Table;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 class Updates extends Page implements HasActions, HasForms, HasTable
 {
@@ -60,23 +58,7 @@ class Updates extends Page implements HasActions, HasForms, HasTable
     {
         return Action::make('update')
             ->requiresConfirmation()
-            ->action(function () {
-                $output = new BufferedOutput;
-
-                // Check if current chdir is the root of the project
-                if (getcwd() !== base_path()) {
-                    chdir(base_path());
-                }
-
-                if (config('app.version') == 'beta') {
-                    Artisan::call(Upgrade::class, ['--no-interaction' => true, '--url' => 'https://api.paymenter.org/beta'], $output);
-                } else {
-                    Artisan::call(Upgrade::class, ['--no-interaction' => true], $output);
-                }
-                $this->dispatch('update-completed', [
-                    'output' => $output->fetch(),
-                ]);
-            })
+            ->action(fn () => $this->dispatch('start-update'))
             ->label('Update');
     }
 

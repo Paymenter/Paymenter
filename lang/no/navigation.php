@@ -12,7 +12,7 @@ return [
     'personal_details' => 'Personopplysninger',
     'security' => 'Sikkerhet',
     'dashboard' => 'Min side',
-    'tickets' => 'Saker',
+    'tickets' => 'Kundeservice',
     'admin' => 'Administrator',
     'notifications' => 'Varsler',
 ];

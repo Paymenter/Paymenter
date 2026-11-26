@@ -43,13 +43,14 @@ class Revenue extends ChartWidget
 
         $interval = $period->interval();
 
+        // Refunded money is not revenue
         $revenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
             ->between(
                 start: $start,
                 end: $end,
             )
             ->interval($interval)
-            ->sum('amount');
+            ->sum('amount - refunded_amount');
 
         $netRevenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
             ->between(
@@ -57,7 +58,7 @@ class Revenue extends ChartWidget
                 end: $end,
             )
             ->interval($interval)
-            ->sum('amount - COALESCE(fee, 0)');
+            ->sum('amount - refunded_amount - COALESCE(fee, 0)');
 
         $newOrders = Trend::model(Order::class)
             ->between(

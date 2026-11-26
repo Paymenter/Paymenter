@@ -89,7 +89,7 @@
                         {{ $this->closeTicket }}
                     @endif
                     
-                    <x-filament::button type="submit" target="send">
+                    <x-filament::button type="submit" wire:target="send">
                         Send Message
                     </x-filament::button>
                 </div>

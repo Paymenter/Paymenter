@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'בטל בסוף תקופת התשלום',
     'cancel_immediate_warning' => 'לאחר לחיצת הכפתור בתחתית העמוד, השירות יבוטל במיידי ולא תוכל להשתמש בו יותר.',
     'cancellation_requested' => 'בקשה לביטול נשלחה',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'תוכנית נוכחית',
     'new_plan' => 'תוכנית חדשה',

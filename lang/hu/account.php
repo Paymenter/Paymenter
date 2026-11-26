@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Kétlépcsős azonosítás letiltva.',
         'two_factor_code_incorrect' => 'A kód helytelen.',
         'session_logged_out' => 'A munkamenet ki lett jelentkeztetve.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Nincs kredited.',

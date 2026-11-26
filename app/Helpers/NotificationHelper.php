@@ -138,7 +138,7 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
+            'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference?->subscription_id)->isNotEmpty(),
         ];
 
         // Generate the invoice PDF
@@ -149,13 +149,13 @@ class NotificationHelper
             mkdir(storage_path('app/invoices'), 0755, true);
         }
         // Save the PDF to a temporary location
-        $pdfPath = storage_path('app/invoices/' . ($invoice->number ?? $invoice->id) . '.pdf');
+        $pdfPath = storage_path('app/invoices/' . $invoice->id . '.pdf');
         $pdf->save($pdfPath);
 
         // Attach the PDF to the email
         $attachments = [
             [
-                'path' => 'invoices/' . ($invoice->number ?? $invoice->id) . '.pdf',
+                'path' => 'invoices/' . $invoice->id . '.pdf',
                 'name' => 'invoice.pdf',
             ],
         ];

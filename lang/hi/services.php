@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'बिलिंग अवधि के अंत में रद्द करें',
     'cancel_immediate_warning' => 'नीचे दिए गए बटन को दबाने पर सेवा तुरंत रद्द हो जाएगी और आप इसे फिर से उपयोग नहीं कर पाएंगे।',
     'cancellation_requested' => 'रद्दीकरण अनुरोध किया गया',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'वर्तमान योजना',
     'new_plan' => 'नई योजना',

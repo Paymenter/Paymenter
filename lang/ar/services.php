@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'إلغاء في نهاية فترة الفاتورة',
     'cancel_immediate_warning' => 'عند الضغط على الزر أدناه، سيتم إلغاء الخدمة فورًا ولن تتمكن من استخدامها بعد الآن.',
     'cancellation_requested' => 'تم طلب الإلغاء',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'الخطة الحالية',
     'new_plan' => 'الخطة الجديدة',

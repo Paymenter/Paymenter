@@ -88,7 +88,8 @@ class ServiceUpgrade extends Model implements Auditable
             $total = max($total, -$this->getMaxRefundAmount());
         }
 
-        return $this->makePrice($total);
+        // The prices above are per unit, and the upgrade applies to every unit of the service
+        return $this->makePrice($total * ($this->service->quantity ?? 1));
     }
 
     protected function resolveOldItemPrice($oldItem): float

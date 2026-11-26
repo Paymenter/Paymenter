@@ -72,6 +72,9 @@ class SettingsProvider extends ServiceProvider
             URL::forceRootUrl(config('app.url'));
 
             Config::set('filesystems.disks.public.url', config('app.url') . '/storage');
+            Config::set('passkeys.allowed_origins', [config('app.url')]);
+            Config::set('passkeys.relying_party_id', parse_url(config('app.url'), PHP_URL_HOST));
+
         } catch (Exception $e) {
             // Do nothing
         }

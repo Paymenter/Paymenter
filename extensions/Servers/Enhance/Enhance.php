@@ -63,6 +63,7 @@ class Enhance extends Server
                 'type' => 'text',
                 'label' => 'API key',
                 'required' => true,
+                'encrypted' => true,
                 'placeholder' => '2cd0079b...',
             ],
             [

@@ -2,11 +2,19 @@
 
 namespace App\Http\Requests\Api\Admin\InvoiceItems;
 
-use App\Http\Requests\Api\Admin\AdminApiRequest;
+use App\Models\Invoice;
 
-class CreateInvoiceItemRequest extends AdminApiRequest
+class CreateInvoiceItemRequest extends InvoiceItemRequest
 {
     protected $permission = 'invoice_items.create';
+
+    public function authorize(): bool
+    {
+        $invoiceId = $this->input('invoice_id');
+        $invoice = $invoiceId ? Invoice::find($invoiceId) : null;
+
+        return $this->authorizeInvoice($invoice);
+    }
 
     public function rules(): array
     {

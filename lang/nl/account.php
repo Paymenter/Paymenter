@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Tweestapsverificatie is uitgeschakeld.',
         'two_factor_code_incorrect' => 'De code is incorrect.',
         'session_logged_out' => 'De sessie is uitgelogd.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Je hebt geen krediet.',

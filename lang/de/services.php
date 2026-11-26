@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Am Ende des Abrechnungszeitraums kündigen',
     'cancel_immediate_warning' => 'Wenn du den Button drückst, wird der Dienst sofort gekündigt und du kannst ihn nicht mehr nutzen.',
     'cancellation_requested' => 'Kündigung angefragt',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Aktuelles Paket',
     'new_plan' => 'Neues Paket',

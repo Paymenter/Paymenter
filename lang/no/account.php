@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'To-faktor autentisering er deaktivert.',
         'two_factor_code_incorrect' => 'Koden er feil.',
         'session_logged_out' => 'Økten har blitt logget ut.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Du har ingen kreditter.',

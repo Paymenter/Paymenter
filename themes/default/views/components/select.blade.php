@@ -73,7 +73,7 @@
         class="relative w-full min-h-[38px] py-2 pl-3 pr-10 text-left bg-background-secondary border border-neutral rounded-md shadow-sm cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-800"
         type="button"
     >
-        <span x-text="selectableItems.find(item => item.value === selectedValue)?.label ?? '{{ $placeholder ?? 'Select option' }}'" class="block truncate"></span>
+        <span x-text="selectableItems.find(item => item.value === selectedValue)?.label ?? '{{ $placeholder ?? __('common.select_option') }}'" class="block truncate"></span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
             <x-ri-expand-up-down-line class="size-4" />
         </span>

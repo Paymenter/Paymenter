@@ -1,6 +1,6 @@
 <div class="container mt-14">
     <div class="bg-primary-800 p-6 rounded-lg mt-2">
-        <h1 class="text-2xl font-semibold">Ticket #{{ $ticket->id }} - {{ $ticket->subject }}</h1>
+        <h1 class="text-2xl font-semibold">{{ __('ticket.ticket_header', ['id' => $ticket->id, 'subject' => $ticket->subject]) }}</h1>
 
         <div class="md:grid grid-cols-4 flex flex-col gap-4">
             <div class="md:col-span-3">
@@ -130,6 +130,12 @@
                                 wire:model.live="attachments" x-ref="fileInput"
                                 @change="selectedFiles = Array.from($event.target.files)" />
                         </div>
+                        @error('message')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                        @error('attachments')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                         @error('attachments.*')
                         <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
                         @enderror
@@ -146,9 +152,13 @@
                                     {{ __('ticket.close_ticket') }}
                                 </x-button.danger>
                             @endif
-                            <x-button.primary type="submit" class="sm:!w-fit order-1 sm:order-2" wire:target="save">
+                            <x-button.primary
+                                type="submit"
+                                class="sm:!w-fit order-1 sm:order-2"
+                                wire:target="save,attachments"
+                                wire:loading.attr="disabled">
                                 {{ __('ticket.reply') }}
-                            </x-button.primary>
+                            </x-button.primary> 
                         </div>
                     </form>
                     <x-easymde-editor />

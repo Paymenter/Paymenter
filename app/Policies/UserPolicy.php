@@ -35,7 +35,8 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->hasPermission('admin.users.update');
+        return $user->hasPermission('admin.users.update')
+            && (!$model->hasPermission('*') || $user->hasPermission('*'));
     }
 
     /**

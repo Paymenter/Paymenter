@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Auth\PasskeyLoginResponse;
 use App\Classes\Synths\PriceSynth;
 use App\Exceptions\ErrorHandler;
 use App\Helpers\ExtensionHelper;
 use App\Http\Middleware\MustVerfiyEmail;
+use App\Http\Requests\Auth\PasskeyVerificationRequest;
 use App\Models\EmailLog;
 use App\Models\Extension;
 use App\Models\OauthClient;
@@ -19,6 +21,7 @@ use Exception;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\Request;
+use Illuminate\Mail\SendQueuedMailable;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Routing\UrlGenerator;
@@ -28,6 +31,8 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
+use Laravel\Passkeys\Http\Requests\PasskeyVerificationRequest as BasePasskeyVerificationRequest;
 use Laravel\Passport\Passport;
 use League\CommonMark\Extension\Table\TableExtension;
 use Livewire\Livewire;
@@ -43,6 +48,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Service provider for settings
         $this->app->register(SettingsProvider::class);
+        $this->app->singleton(PasskeyLoginResponseContract::class, PasskeyLoginResponse::class);
+        $this->app->bind(BasePasskeyVerificationRequest::class, PasskeyVerificationRequest::class);
 
         UrlGenerator::macro('alternateHasCorrectSignature', function (Request $request, $absolute = true, Closure|array $ignoreQuery = []) {
             // ensure the base path is applied to absolute url
@@ -155,37 +162,56 @@ class AppServiceProvider extends ServiceProvider
         Gate::defaultDenialResponse(Response::denyAsNotFound());
 
         try {
-            foreach (
-                collect(Extension::where(function ($query) {
-                    $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
-                })->get())->unique('extension') as $extension
-            ) {
+            $extensions = Extension::query()
+                ->where(fn ($query) => $query
+                    ->where('enabled', true)
+                    ->orWhereIn('type', ['server', 'gateway']))
+                ->get(['id', 'extension', 'type'])
+                ->unique('extension');
+
+            $extensions->load('settings');
+
+            foreach ($extensions as $extension) {
                 ExtensionHelper::call($extension, 'boot', mayFail: true);
             }
         } catch (Exception $e) {
             // Fail silently
         }
 
-        Queue::after(function (JobProcessed $event) {
-            if ($event->job->resolveName() === 'App\Mail\Mail') {
-                $payload = json_decode($event->job->getRawBody());
-                $data = unserialize($payload->data->command);
-                EmailLog::where('id', $data->mailable->email_log_id)->update([
-                    'sent_at' => now(),
-                    'status' => 'sent',
-                ]);
+        // resolveName() returns the mailable's class for queued mail, so match the job wrapper instead
+        // and update the log of any mailable that carries an email_log_id (Mail, SystemMail, ...)
+        $updateEmailLog = function ($job, array $attributes) {
+            $payload = $job->payload();
+
+            if (($payload['data']['commandName'] ?? null) !== SendQueuedMailable::class) {
+                return;
             }
+
+            try {
+                $mailable = unserialize($payload['data']['command'])->mailable;
+            } catch (\Throwable  $e) {
+                return;
+            }
+
+            if (empty($mailable->email_log_id)) {
+                return;
+            }
+
+            EmailLog::where('id', $mailable->email_log_id)->update($attributes);
+        };
+
+        Queue::after(function (JobProcessed $event) use ($updateEmailLog) {
+            $updateEmailLog($event->job, [
+                'sent_at' => now(),
+                'status' => 'sent',
+            ]);
         });
-        Queue::failing(function (JobFailed $event) {
-            if ($event->job->resolveName() === 'App\Mail\Mail') {
-                $payload = json_decode($event->job->getRawBody());
-                $data = unserialize($payload->data->command);
-                EmailLog::where('id', $data->mailable->email_log_id)->update([
-                    'status' => 'failed',
-                    'error' => $event->exception->getMessage(),
-                    'job_uuid' => $event->job->uuid(),
-                ]);
-            }
+        Queue::failing(function (JobFailed $event) use ($updateEmailLog) {
+            $updateEmailLog($event->job, [
+                'status' => 'failed',
+                'error' => $event->exception->getMessage(),
+                'job_uuid' => $event->job->uuid(),
+            ]);
         });
 
         Str::macro('markdown', function ($markdown) {

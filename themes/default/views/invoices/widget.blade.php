@@ -28,7 +28,7 @@
             </div>
             </div>
             @foreach ($invoice->items as $item)
-            <p class="text-base text-sm text-wrap">Item(s): {{ $item->description }} ({{ __('invoices.invoice_date')}}: {{
+            <p class="text-base text-sm text-wrap">{{ __('invoices.item') }}: {{ $item->description }} ({{ __('invoices.invoice_date')}}: {{
                 $invoice->created_at->format('d M Y') }})</p>
             @endforeach
         </div>

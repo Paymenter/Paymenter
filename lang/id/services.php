@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Batalkan pada akhir periode tagihan',
     'cancel_immediate_warning' => 'Ketika anda menekan tombol dibawah, layanan ini akan langsung dibatalkan dan Anda tidak akan bisa menggunakannya lagi.',
     'cancellation_requested' => 'Permintaan Pembatalan telah dikirimkan',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Paket Saat Ini',
     'new_plan' => 'Paket Baru',

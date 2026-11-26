@@ -69,6 +69,7 @@ return [
     'refund_amount_exceeds_refundable' => 'The refund amount cannot exceed the refundable amount of :max.',
     'refund_success' => 'Refund processed successfully.',
     'refund_failed' => 'Refund failed.',
+    'refund_via_gateway' => 'Refund via Payment Gateway',
     'deleted_user' => 'Deleted User',
 
 ];

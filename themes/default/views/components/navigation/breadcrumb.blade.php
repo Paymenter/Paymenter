@@ -7,21 +7,24 @@
         \App\Classes\Navigation::getDashboardLinks(),
     ];
 
-    function findBreadcrumb($items, $currentRoute) {
-        foreach ($items as $item) {
-            if (isset($item['url']) && $item['url'] === $currentRoute) {
-                return [$item];
-            }
+    // The view can render more than once per process (e.g. Livewire tests).
+    if (!function_exists('findBreadcrumb')) {
+        function findBreadcrumb($items, $currentRoute) {
+            foreach ($items as $item) {
+                if (isset($item['url']) && $item['url'] === $currentRoute) {
+                    return [$item];
+                }
 
-            if (!empty($item['children'])) {
-                $childTrail = findBreadcrumb($item['children'], $currentRoute);
-                if (!empty($childTrail)) {
-                    return array_merge([$item], $childTrail);
+                if (!empty($item['children'])) {
+                    $childTrail = findBreadcrumb($item['children'], $currentRoute);
+                    if (!empty($childTrail)) {
+                        return array_merge([$item], $childTrail);
+                    }
                 }
             }
-        }
 
-        return [];
+            return [];
+        }
     }
 
     $breadcrumbs = [];

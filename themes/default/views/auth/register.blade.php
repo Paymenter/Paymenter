@@ -1,4 +1,4 @@
-<form
+<form method="POST"
     class="mx-auto flex flex-col gap-2 mt-4 px-6 sm:px-14 pb-10 bg-primary-800 rounded-md xl:max-w-[60%] w-full"
     wire:submit.prevent="submit" id="register">
     <div class="flex flex-col items-center my-14">

@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => '兩步驟驗證已停用。',
         'two_factor_code_incorrect' => '代碼不正確。',
         'session_logged_out' => '工作階段已登出。',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => '您沒有餘額。',

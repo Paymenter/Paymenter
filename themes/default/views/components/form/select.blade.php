@@ -32,7 +32,7 @@
     </select>
     @if ($multiple)
     <p class="text-xs text-base">
-        {{ __('Pro tip: Hold down the Ctrl (Windows) / Command (Mac) button to select multiple options.') }}</p>
+        {{ __('common.select_multiple_tip') }}</p>
     @endif
 
     @error($name)

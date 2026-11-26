@@ -153,7 +153,7 @@
                 @if($selectedMethod === 'credit' && $credit && $credit->amount >= $invoice->formattedRemaining->total)
                 {{ __('invoices.apply_credits_and_pay') }}
                 @elseif($selectedMethod === 'credit' && $credit)
-                {{ __('invoices.apply_credit_and_continue', ['amount' => $credit->formattedAmount]) }}
+                {{ __('invoices.apply_credits_and_continue', ['amount' => $credit->formattedAmount]) }}
                 @else
                 {{ __('invoices.pay_now', ['amount' => $invoice->formattedRemaining]) }}
                 @endif

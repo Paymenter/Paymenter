@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'تم تعطيل المصادقة الثنائية.',
         'two_factor_code_incorrect' => 'الرمز غير صحيح.',
         'session_logged_out' => 'تم تسجيل خروج الجلسة.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'ليس لديك أي رصيد.',
