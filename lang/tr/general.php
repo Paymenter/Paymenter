@@ -34,6 +34,11 @@ return [
     ],
 
     'all_rights_reserved' => 'Tüm hakları saklıdır.',
+    'copyright' => '© :year :app_name. | All rights reserved.',
+    'powered_by' => 'Powered by',
     'update' => 'Güncelle',
     'save' => 'Kaydet',
+    'select_plan' => 'Select a plan',
+    'language' => 'Language',
+    'select_language' => 'Select language',
 ];
