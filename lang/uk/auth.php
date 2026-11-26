@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'Увійдіть у свій обліковий запис',
     'or_sign_in_with' => 'Або увійдіть через',
     'forgot_password' => 'Забули пароль?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'Немає облікового запису?',
     'already_have_account' => 'Вже маєте обліковий запис?',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Ваш обліковий запис Discord не підтверджено.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'Ви не зареєстровані на цьому сайті.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'Скинути пароль',
 
     'verify_2fa' => 'Підтвердити 2FA',
     'verify' => 'Підтвердити',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'Підтвердьте свою електронну адресу',
