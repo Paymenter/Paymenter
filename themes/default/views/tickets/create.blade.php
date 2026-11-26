@@ -100,7 +100,7 @@
                             wire:model.live="attachments" x-ref="fileInput"
                             @change="selectedFiles = Array.from($event.target.files)" />
                     </div>
-                    <x-button.primary class="mt-2 !w-fit float-right">
+                    <x-button.primary class="mt-2 !w-fit float-right" type="submit">
                         {{ __('ticket.create') }}
                     </x-button.primary>
                 </form>

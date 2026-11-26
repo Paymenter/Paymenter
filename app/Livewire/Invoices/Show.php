@@ -246,7 +246,7 @@ class Show extends Component
     public function downloadPDF()
     {
         return response()->streamDownload(function () {
-            echo PDF::generateInvoice($this->invoice)->stream();
-        }, 'invoice-' . ($this->invoice->number ?? $this->invoice->id) . '.pdf');
+            echo PDF::generateInvoice($this->invoice)->output();
+        }, $this->invoice->pdfDownloadFilename());
     }
 }

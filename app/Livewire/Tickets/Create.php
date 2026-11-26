@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 #[DisabledIf('tickets_disabled')]
@@ -32,8 +33,9 @@ class Create extends Component
     public function create()
     {
         // Add rules for the department
+        $departments = array_values((array) config('settings.ticket_departments'));
         $this->validate([
-            'department' => count((array) config('settings.ticket_departments')) > 0 ? 'required|in:' . implode(',', array_values((array) config('settings.ticket_departments'))) : '',
+            'department' => count($departments) > 0 ? ['required', Rule::in($departments)] : '',
             'service' => 'nullable|exists:services,id,user_id,' . Auth::id(),
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:16000',

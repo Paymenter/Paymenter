@@ -13,6 +13,7 @@ use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([InvoiceObserver::class])]
@@ -237,6 +238,14 @@ class Invoice extends Model implements Auditable
         return Attribute::make(
             get: fn () => PDF::generateInvoice($this)
         );
+    }
+
+    public function pdfDownloadFilename(): string
+    {
+        $number = str_replace(['/', '\\'], ' ', (string) ($this->number ?: $this->id));
+        $name = Str::slug($number);
+
+        return 'invoice-' . ($name !== '' ? $name : $this->id) . '.pdf';
     }
 
     public function getRouteKey()
