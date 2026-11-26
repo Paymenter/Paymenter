@@ -158,6 +158,9 @@ return [
     'url' => 'השדה :attribute חייב להיות קישור תקין.',
     'ulid' => 'השדה :attribute חייב להיות ULID תקין.',
     'uuid' => 'השדה :attribute חייב להיות ULID תקין.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
