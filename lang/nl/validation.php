@@ -158,6 +158,9 @@ return [
     'url' => ':attribute moet een geldige URL zijn.',
     'ulid' => ':attribute moet een geldige ULID zijn.',
     'uuid' => ':attribute moet een geldige UUID zijn.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
