@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'Prijavite se na svoj nalog',
     'or_sign_in_with' => 'Ili se prijavite putem',
     'forgot_password' => 'Zaboravili ste lozinku?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'Nemate nalog?',
     'already_have_account' => 'Već imate nalog?',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Vaš Discord nalog nije verifikovan.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'Niste registrovani na ovom sajtu.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'Resetujte lozinku',
 
     'verify_2fa' => 'Verifikujte 2FA',
     'verify' => 'Verifikujte',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'Verifikujte svoju email adresu',
