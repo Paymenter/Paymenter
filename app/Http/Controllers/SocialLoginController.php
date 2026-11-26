@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Actions\Auth\Login;
 use App\Models\User;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\GoogleProvider;
+use Laravel\Socialite\Two\InvalidStateException;
 use SocialiteProviders\Discord\Provider as DiscordProvider;
 
 class SocialLoginController extends Controller
@@ -54,32 +57,51 @@ class SocialLoginController extends Controller
         };
     }
 
-    public function handle($provider)
+    public function handle(Request $request, $provider)
     {
-        $action = new Login;
-        if ($provider == 'discord') {
-            $oauth_user = $this->discord_driver->user();
+        $driver = match ($provider) {
+            'discord' => $this->discord_driver,
+            'github' => $this->github_driver,
+            'google' => $this->google_driver,
+            default => null,
+        };
 
-            if ($oauth_user->user['verified'] == false) {
-                return redirect()->route('login')->with('error', __('auth.oauth.unverified_discord_account'));
-            }
-
-            return $this->findUserAndLogin($oauth_user->email);
-        } elseif ($provider == 'google') {
-            $oauth_user = $this->google_driver->user();
-
-            if (!$oauth_user->user['email_verified']) {
-                return redirect()->route('login')->with('error', __('auth.oauth.unverified_google_account'));
-            }
-
-            return $this->findUserAndLogin($oauth_user->email);
-        } elseif ($provider == 'github') {
-            $oauth_user = $this->github_driver->user();
-
-            return $this->findUserAndLogin($this->github_driver->user()->email);
-        } else {
+        if (!$driver) {
             return redirect()->route('login');
         }
+
+        // Cancelling on the provider's consent screen returns ?error=access_denied without a code
+        if ($request->filled('error')) {
+            return $this->failed(__('auth.oauth.cancelled'));
+        }
+
+        try {
+            $oauth_user = $driver->user();
+        } catch (InvalidStateException) {
+            // The state is gone from the session: the callback was reloaded, another
+            // sign-in tab replaced it, or the session expired on the consent screen.
+            return $this->failed(__('auth.oauth.expired'));
+        } catch (GuzzleException $e) {
+            // Wrong client credentials fail every sign-in here, so report it
+            report($e);
+
+            return $this->failed(__('auth.oauth.failed'));
+        }
+
+        if ($provider == 'discord' && !($oauth_user->user['verified'] ?? false)) {
+            return $this->failed(__('auth.oauth.unverified_discord_account'));
+        }
+
+        if ($provider == 'google' && !($oauth_user->user['email_verified'] ?? false)) {
+            return $this->failed(__('auth.oauth.unverified_google_account'));
+        }
+
+        // GitHub returns no email when the account has no verified primary address
+        if (!$oauth_user->email) {
+            return $this->failed(__('auth.oauth.no_email'));
+        }
+
+        return $this->findUserAndLogin($oauth_user->email);
     }
 
     private function findUserAndLogin(string $email): RedirectResponse
@@ -87,7 +109,7 @@ class SocialLoginController extends Controller
         $user = User::where('email', $email)->first();
 
         if (!$user) {
-            return redirect()->route('register')->with('error', __('auth.oauth.account_not_registered'));
+            return $this->failed(__('auth.oauth.account_not_registered'), 'register');
         }
 
         if ($user->tfa_secret) {
@@ -103,5 +125,10 @@ class SocialLoginController extends Controller
         (new Login)->execute($user, true);
 
         return redirect()->route('home');
+    }
+
+    private function failed(string $message, string $route = 'login'): RedirectResponse
+    {
+        return redirect()->route($route)->with('notification', ['message' => $message, 'type' => 'error']);
     }
 }
