@@ -158,6 +158,9 @@ return [
     'url' => ':attributeには有効なURLを指定してください。',
     'ulid' => ':attributeには有効なULIDを指定してください。',
     'uuid' => ':attributeには有効なUUIDを指定してください。',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
