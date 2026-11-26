@@ -158,6 +158,9 @@ return [
     'url' => 'Pole :attribute musi zawierać prawidłowy URL.',
     'ulid' => 'To :attribute pole musi być ważnym ULID.',
     'uuid' => 'Pole :attribute musi być poprawnym identyfikatorem UUID.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
