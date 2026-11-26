@@ -158,6 +158,9 @@ return [
     'url' => 'A(z) :attribute mezőnek érvényes URL-nek kell lennie.',
     'ulid' => 'A(z) :attribute mezőnek érvényes ULID-nek kell lennie.',
     'uuid' => 'A(z) :attribute mezőnek érvényes UUID-nek kell lennie.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
