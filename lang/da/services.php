@@ -36,6 +36,12 @@ return [
     'next_step' => 'Næste skridt',
 
     'upgrade_pending' => 'Du kan ikke opgradere mens der allerede er en opgraderings / nedgraderings faktura åben',
+    'not_upgradable' => 'This service is not upgradable.',
+    'invalid_upgrade' => 'Invalid upgrade.',
+    'upgrade_no_changes' => 'You have not changed anything. Please select a different product or change the configuration options.',
+    'upgrade_completed' => 'The upgrade has been completed.',
+    'upgrade_completed_credited' => 'The upgrade has been completed. We\'ve added the remaining amount to your account balance.',
+    'upgrade_added_to_cart' => 'The upgrade has been added to your cart. Please complete the payment to proceed.',
 
     'outstanding_invoice' => 'Du har en udestående faktura',
     'view_and_pay' => 'Klik her for at se og betale',
@@ -73,5 +79,8 @@ return [
     'label_placeholder' => 'Angiv en brugerdefineret label til denne service',
     'label_modal_title' => 'Rediger service label',
     'update_label' => 'Opdater label',
+    'label_updated' => 'Service label updated successfully',
+    'view_not_found' => 'View not found',
+    'view_load_error' => 'Got an error while trying to load the view',
 
 ];
