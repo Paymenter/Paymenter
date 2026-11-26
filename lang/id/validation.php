@@ -158,6 +158,9 @@ return [
     'url' => 'Kolom :attribute harus berupa URL.',
     'ulid' => 'Kolom :attribute harus berupa ULID',
     'uuid' => 'Kolom :attribute harus berupa UUID.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
