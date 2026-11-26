@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'Kirjaudu sisään tilillesi',
     'or_sign_in_with' => 'Tai kirjaudu käyttäen',
     'forgot_password' => 'Unohditko salasanasi?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'Eikö sinulla ole tiliä?',
     'already_have_account' => 'Onko sinulla jo tili?',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Discord-tiliäsi ei ole vahvistettu.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'Et ole rekisteröitynyt tälle sivustolle.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'Nollaa salasana',
 
     'verify_2fa' => 'Vahvista 2FA',
     'verify' => 'Vahvista',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'Vahvista sähköpostiosoitteesi',
