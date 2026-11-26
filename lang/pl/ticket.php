@@ -33,4 +33,10 @@ return [
     'select_service' => 'Wybierz usługę',
     'create' => 'Utwórz',
     'no_tickets' => 'Nie znaleziono zgłoszeń',
+    'initial_message' => 'Initial message',
+    'ticket_header' => 'Ticket #:id - :subject',
+    'message_sent' => 'Message sent successfully',
+    'closing_disabled' => 'Closing tickets is disabled.',
+    'rate_limit_create' => 'Too many ticket creation attempts. Please try again in :seconds seconds.',
+    'rate_limit_message' => 'Too many message attempts. Please try again in :seconds seconds.',
 ];
