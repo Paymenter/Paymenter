@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'Logga in till ditt konto',
     'or_sign_in_with' => 'Eller logga in med',
     'forgot_password' => 'Glömt ditt lösenord?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'Har du inget konto?',
     'already_have_account' => 'Har du redan ett konto?',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Ditt Discord-konto är inte verifierat.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'Du är inte registrerad på denna webbplats.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'Återställ lösenord',
 
     'verify_2fa' => 'Verifiera 2FA',
     'verify' => 'Verifiera',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'Verifiera din e-postadress',
