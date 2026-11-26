@@ -158,6 +158,9 @@ return [
     'url' => ':attribute फ़ील्ड एक वैध URL होना चाहिए।',
     'ulid' => ':attribute फ़ील्ड एक वैध ULID होना चाहिए।',
     'uuid' => ':attribute फ़ील्ड को एक वैध UUID होना चाहिए।',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
