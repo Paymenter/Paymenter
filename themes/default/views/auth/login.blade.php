@@ -10,7 +10,7 @@
     <x-form.input name="password" type="password" :label="__('general.input.password')"
         :placeholder="__('general.input.password_placeholder')" required hideRequiredIndicator wire:model="password" autocomplete="current-password" />
     <div class="flex flex-row">
-        <x-form.checkbox name="remember" label="Remember me" wire:model="remember" />
+        <x-form.checkbox name="remember" :label="__('auth.remember_me')" wire:model="remember" />
         <a class="text-sm text-secondary-500 text-secondary hover:underline ml-auto"
             href="{{ route('password.request') }}">
             {{ __('auth.forgot_password') }}

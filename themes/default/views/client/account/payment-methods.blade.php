@@ -159,7 +159,7 @@
                         </span>
                         <span class="text-base text-sm">
                             {{ $transaction->formattedAmount }}
-                            using
+                            {{ __('account.using') }}
                             {{ $transaction->gateway ? $transaction->gateway->name : 'N/A' }}
                         </span>
                     </div>

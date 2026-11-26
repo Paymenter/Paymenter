@@ -5,5 +5,5 @@
         'value' => $code,
         'label' => $locale
     ])->values()->toArray()"
-    placeholder="Select language"
+    :placeholder="__('general.select_language')"
 />

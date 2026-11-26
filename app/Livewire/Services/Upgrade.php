@@ -34,7 +34,7 @@ class Upgrade extends Component
         $this->authorize('view', $this->service);
 
         if (!$this->service->upgradable) {
-            $this->notify('This service is not upgradable.', 'error', true);
+            $this->notify(__('services.not_upgradable'), 'error', true);
 
             return $this->redirect(route('services.show', $this->service), true);
         }
@@ -85,7 +85,7 @@ class Upgrade extends Component
     {
         // Check if the upgrade is valid
         if (!$this->service->productUpgrades()->contains($upgrade) && $upgrade != $this->service->product_id) {
-            $this->notify('Invalid upgrade.', 'error');
+            $this->notify(__('services.invalid_upgrade'), 'error');
 
             return;
         }
@@ -123,7 +123,7 @@ class Upgrade extends Component
                         ->where('billing_unit', $this->service->plan->billing_unit)
                         ->first();
                     if (!$plan) {
-                        $fail(__('Invalid upgrade.'));
+                        $fail(__('services.invalid_upgrade'));
                     }
                 },
             ],
@@ -148,7 +148,7 @@ class Upgrade extends Component
     public function doUpgrade()
     {
         if (!$this->service->upgradable) {
-            $this->notify('This service is not upgradable.', 'error', true);
+            $this->notify(__('services.not_upgradable'), 'error', true);
 
             return $this->redirect(route('services.show', $this->service), true);
         }
@@ -162,7 +162,7 @@ class Upgrade extends Component
             // Validate upgradable again after locking the service
             if ($service->upgrade()->where('status', ServiceUpgrade::STATUS_PENDING)->count() != 0) {
                 DB::rollBack();
-                $this->notify('This service is not upgradable.', 'error', true);
+                $this->notify(__('services.not_upgradable'), 'error', true);
 
                 return $this->redirect(route('services.show', $this->service), true);
             }
@@ -192,7 +192,7 @@ class Upgrade extends Component
             if ($this->upgradeProduct->id === $service->product_id && $upgradeConfigOptions == $configOptions) {
                 // No changes made, clean rollback and exit safely
                 DB::rollBack();
-                $this->notify('You have not changed anything. Please select a different product or change the configuration options.', 'error');
+                $this->notify(__('services.upgrade_no_changes'), 'error');
 
                 return;
             }
@@ -217,7 +217,7 @@ class Upgrade extends Component
 
                 if (!config('settings.credits_on_downgrade', true)) {
                     DB::commit();
-                    $this->notify('The upgrade has been completed.', 'success', true);
+                    $this->notify(__('services.upgrade_completed'), 'success', true);
 
                     return $this->redirect(route('services.show', $service), true);
                 }
@@ -237,9 +237,9 @@ class Upgrade extends Component
                 DB::commit();
 
                 if ($price->price < 0) {
-                    $this->notify('The upgrade has been completed. We\'ve added the remaining amount to your account balance.', 'success', true);
+                    $this->notify(__('services.upgrade_completed_credited'), 'success', true);
                 } else {
-                    $this->notify('The upgrade has been completed.', 'success', true);
+                    $this->notify(__('services.upgrade_completed'), 'success', true);
                 }
 
                 return $this->redirect(route('services.show', $service), true);
@@ -266,7 +266,7 @@ class Upgrade extends Component
 
             DB::commit();
 
-            $this->notify('The upgrade has been added to your cart. Please complete the payment to proceed.', 'success', true);
+            $this->notify(__('services.upgrade_added_to_cart'), 'success', true);
 
             return $this->redirect(route('invoices.show', $invoice));
 
@@ -278,7 +278,7 @@ class Upgrade extends Component
                 return $this->notify($e->getMessage(), 'error');
             } else {
                 report($e);
-                $this->notify('An error occurred while processing your order. Please try again later.');
+                $this->notify(__('product.order_error'));
             }
         }
     }

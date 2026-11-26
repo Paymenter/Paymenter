@@ -12,7 +12,7 @@
             </div>
         </div>
         @if ($product->availablePlans()->count() > 1)
-            <x-form.select wire:model.live="plan_id" name="plan_id" label="Select a plan">
+            <x-form.select wire:model.live="plan_id" name="plan_id" :label="__('general.select_plan')">
                 @foreach ($product->availablePlans() as $availablePlan)
                     <option value="{{ $availablePlan->id }}">
                         {{ $availablePlan->name }} -
