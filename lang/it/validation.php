@@ -158,6 +158,9 @@ return [
     'url' => 'Il campo :attribute deve essere un URL valido.',
     'ulid' => 'Il campo :attribute deve essere un ULID valido.',
     'uuid' => 'Il campo :attribute deve essere un UUID valido.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
