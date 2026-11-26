@@ -36,6 +36,12 @@ return [
     'next_step' => 'Étape suivante',
 
     'upgrade_pending' => 'Vous ne pouvez pas effectuer de mise à niveau tant qu\'une facture de mise à niveau ou de rétrogradation est en cours',
+    'not_upgradable' => 'This service is not upgradable.',
+    'invalid_upgrade' => 'Invalid upgrade.',
+    'upgrade_no_changes' => 'You have not changed anything. Please select a different product or change the configuration options.',
+    'upgrade_completed' => 'The upgrade has been completed.',
+    'upgrade_completed_credited' => 'The upgrade has been completed. We\'ve added the remaining amount to your account balance.',
+    'upgrade_added_to_cart' => 'The upgrade has been added to your cart. Please complete the payment to proceed.',
 
     'outstanding_invoice' => 'Vous avez une facture impayée.',
     'view_and_pay' => 'Afficher la facture et payer',
@@ -73,5 +79,8 @@ return [
     'label_placeholder' => 'Entrez une étiquette personnalisée pour ce service',
     'label_modal_title' => 'Modifier l\'étiquette du service',
     'update_label' => 'Mettre à jour l\'étiquette',
+    'label_updated' => 'Service label updated successfully',
+    'view_not_found' => 'View not found',
+    'view_load_error' => 'Got an error while trying to load the view',
 
 ];
