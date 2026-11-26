@@ -36,6 +36,12 @@ return [
     'next_step' => 'Siguiente paso',
 
     'upgrade_pending' => 'No es posible realizar una actualización si ya existe una factura de mejora/disminución abierta',
+    'not_upgradable' => 'This service is not upgradable.',
+    'invalid_upgrade' => 'Invalid upgrade.',
+    'upgrade_no_changes' => 'You have not changed anything. Please select a different product or change the configuration options.',
+    'upgrade_completed' => 'The upgrade has been completed.',
+    'upgrade_completed_credited' => 'The upgrade has been completed. We\'ve added the remaining amount to your account balance.',
+    'upgrade_added_to_cart' => 'The upgrade has been added to your cart. Please complete the payment to proceed.',
 
     'outstanding_invoice' => 'Tienes una factura pendiente.',
     'view_and_pay' => 'Haz clic aquí para ver y pagar',
@@ -73,5 +79,8 @@ return [
     'label_placeholder' => 'Introduzca una etiqueta personalizada para este servicio',
     'label_modal_title' => 'Editar etiqueta del servicio',
     'update_label' => 'Actualizar etiqueta',
+    'label_updated' => 'Service label updated successfully',
+    'view_not_found' => 'View not found',
+    'view_load_error' => 'Got an error while trying to load the view',
 
 ];
