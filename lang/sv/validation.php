@@ -158,6 +158,9 @@ return [
     'url' => ':attribute fältet måste vara en giltig URL.',
     'ulid' => ':attribute fältet måste vara en korrekt ULID.',
     'uuid' => ':attribute fältet måste vara en korrekt UUID.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
