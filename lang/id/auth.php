@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'Masuk ke akun Anda',
     'or_sign_in_with' => 'Atau masuk dengan',
     'forgot_password' => 'Lupa kata sandi Anda?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'Tidak memiliki akun?',
     'already_have_account' => 'Sudah memiliki akun?',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => '.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'Anda tidak terdaftar di situs ini.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'Atur ulang kata sandi',
 
     'verify_2fa' => 'Verifikasi 2FA',
     'verify' => 'Verifikasi',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'Verifikasi alamat email Anda',
