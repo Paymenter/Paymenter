@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'כניסה לחשבון',
     'or_sign_in_with' => 'או היכנס באמצעות',
     'forgot_password' => 'שכחת סיסמה?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'אין לך חשבון?',
     'already_have_account' => 'כבר יש לך חשבון?',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'חשבון הדיסקורד שלך לא אומת.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'אינך רשום באתר זה.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'איפוס סיסמה',
 
     'verify_2fa' => 'אימות דו שלבי',
     'verify' => 'אימות',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => ' אמת את כתובת הדוא״ל שלך',
