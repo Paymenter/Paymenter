@@ -464,6 +464,13 @@ class Settings
                     'required' => true,
                 ],
                 [
+                    'name' => 'cronjob_upgrade_cancel',
+                    'label' => 'Cancel unpaid upgrade if pending for x days',
+                    'type' => 'number',
+                    'default' => 7,
+                    'required' => true,
+                ],
+                [
                     'name' => 'cronjob_order_suspend',
                     'label' => 'Suspend server if invoice is x days overdue',
                     'type' => 'number',

@@ -36,6 +36,11 @@ return [
     'next_step' => 'Next Step',
 
     'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
+    'upgrade_pay' => 'Pay Upgrade Invoice',
+    'upgrade_cancel' => 'Cancel Upgrade',
+    'upgrade_cancel_confirm' => 'Are you sure you want to cancel this upgrade?',
+    'upgrade_cancelled' => 'The upgrade has been cancelled.',
+    'upgrade_cancel_failed' => 'This upgrade can no longer be cancelled. It may have already been paid.',
 
     'outstanding_invoice' => 'You have an outstanding invoice.',
     'view_and_pay' => 'Click here to view and pay',
