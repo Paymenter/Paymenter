@@ -158,6 +158,9 @@ return [
     'url' => ':attribute må være en gyldig URL.',
     'ulid' => ':attribute må være en gyldig ULID.',
     'uuid' => ':attribute må være en gyldig UUID.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
