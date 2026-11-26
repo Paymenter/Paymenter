@@ -158,6 +158,9 @@ return [
     'url' => 'يجب أن يكون الحقل :attribute عنوان URL صالح.',
     'ulid' => 'يجب أن يكون الحقل :attribute ULID صالح.',
     'uuid' => 'يجب أن يكون الحقل :attribute UUID صالح.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
