@@ -48,4 +48,23 @@ final class PushEndpoint
 
         return false;
     }
+
+    // RFC 8291: p256dh is an uncompressed P-256 public key (65 bytes), auth a 16-byte secret, both base64url
+    public static function hasValidKeys(mixed $keys): bool
+    {
+        return is_array($keys)
+            && self::decodedLength($keys['p256dh'] ?? null) === 65
+            && self::decodedLength($keys['auth'] ?? null) === 16;
+    }
+
+    private static function decodedLength(mixed $value): ?int
+    {
+        if (!is_string($value) || !preg_match('/^[A-Za-z0-9_-]+={0,2}$/', $value)) {
+            return null;
+        }
+
+        $decoded = base64_decode(strtr(rtrim($value, '='), '-_', '+/'), true);
+
+        return $decoded === false ? null : strlen($decoded);
+    }
 }
