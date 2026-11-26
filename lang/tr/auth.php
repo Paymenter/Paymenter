@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'Hesabınıza giriş yapın',
     'or_sign_in_with' => 'Ya da şununla giriş yap',
     'forgot_password' => 'Şifrenizi mi unuttunuz?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'Hesabınız yok mu?',
     'already_have_account' => 'Zaten hesabınız var mı?',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Discord hesabınız doğrulanmamış.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'Bu siteye kayıtlı değilsiniz.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'Şifreyi sıfırla',
 
     'verify_2fa' => 'Doğrula (2FA)',
     'verify' => 'Doğrula',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'E-posta adresinizi doğrulayın',
