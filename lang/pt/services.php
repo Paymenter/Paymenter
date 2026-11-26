@@ -36,6 +36,12 @@ return [
     'next_step' => 'Próximo passo',
 
     'upgrade_pending' => 'Você não pode fazer outro melhoramento enquanto já há um melhoramento ativo / rebaixamento de fatura aberta',
+    'not_upgradable' => 'This service is not upgradable.',
+    'invalid_upgrade' => 'Invalid upgrade.',
+    'upgrade_no_changes' => 'You have not changed anything. Please select a different product or change the configuration options.',
+    'upgrade_completed' => 'The upgrade has been completed.',
+    'upgrade_completed_credited' => 'The upgrade has been completed. We\'ve added the remaining amount to your account balance.',
+    'upgrade_added_to_cart' => 'The upgrade has been added to your cart. Please complete the payment to proceed.',
 
     'outstanding_invoice' => 'Você tem uma fatura em aberto.',
     'view_and_pay' => 'Clique aqui para ver e pagar',
@@ -73,5 +79,8 @@ return [
     'label_placeholder' => 'Digite um rótulo personalizado para este serviço',
     'label_modal_title' => 'Editar rótulo do serviço',
     'update_label' => 'Atualizar rótulo',
+    'label_updated' => 'Service label updated successfully',
+    'view_not_found' => 'View not found',
+    'view_load_error' => 'Got an error while trying to load the view',
 
 ];
