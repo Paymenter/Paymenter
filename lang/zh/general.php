@@ -34,6 +34,11 @@ return [
     ],
 
     'all_rights_reserved' => '版權所有。',
+    'copyright' => '© :year :app_name. | All rights reserved.',
+    'powered_by' => 'Powered by',
     'update' => '更新',
     'save' => '儲存',
+    'select_plan' => 'Select a plan',
+    'language' => 'Language',
+    'select_language' => 'Select language',
 ];
