@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'قم بتسجيل الدخول إلى حسابك',
     'or_sign_in_with' => 'أو سجل الدخول باستخدام',
     'forgot_password' => 'نسيت كلمة المرور؟',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'ليس لديك حساب؟',
     'already_have_account' => 'لديك حساب بالفعل؟',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'لم يتم التحقق من حساب الدسكورد الخاص بك.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'أنت غير مسجل في هذا الموقع.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'إعادة تعيين كلمة المرور',
 
     'verify_2fa' => 'التحقق عبر المصادقة الثنائية',
     'verify' => 'التحقق',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'تحقق من عنوان بريدك الإلكتروني',
