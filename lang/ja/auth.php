@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'アカウントにログイン',
     'or_sign_in_with' => 'または次の方法でログイン',
     'forgot_password' => 'パスワードをお忘れですか？',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'アカウントをお持ちでないですか？',
     'already_have_account' => 'すでにアカウントをお持ちですか？',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'お使いのDiscordアカウントは認証されていません。',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'このアカウントはこのサイトに登録されていません。',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'パスワードをリセット',
 
     'verify_2fa' => '二要素認証コードの確認',
     'verify' => '確認',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => 'メールアドレスを確認してください',
