@@ -34,6 +34,11 @@ return [
     ],
 
     'all_rights_reserved' => 'सर्वाधिकार सुरक्षित।',
+    'copyright' => '© :year :app_name. | All rights reserved.',
+    'powered_by' => 'Powered by',
     'update' => 'अपडेट करें',
     'save' => 'Save',
+    'select_plan' => 'Select a plan',
+    'language' => 'Language',
+    'select_language' => 'Select language',
 ];
