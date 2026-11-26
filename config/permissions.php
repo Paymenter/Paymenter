@@ -24,6 +24,7 @@ return [
             ],
             'billing_agreements' => [
                 'viewAny' => 'View Billing Agreements',
+                'delete' => 'Delete Billing Agreements',
             ],
             'invoices' => [
                 'create' => 'Create Invoices',
