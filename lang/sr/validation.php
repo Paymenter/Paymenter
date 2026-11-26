@@ -158,6 +158,9 @@ return [
     'url' => 'Polje :attribute mora biti validan URL.',
     'ulid' => 'Polje :attribute mora biti validan ULID.',
     'uuid' => 'Polje :attribute mora biti validan UUID.',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
