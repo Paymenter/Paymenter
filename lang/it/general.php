@@ -34,6 +34,11 @@ return [
     ],
 
     'all_rights_reserved' => 'Tutti i diritti riservati.',
+    'copyright' => '© :year :app_name. | All rights reserved.',
+    'powered_by' => 'Powered by',
     'update' => 'Aggiorna',
     'save' => 'Salva',
+    'select_plan' => 'Select a plan',
+    'language' => 'Language',
+    'select_language' => 'Select language',
 ];
