@@ -46,12 +46,17 @@ class Account extends ComponentWithProperties
 
         /** @var User $user */
         $user = Auth::user();
-        $user->update($validatedData);
+        $user->fill($validatedData);
+        $emailChanged = $user->isDirty('email');
 
         // If email was changed, we should mark it as unverified and send a new verification email
-        if ($user->wasChanged('email')) {
+        if ($emailChanged) {
             $user->email_verified_at = null;
-            $user->save();
+        }
+
+        $user->save();
+
+        if ($emailChanged) {
             NotificationHelper::emailVerificationNotification($user);
         }
 
