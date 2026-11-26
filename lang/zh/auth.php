@@ -21,6 +21,7 @@ return [
     'sign_in_title' => '登入您的帳戶',
     'or_sign_in_with' => '或使用以下方式登入',
     'forgot_password' => '忘記密碼？',
+    'remember_me' => 'Remember me',
     'dont_have_account' => '還沒有帳戶？',
     'already_have_account' => '已經有帳戶了？',
 
@@ -37,13 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => '您的 Discord 帳戶尚未驗證。',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => '您尚未在本站註冊。',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => '重設密碼',
 
     'verify_2fa' => '驗證兩步驟驗證',
     'verify' => '驗證',
+    'sign_in_with_passkey' => 'Sign in with a passkey',
+    'passkey_signing_in' => 'Waiting for your passkey…',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
+    'confirm_password' => 'Confirm password',
 
     'verification' => [
         'notice' => '驗證您的電子郵件地址',
