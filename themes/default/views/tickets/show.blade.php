@@ -152,9 +152,13 @@
                                     {{ __('ticket.close_ticket') }}
                                 </x-button.danger>
                             @endif
-                            <x-button.primary type="submit" class="sm:!w-fit order-1 sm:order-2" wire:target="save">
+                            <x-button.primary
+                                type="submit"
+                                class="sm:!w-fit order-1 sm:order-2"
+                                wire:target="save,attachments"
+                                wire:loading.attr="disabled">
                                 {{ __('ticket.reply') }}
-                            </x-button.primary>
+                            </x-button.primary> 
                         </div>
                     </form>
                     <x-easymde-editor />
