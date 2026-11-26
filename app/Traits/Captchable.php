@@ -11,11 +11,6 @@ trait Captchable
 
     private $is_valid = false;
 
-    public function updated()
-    {
-        $this->captcha();
-    }
-
     // Captchable
     private function captcha()
     {
