@@ -34,6 +34,11 @@ return [
     ],
 
     'all_rights_reserved' => 'Hak cipta dilindungi.',
+    'copyright' => '© :year :app_name. | All rights reserved.',
+    'powered_by' => 'Powered by',
     'update' => 'Pembaruan',
     'save' => 'Simpan',
+    'select_plan' => 'Select a plan',
+    'language' => 'Language',
+    'select_language' => 'Select language',
 ];
