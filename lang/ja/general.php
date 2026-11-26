@@ -34,6 +34,11 @@ return [
     ],
 
     'all_rights_reserved' => '無断複製・転載を禁じます。',
+    'copyright' => '© :year :app_name. | All rights reserved.',
+    'powered_by' => 'Powered by',
     'update' => '更新',
     'save' => '保存',
+    'select_plan' => 'Select a plan',
+    'language' => 'Language',
+    'select_language' => 'Select language',
 ];
