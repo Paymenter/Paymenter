@@ -158,6 +158,9 @@ return [
     'url' => ':attribute 欄位必須是有效的 URL。',
     'ulid' => ':attribute 欄位必須是有效的 ULID。',
     'uuid' => ':attribute 欄位必須是有效的 UUID。',
+    'captcha_required' => 'The CAPTCHA is required.',
+    'captcha_failed' => 'The CAPTCHA could not be verified.',
+    'captcha_invalid' => 'The CAPTCHA was invalid.',
 
     /*
     |--------------------------------------------------------------------------
