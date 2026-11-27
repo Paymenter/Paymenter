@@ -24,6 +24,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Url;
 
@@ -61,14 +62,31 @@ class Extension extends Page implements HasActions, HasTable
 
     public int $loadedItems = self::PER_PAGE;
 
-    public ?array $allExtensions = [];
-
     public ?string $error = null;
+
+    private ?array $marketplaceExtensions = null;
+
+    private bool $marketplaceLoaded = false;
 
     public function mount(): void
     {
+        $this->loadMarketplaceExtensions();
+    }
+
+    protected function loadMarketplaceExtensions(): ?array
+    {
+        if ($this->marketplaceLoaded) {
+            return $this->marketplaceExtensions;
+        }
+        $this->marketplaceLoaded = true;
+
+        // Already failed on mount, don't retry on every Livewire request
+        if ($this->error) {
+            return $this->marketplaceExtensions = null;
+        }
+
         try {
-            $this->allExtensions = Cache::remember('paymenter_marketplace_extensions', now()->addHours(6), function () {
+            $this->marketplaceExtensions = Cache::remember('paymenter_marketplace_extensions', now()->addHours(6), function () {
                 $response = Http::timeout(15)
                     ->withUserAgent('Paymenter/' . config('app.version') . ' (https://paymenter.org)')
                     ->get('https://api.paymenter.org/extensions', ['limit' => 999]);
@@ -80,13 +98,16 @@ class Extension extends Page implements HasActions, HasTable
 
                 return $response->json('extensions', []);
             });
-            if (is_null($this->allExtensions)) {
+            if (is_null($this->marketplaceExtensions)) {
                 $this->error = 'The Paymenter Marketplace is currently unavailable. Please try again later.';
             }
         } catch (ConnectionException $e) {
+            $this->marketplaceExtensions = null;
             $this->error = 'Failed to connect to the Paymenter Marketplace. Please check your server\'s internet connection.';
             logger()->error('Paymenter Marketplace API connection failed: ' . $e->getMessage());
         }
+
+        return $this->marketplaceExtensions;
     }
 
     public function updatedSearch(): void
@@ -111,11 +132,13 @@ class Extension extends Page implements HasActions, HasTable
 
     public function getFilteredExtensionsProperty(): Collection
     {
-        if (is_null($this->allExtensions)) {
+        $all = $this->loadMarketplaceExtensions();
+
+        if (is_null($all)) {
             return collect();
         }
 
-        return collect($this->allExtensions)
+        return collect($all)
             ->when($this->search, fn (Collection $c) => $c->filter(fn ($i) => stripos($i['name'], $this->search) !== false))
             ->when($this->filter !== 'all', fn (Collection $c) => $c->where('type', $this->filter));
     }
@@ -152,6 +175,7 @@ class Extension extends Page implements HasActions, HasTable
             ->recordActions([
                 Action::make('install')
                     ->label('Install')
+                    ->icon('ri-download-2-line')
                     ->action(function ($record) {
                         $extension = \App\Models\Extension::create([
                             'name' => $record['name'],
@@ -169,6 +193,50 @@ class Extension extends Page implements HasActions, HasTable
                         $this->redirect(ExtensionResource::getUrl('edit', ['record' => $extension->id]), true);
                     })
                     ->requiresConfirmation(),
+                Action::make('remove')
+                    ->label('Remove')
+                    ->color('danger')
+                    ->icon('ri-delete-bin-line')
+                    ->requiresConfirmation()
+                    ->modalHeading('Remove Extension')
+                    ->modalDescription('Are you sure you want to permanently remove this extension and delete all its files from the server? This action cannot be undone.')
+                    ->visible(fn () => Auth::user()->hasPermission('admin.extensions.delete'))
+                    ->action(function ($record) {
+                        $type = basename($record['type']);
+                        $name = basename($record['name']);
+                        $path = base_path('extensions/' . ucfirst($type) . 's/' . $name);
+
+                        if (!is_dir($path)) {
+                            Notification::make()
+                                ->title('Extension not found')
+                                ->body('The extension directory could not be found.')
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
+                        if (!File::deleteDirectory($path)) {
+                            Notification::make()
+                                ->title('Failed to remove extension')
+                                ->body('Could not delete the extension directory. Please check file permissions.')
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
+                        clearstatcache();
+                        $this->flushCachedTableRecords();
+
+                        Notification::make()
+                            ->title('Extension Removed')
+                            ->body('The extension files have been permanently deleted.')
+                            ->success()
+                            ->send();
+
+                        $this->redirect(static::getUrl(['tab' => 'installable']), true);
+                    }),
             ])
             ->headerActions([
                 Action::make('upload')
