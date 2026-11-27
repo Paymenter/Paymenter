@@ -21,7 +21,7 @@ return [
     'sign_in_title' => 'Mit deinem Account anmelden',
     'or_sign_in_with' => 'Oder anmelden mit',
     'forgot_password' => 'Passwort vergessen?',
-    'remember_me' => 'Remember me',
+    'remember_me' => 'Angemeldet bleiben',
     'dont_have_account' => 'Du hast noch kein Konto?',
     'already_have_account' => 'Du hast bereits ein Konto?',
 
@@ -38,23 +38,23 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Dein Discord Account ist nicht verifiziert.',
-        'unverified_google_account' => 'Your Google account is not verified.',
+        'unverified_google_account' => 'Ihr Google-Konto ist nicht verifiziert.',
         'account_not_registered' => 'Du bist nicht auf dieser Seite registriert.',
-        'authorization_request' => 'Authorization Request',
-        'requesting_permission' => 'is requesting permission to access your account.',
-        'scopes_title' => 'This application will be able to:',
-        'authorize' => 'Authorize',
+        'authorization_request' => 'Autorisierungsanfrage',
+        'requesting_permission' => 'bittet um die Erlaubnis, auf Ihr Konto zugreifen zu dürfen.',
+        'scopes_title' => 'Diese Anwendung wird folgende Funktionen bieten:',
+        'authorize' => 'Autorisieren',
     ],
 
     'reset_password' => 'Passwort zurücksetzen',
 
     'verify_2fa' => '2FA verifizieren',
     'verify' => 'Überprüfen',
-    'sign_in_with_passkey' => 'Sign in with a passkey',
-    'passkey_signing_in' => 'Waiting for your passkey…',
-    'confirm_password_title' => 'Confirm your password',
-    'confirm_password_description' => 'For your security, confirm your password before managing passkeys.',
-    'confirm_password' => 'Confirm password',
+    'sign_in_with_passkey' => 'Mit einem Passkey anmelden',
+    'passkey_signing_in' => 'Warten auf Ihren Passkey…',
+    'confirm_password_title' => 'Bestätigen Sie Ihr Passwort',
+    'confirm_password_description' => 'Zu Ihrer Sicherheit sollten Sie Ihr Passwort bestätigen, bevor Sie Passkeys verwalten.',
+    'confirm_password' => 'Passwort bestätigen',
 
     'verification' => [
         'notice' => 'Bestätige deine E-Mail-Adresse',
