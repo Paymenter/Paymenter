@@ -158,9 +158,9 @@ return [
     'url' => ':attribute muss eine gültige URL sein.',
     'ulid' => ':attribute muss eine gültige ULID sein.',
     'uuid' => ':attribute muss eine gültige UUID sein.',
-    'captcha_required' => 'The CAPTCHA is required.',
-    'captcha_failed' => 'The CAPTCHA could not be verified.',
-    'captcha_invalid' => 'The CAPTCHA was invalid.',
+    'captcha_required' => 'Das CAPTCHA ist erforderlich.',
+    'captcha_failed' => 'Das CAPTCHA konnte nicht überprüft werden.',
+    'captcha_invalid' => 'Das CAPTCHA war ungültig.',
 
     /*
     |--------------------------------------------------------------------------
