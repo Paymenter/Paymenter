@@ -6,6 +6,8 @@ use App\Models\TaxRate;
 
 /**
  * Class Price
+ *
+ * @property-read bool $available
  */
 class Price
 {

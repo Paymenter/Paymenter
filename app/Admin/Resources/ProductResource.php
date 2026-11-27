@@ -86,6 +86,28 @@ class ProductResource extends Resource
                                 Checkbox::make('hidden')
                                     ->label('Hide product')
                                     ->hint('Hide the product from the client area.'),
+                                Select::make('domain_mode')
+                                    ->label('Domain requirement')
+                                    ->options([
+                                        'none' => 'No domain',
+                                        'required' => 'Require a domain',
+                                    ])
+                                    ->default('none')
+                                    ->required()
+                                    ->live(),
+                                Select::make('domain_products')
+                                    ->label('Domain products to add')
+                                    ->multiple()
+                                    ->options(fn () => Product::query()
+                                        ->with('server')
+                                        ->orderBy('name')
+                                        ->get()
+                                        ->filter(fn (Product $product) => $product->server && ExtensionHelper::isRegistrar($product->server))
+                                        ->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->required(fn (Get $get) => $get('domain_mode') === 'required')
+                                    ->visible(fn (Get $get) => $get('domain_mode') === 'required'),
 
                                 RichEditor::make('description')->nullable()->columnSpanFull(),
                                 FileUpload::make('image')

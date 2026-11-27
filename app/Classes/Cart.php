@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Exceptions\DisplayException;
+use App\Helpers\ExtensionHelper;
 use App\Models\Coupon;
 use App\Models\Plan;
 use App\Models\Product;
@@ -41,6 +42,22 @@ class Cart
         return self::get()->items;
     }
 
+    public static function groupedItems()
+    {
+        $items = self::items();
+
+        $groups = $items->whereNull('parent_id')->map(fn ($parent) => [
+            'parent' => $parent,
+            'items' => collect([$parent])->merge($items->where('parent_id', $parent->id)),
+        ])->values();
+
+        $orphans = $items->whereNotNull('parent_id')
+            ->reject(fn ($child) => $groups->contains(fn ($group) => $group['parent']->id === $child->parent_id))
+            ->map(fn ($item) => ['parent' => $item, 'items' => collect([$item])]);
+
+        return $groups->merge($orphans)->values();
+    }
+
     public static function createCart()
     {
         $cart = self::getOnce();
@@ -61,12 +78,22 @@ class Cart
 
     protected const DEFAULT_RATE_LIMIT_DECAY_MINUTES = 1;
 
-    public static function add(Product $product, Plan $plan, $configOptions, $checkoutConfig, $quantity = 1, $key = null)
+    public static function add(Product $product, Plan $plan, $configOptions, $checkoutConfig, $quantity = 1, $key = null, $parentId = null)
     {
         self::checkRateLimit();
 
+        if ($product->server && ExtensionHelper::isRegistrar($product->server)) {
+            // Domain prices cover the full term; years stay in the checkout config.
+            $quantity = 1;
+        }
+
         // Match on key
         $cart = self::createCart();
+
+        if ($parentId === null && $key) {
+            $parentId = $cart->items()->whereKey($key)->value('parent_id');
+        }
+
         self::ensureCartItemLimit($cart, $key);
 
         $item = $cart->items()->updateOrCreate([
@@ -77,6 +104,7 @@ class Cart
             'config_options' => $configOptions,
             'checkout_config' => $checkoutConfig,
             'quantity' => $quantity,
+            'parent_id' => $parentId,
         ]);
         $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
 
@@ -131,20 +159,33 @@ class Cart
         return sprintf('cart-add:ip:%s', request()->ip());
     }
 
-    public static function remove($index)
+    public static function remove($index): bool
     {
         $cart = self::get();
         $item = $cart->items()->where('id', $index)->first();
+
         if ($item) {
+            if ($item->parent_id) {
+                return false;
+            }
+
+            $item->children()->get()->each->delete();
             $item->delete(); // We also want to trigger Eloquent events
         }
+
         $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
+
+        return true;
     }
 
     public static function updateQuantity($index, $quantity)
     {
         $cart = self::get();
         if ($item = $cart->items()->where('id', $index)->first()) {
+            if ($item->product->server && ExtensionHelper::isRegistrar($item->product->server)) {
+                return;
+            }
+
             if ($item->product->allow_quantity !== 'combined') {
                 return;
             }

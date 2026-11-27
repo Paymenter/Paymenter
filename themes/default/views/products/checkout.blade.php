@@ -75,6 +75,25 @@
                 @endif
             </x-form.configoption>
         @endforeach
+
+        @if ($this->requiresDomainField())
+            <div class="space-y-2 border border-neutral rounded-md p-3 bg-background-secondary">
+                <x-button.primary type="button" wire:click="checkDomainAvailability">
+                    Check domain availability
+                </x-button.primary>
+
+                @if ($domainCheck)
+                    @if ($domainCheck['available'] ?? false)
+                        <p class="text-success text-sm">
+                            {{ $domainCheck['name'] }} is available for {{ number_format($domainCheck['price'], 2) }}
+                            for {{ $domainCheck['years'] }} {{ $domainCheck['years'] === 1 ? 'year' : 'years' }}.
+                        </p>
+                    @else
+                        <p class="text-error text-sm">{{ $domainCheck['error'] ?? 'This domain is not available.' }}</p>
+                    @endif
+                @endif
+            </div>
+        @endif
     </div>
     <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md h-fit">
         <h2 class="text-2xl font-semibold  mb-2">
