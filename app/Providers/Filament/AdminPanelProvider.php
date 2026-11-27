@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Actions\Auth\Logout;
+use App\Admin\Components\DebugModeBanner;
 use App\Http\Middleware\ImpersonateMiddleware;
 use App\Http\Middleware\LockSession;
 use App\Http\Middleware\ResolveUserSession;
@@ -38,7 +39,6 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        // Filament loads before the settings provider, so we need to load the settings here
         SettingsProvider::getSettings();
 
         Notifications::alignment(Alignment::Center);
@@ -78,6 +78,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
                 fn (): string => Blade::render('<x-admin-footer />'),
+            )
+            ->renderHook(
+                PanelsRenderHook::PAGE_START,
+                fn (): string => Blade::render('@livewire(\App\Admin\Components\DebugModeBanner::class)'),
             )
             ->renderHook(
                 'panels::head.end',
