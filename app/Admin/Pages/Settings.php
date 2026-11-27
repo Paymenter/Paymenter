@@ -6,6 +6,7 @@ use App\Classes\FilamentInput;
 use App\Classes\Settings as ClassesSettings;
 use App\Models\Setting;
 use App\Models\User;
+use App\Providers\SettingsProvider;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -119,10 +120,14 @@ class Settings extends Page implements HasForms
             }
         }
 
+        SettingsProvider::flushCache();
+
         Notification::make()
             ->title('Saved successfully!')
             ->success()
             ->send();
+
+        $this->dispatch('debug-mode-updated');
     }
 
     public static function canAccess(): bool
