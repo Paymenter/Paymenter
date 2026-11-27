@@ -36,12 +36,12 @@ return [
     'next_step' => 'Nächster Schritt',
 
     'upgrade_pending' => 'Du kannst kein Upgrade durchführen, solange du noch offene Rechnungen hast',
-    'not_upgradable' => 'This service is not upgradable.',
-    'invalid_upgrade' => 'Invalid upgrade.',
-    'upgrade_no_changes' => 'You have not changed anything. Please select a different product or change the configuration options.',
-    'upgrade_completed' => 'The upgrade has been completed.',
-    'upgrade_completed_credited' => 'The upgrade has been completed. We\'ve added the remaining amount to your account balance.',
-    'upgrade_added_to_cart' => 'The upgrade has been added to your cart. Please complete the payment to proceed.',
+    'not_upgradable' => 'Dieser Dienst lässt sich nicht erweitern.',
+    'invalid_upgrade' => 'Ungültiges Upgrade.',
+    'upgrade_no_changes' => 'Sie haben nichts geändert. Bitte wählen Sie ein anderes Produkt aus oder ändern Sie die Konfigurationsoptionen.',
+    'upgrade_completed' => 'Das Upgrade ist abgeschlossen.',
+    'upgrade_completed_credited' => 'Das Upgrade ist abgeschlossen. Wir haben den Restbetrag Ihrem Kontostand gutgeschrieben.',
+    'upgrade_added_to_cart' => 'Das Upgrade wurde Ihrem Warenkorb hinzugefügt. Bitte schließen Sie die Zahlung ab, um fortzufahren.',
 
     'outstanding_invoice' => 'Du hast eine ausstehende Rechnung',
     'view_and_pay' => 'Hier klicken, um anzuzeigen und zu bezahlen',
@@ -79,8 +79,8 @@ return [
     'label_placeholder' => 'Geben Sie eine benutzerdefinierte Bezeichnung für diesen Dienst ein',
     'label_modal_title' => 'Dienstleistungsbezeichnung bearbeiten',
     'update_label' => 'Bezeichnung aktualisieren',
-    'label_updated' => 'Service label updated successfully',
-    'view_not_found' => 'View not found',
-    'view_load_error' => 'Got an error while trying to load the view',
+    'label_updated' => 'Service-Bezeichnung erfolgreich aktualisiert',
+    'view_not_found' => 'Ansicht nicht gefunden',
+    'view_load_error' => 'Beim Laden der Ansicht ist ein Fehler aufgetreten',
 
 ];
