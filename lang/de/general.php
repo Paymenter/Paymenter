@@ -34,11 +34,11 @@ return [
     ],
 
     'all_rights_reserved' => 'Alle Rechte vorbehalten.',
-    'copyright' => '© :year :app_name. | All rights reserved.',
-    'powered_by' => 'Powered by',
+    'copyright' => '© :year :app_name. | Alle Rechte vorbehalten.',
+    'powered_by' => 'Unterstützt von',
     'update' => 'Aktualisierung',
     'save' => 'Speichern',
-    'select_plan' => 'Select a plan',
-    'language' => 'Language',
-    'select_language' => 'Select language',
+    'select_plan' => 'Wählen Sie einen Tarif aus',
+    'language' => 'Sprache',
+    'select_language' => 'Sprache auswählen',
 ];
