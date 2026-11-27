@@ -34,7 +34,7 @@
                     <label for="editor" class="block text-sm font-medium text-primary-100">
                         {{ __('ticket.reply') }}
                     </label>
-                    <textarea id="editor" placeholder="Initial message"></textarea>
+                    <textarea id="editor" placeholder="{{ __('ticket.initial_message') }}"></textarea>
                     
                     <label for="attachments" class="block text-sm font-medium text-primary-100 mt-2">
                         {{ __('ticket.attachments') }}
@@ -100,7 +100,7 @@
                             wire:model.live="attachments" x-ref="fileInput"
                             @change="selectedFiles = Array.from($event.target.files)" />
                     </div>
-                    <x-button.primary class="mt-2 !w-fit float-right">
+                    <x-button.primary class="mt-2 !w-fit float-right" type="submit">
                         {{ __('ticket.create') }}
                     </x-button.primary>
                 </form>

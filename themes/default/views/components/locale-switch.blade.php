@@ -15,17 +15,17 @@
     <x-slot:content>
         @if(count($locales) > 1)
         <div>
-            <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
+            <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> {{ __('general.language') }} </strong>
             <x-select wire:model.live="currentLocale" :options="collect($locales)->map(fn($code) => [
                 'value' => $code,
                 'label' => config('app.available_locales')[$code] ?? $code
-                ])->values()->toArray()" placeholder="Select language" />
+                ])->values()->toArray()" :placeholder="__('general.select_language')" />
         </div>
         @endif
         @if(count($this->currencies) > 1 && Cart::items()->isEmpty())
         <div>
-            <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Currency </strong>
-            <x-select wire:model.live="currentCurrency" :options="$this->currencies" placeholder="Select currency" />
+            <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> {{ __('account.input.currency') }} </strong>
+            <x-select wire:model.live="currentCurrency" :options="$this->currencies" placeholder="{{ __('common.select.placeholder', ['name' => strtolower(__('account.input.currency'))]) }}" />
         </div>
         @endif
     </x-slot:content>

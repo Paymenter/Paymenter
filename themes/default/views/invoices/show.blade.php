@@ -69,8 +69,8 @@
                     </div>
                     <x-button.primary wire:click="$set('showPayModal', true)" class="mt-2" wire:loading.attr="disabled"
                         wire:target="$set('showPayModal')">
-                        <span wire:loading wire:target="pay">Processing...</span>
-                        <span wire:loading.remove wire:target="pay">Pay</span>
+                        <span wire:loading wire:target="pay">{{ __('invoices.transaction_statuses.processing') }}...</span>
+                        <span wire:loading.remove wire:target="pay">{{ __('invoices.pay_now') }}</span>
                     </x-button.primary>
                     @endif
                     @endif
@@ -154,7 +154,7 @@
                 </div>
                 @endif
                 <div class="flex justify-between">
-                    <div class="text-base font-semibold text-gray-900 uppercase dark:text-white">Total</div>
+                    <div class="text-base font-semibold text-gray-900 uppercase dark:text-white">{{ __('invoices.total') }}</div>
                     <div class="text-base font-bold text-gray-900 dark:text-white">
                         {{ $invoice->formattedTotal }}
                     </div>

@@ -11,11 +11,6 @@ trait Captchable
 
     private $is_valid = false;
 
-    public function updated()
-    {
-        $this->captcha();
-    }
-
     // Captchable
     private function captcha()
     {
@@ -24,7 +19,7 @@ trait Captchable
         }
 
         if (!$this->captcha) {
-            throw ValidationException::withMessages(['captcha' => 'The CAPTCHA is required.']);
+            throw ValidationException::withMessages(['captcha' => __('validation.captcha_required')]);
         }
 
         if (config('settings.captcha') == 'turnstile') {
@@ -63,7 +58,7 @@ trait Captchable
             return $this->is_valid = true;
         }
 
-        throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
+        throw ValidationException::withMessages(['captcha' => __('validation.captcha_invalid')]);
 
         return $this->is_valid = false;
     }
@@ -81,7 +76,7 @@ trait Captchable
             return $this->is_valid = true;
         }
 
-        throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
+        throw ValidationException::withMessages(['captcha' => __('validation.captcha_invalid')]);
 
         return $this->is_valid = false;
     }
@@ -99,7 +94,7 @@ trait Captchable
             return $this->is_valid = true;
         }
 
-        throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
+        throw ValidationException::withMessages(['captcha' => __('validation.captcha_invalid')]);
 
         return $this->is_valid = false;
     }

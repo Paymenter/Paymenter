@@ -3,9 +3,9 @@
         <nav role="navigation" aria-label="Pagination Navigation" class="flex gap-2 items-center">
             <span>
                 @if ($paginator->onFirstPage())
-                    <span class="bg-background-secondary text-white px-4 py-2 rounded-lg cursor-not-allowed">Previous</span>
+                    <span class="bg-background-secondary text-white px-4 py-2 rounded-lg cursor-not-allowed">{!! __('pagination.previous') !!}</span>
                 @else
-                    <button wire:click="previousPage" wire:loading.attr="disabled" rel="prev" class="bg-background-secondary text-white px-4 py-2 rounded-lg">Previous</button>
+                    <button wire:click="previousPage" wire:loading.attr="disabled" rel="prev" class="bg-background-secondary text-white px-4 py-2 rounded-lg">{!! __('pagination.previous') !!}</button>
                 @endif
             </span>
 
@@ -37,10 +37,10 @@
 
             <span>
                 @if ($paginator->onLastPage())
-                    <span class="bg-background-secondary text-white px-4 py-2 rounded-lg cursor-not-allowed">Next</span>
+                    <span class="bg-background-secondary text-white px-4 py-2 rounded-lg cursor-not-allowed">{!! __('pagination.next') !!}</span>
                 @else
                     <button wire:click="nextPage" wire:loading.attr="disabled" rel="next"
-                        class="bg-background-secondary text-white px-4 py-2 rounded-lg">Next</button>
+                        class="bg-background-secondary text-white px-4 py-2 rounded-lg">{!! __('pagination.next') !!}</button>
                 @endif
             </span>
         </nav>

@@ -73,5 +73,14 @@ return [
     'refund_failed' => 'Refund failed.',
     'refund_via_gateway' => 'Refund via Payment Gateway',
     'deleted_user' => 'Deleted User',
+    'cannot_be_paid' => 'This invoice cannot be paid.',
+    'cannot_be_paid_with_credits' => 'This invoice cannot be paid with credits.',
+    'invalid_payment_method' => 'Invalid payment method.',
+    'partially_paid_with_credits' => 'Part of the invoice has been paid with credits. Please pay the remaining amount',
+    'payment_method_not_usable' => 'This payment method cannot be used for this invoice.',
+    'saved_payment_method_charged' => 'Successfully charged the saved payment method.',
+    'payment_processing_failed' => 'Could not process payment. Please try again or use a different payment method.',
+    'payment_failed' => 'Payment failed. Please try again or use a different payment method.',
+    'invoice_paid' => 'The invoice has been paid.',
 
 ];

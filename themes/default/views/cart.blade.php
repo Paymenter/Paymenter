@@ -50,7 +50,7 @@
                             </h3>
                             @if ($item->quantity > 1)
                             <p class="text-sm text-base/70">
-                                {{ $itemPrice->format($itemPrice->total) }} each
+                                {{ __('product.each', ['price' => $itemPrice]) }}
                             </p>
                             @endif
                         </div>
@@ -116,7 +116,7 @@
                 <div class="flex flex-col justify-between items-end gap-4">
                     <h3 class="text-xl font-semibold p-1">
                         {{ $parent->price->format($parent->price->total * $parent->quantity) }} @if ($parent->quantity > 1)
-                        ({{ $parent->price }} each)
+                        ({{ __('product.each', ['price' => $parent->price]) }})
                         @endif
                     </h3>
                     <div class="flex flex-row gap-2">
@@ -165,7 +165,7 @@
                 </h2>
                 <div class="font-semibold flex items-end gap-2">
                     @if(!$coupon)
-                    <x-form.input wire:model="coupon" name="coupon" label="Coupon" />
+                    <x-form.input wire:model="coupon" name="coupon" :label="__('product.coupon')" />
                     <x-button.primary wire:click="applyCoupon" class="h-fit !w-fit mb-0.5" wire:loading.attr="disabled">
                         <x-loading target="applyCoupon" />
                         <div wire:loading.remove wire:target="applyCoupon">

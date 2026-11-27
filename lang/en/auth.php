@@ -21,6 +21,7 @@ return [
     'sign_in_title' => 'Sign in to your account',
     'or_sign_in_with' => 'Or sign in with',
     'forgot_password' => 'Forgot your password?',
+    'remember_me' => 'Remember me',
     'dont_have_account' => 'Don\'t have an account?',
     'already_have_account' => 'Already have an account?',
 
@@ -37,7 +38,12 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Your Discord account is not verified.',
+        'unverified_google_account' => 'Your Google account is not verified.',
         'account_not_registered' => 'You are not registered on this site.',
+        'authorization_request' => 'Authorization Request',
+        'requesting_permission' => 'is requesting permission to access your account.',
+        'scopes_title' => 'This application will be able to:',
+        'authorize' => 'Authorize',
     ],
 
     'reset_password' => 'Reset password',

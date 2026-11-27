@@ -6,6 +6,7 @@ use App\Auth\PasskeyLoginResponse;
 use App\Classes\Synths\PriceSynth;
 use App\Exceptions\ErrorHandler;
 use App\Helpers\ExtensionHelper;
+use App\Http\Middleware\MustVerfiyEmail;
 use App\Http\Requests\Auth\PasskeyVerificationRequest;
 use App\Models\EmailLog;
 use App\Models\Extension;
@@ -147,6 +148,8 @@ class AppServiceProvider extends ServiceProvider
             return Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
         });
         Livewire::propertySynthesizer(PriceSynth::class);
+        // Re-run the verified email check on Livewire updates of pages that require it
+        Livewire::addPersistentMiddleware([MustVerfiyEmail::class]);
 
         Gate::define('has-permission', function (User $user, string $ability) {
             return $user->hasPermission($ability);
