@@ -7,6 +7,7 @@ use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Rules\Domain;
 use Exception;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -121,16 +122,18 @@ class Plesk extends Server
     {
         $returnData = [
             'domain' => $properties['domain'],
-            'username' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', $service->user->name)),
+            // System users are server-wide, so every subscription gets its own FTP login
+            'ftp_username' => $this->makeLogin($service->user->name, 's' . $service->id),
             'ftp_password' => Str::password(12),
         ];
 
-        $pleskCustomerId = $service->user->properties->where('key', 'plesk_id')->first();
+        $pleskCustomerId = $service->user->properties->where('key', 'plesk_id')->first()?->value;
+        $user = $pleskCustomerId ? $this->findClient($pleskCustomerId) : null;
 
-        try {
-            $user = $this->request('/clients/' . $pleskCustomerId->value)->json();
-            // Check if user exists
-        } catch (Exception $e) {
+        if ($user) {
+            $returnData['username'] = $user['login'];
+        } else {
+            $returnData['username'] = $this->makeLogin($service->user->name, (string) $service->user->id);
             $returnData['password'] = Str::password(12);
 
             $user = $this->request('/clients', 'post', [
@@ -143,8 +146,9 @@ class Plesk extends Server
                 'external_id' => $service->user->id,
             ])->json();
 
-            $service->user->properties()->create([
+            $service->user->properties()->updateOrCreate([
                 'key' => 'plesk_id',
+            ], [
                 'name' => 'Plesk ID',
                 'value' => $user['id'],
             ]);
@@ -163,7 +167,7 @@ class Plesk extends Server
             ],
             'hosting_type' => 'virtual',
             'hosting_settings' => [
-                'ftp_login' => $returnData['username'],
+                'ftp_login' => $returnData['ftp_username'],
                 'ftp_password' => $returnData['ftp_password'],
             ],
             'plan' => [
@@ -179,6 +183,36 @@ class Plesk extends Server
         ]);
 
         return $returnData;
+    }
+
+    /**
+     * Get a Plesk client, or null when Plesk no longer has it. Other failures are rethrown,
+     * so an unreachable Plesk server never leads to a duplicate customer.
+     */
+    private function findClient(string $id): ?array
+    {
+        try {
+            return $this->request('/clients/' . $id)->json();
+        } catch (RequestException $e) {
+            if ($e->response->status() === 404) {
+                return null;
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Build a login that is valid both as a Plesk customer login and as a system (FTP) user:
+     * lowercase a-z, 0-9 and "-", starting with a letter, at most 20 characters (the Windows
+     * system user limit; Linux allows 32). The suffix holds a Paymenter id, so logins never collide.
+     */
+    private function makeLogin(?string $name, string $suffix): string
+    {
+        $base = ltrim(preg_replace('/[^a-z0-9]/', '', strtolower(Str::ascii((string) $name))), '0123456789');
+        $suffix = '-' . $suffix;
+
+        return substr($base ?: 'user', 0, max(1, 20 - strlen($suffix))) . $suffix;
     }
 
     /**
